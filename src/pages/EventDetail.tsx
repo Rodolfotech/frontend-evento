@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { eventsApi, attendeesApi } from '../api';
+import { eventsApi, attendeesApi, socialApi } from '../api';
 import { useAuth } from '../context/AuthContext';
 import type { Event } from '../types';
 import {
@@ -14,6 +14,7 @@ import {
   MessageCircle,
   CheckCircle,
   Sparkles,
+  RefreshCw,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -24,6 +25,7 @@ export default function EventDetail() {
   const [event, setEvent] = useState<Event | null>(null);
   const [registered, setRegistered] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -53,6 +55,19 @@ export default function EventDetail() {
       );
     } catch {
       alert('Ya estás registrado o ocurrió un error');
+    }
+  };
+
+  const handleSync = async () => {
+    if (!event) return;
+    setSyncing(true);
+    try {
+      const { data } = await socialApi.syncFeed(event.id);
+      setEvent((prev) => prev ? { ...prev, socialFeed: data.socialFeed, lastSync: data.lastSync } : prev);
+    } catch {
+      alert('Error al sincronizar Instagram. Asegúrate de tener Instagram conectado en tu perfil.');
+    } finally {
+      setSyncing(false);
     }
   };
 
@@ -166,6 +181,23 @@ export default function EventDetail() {
                 </div>
               )}
 
+              {user && event.owner?.id === user.id && (
+                <div className="mb-8 flex items-center gap-3">
+                  <button
+                    onClick={handleSync}
+                    disabled={syncing}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
+                    {syncing ? 'Sincronizando...' : 'Sincronizar Instagram'}
+                  </button>
+                  {event.lastSync && (
+                    <span className="text-xs text-gray-500">
+                      Última sincronización: {format(new Date(event.lastSync), "dd MMM yyyy HH:mm", { locale: es })}
+                    </span>
+                  )}
+                </div>
+              )}
               {event.socialFeed && event.socialFeed.length > 0 && (
                 <div className="mb-8">
                   <h2 className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
@@ -211,23 +243,20 @@ export default function EventDetail() {
 
               <div className="flex items-center gap-4">
                 {isAuthenticated ? (
-                  <button
-                    onClick={handleRegister}
-                    disabled={registered}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
-                  >
-                    {registered ? (
-                      <>
-                        <CheckCircle className="w-4 h-4" />
-                        Registrado
-                      </>
-                    ) : (
-                      <>
-                        <Users className="w-4 h-4" />
-                        Registrarme
-                      </>
-                    )}
-                  </button>
+                  registered ? (
+                    <span className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium">
+                      <CheckCircle className="w-4 h-4" />
+                      Ya registrado
+                    </span>
+                  ) : (
+                    <button
+                      onClick={handleRegister}
+                      className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                    >
+                      <Users className="w-4 h-4" />
+                      Registrarme
+                    </button>
+                  )
                 ) : (
                   <Link
                     to="/login"

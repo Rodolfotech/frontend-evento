@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { User } from '../types';
-import { authApi } from '../api';
+import { authApi, usersApi } from '../api';
 
 interface AuthContextType {
   user: User | null;
@@ -19,8 +19,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (token) {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      setUser(payload as User);
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUser({ id: payload.sub, email: payload.email } as User);
+        usersApi.getProfile().then(({ data }) => setUser(data)).catch((err) => {
+          if (err?.response?.status === 401) {
+            setToken(null);
+            localStorage.removeItem('token');
+          }
+        });
+      } catch {
+        setToken(null);
+        localStorage.removeItem('token');
+      }
     }
   }, [token]);
 
@@ -33,7 +44,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (name: string, email: string, password: string) => {
     const { data } = await authApi.register({ name, email, password });
-    setUser(data);
+    setToken(data.access_token);
+    setUser(data.user);
+    localStorage.setItem('token', data.access_token);
   };
 
   const logout = () => {

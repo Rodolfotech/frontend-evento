@@ -5,7 +5,9 @@ export const authApi = {
   login: (email: string, password: string) =>
     api.post<{ access_token: string; user: User }>('/auth/login', { email, password }),
   register: (data: { email: string; password: string; name: string }) =>
-    api.post<User>('/auth/register', data),
+    api.post<{ access_token: string; user: User }>('/auth/register', data),
+  forgotPassword: (email: string) => api.post('/auth/forgot-password', { email }),
+  resetPassword: (token: string, password: string) => api.post('/auth/reset-password', { token, password }),
 };
 
 export const eventsApi = {
@@ -30,10 +32,13 @@ export const attendeesApi = {
 };
 
 export const socialApi = {
+  getInstagramAuthUrl: () => api.get<{ url: string }>('/social/instagram/auth-url'),
+  instagramCallback: (code: string) => api.post('/social/instagram/callback', { code }),
   facebookConnect: (data: SocialConnectPayload) => api.post('/social/facebook/connect', data),
   instagramConnect: (data: SocialConnectPayload) => api.post('/social/instagram/connect', data),
   disconnect: (platform: string) => api.delete(`/social/${platform}/disconnect`),
   getStatus: () => api.get<{ facebook: boolean; instagram: boolean }>('/social/status'),
+  refreshToken: () => api.post('/social/instagram/refresh'),
   syncFeed: (eventId: string) => api.post(`/social/sync/${eventId}`),
 };
 
