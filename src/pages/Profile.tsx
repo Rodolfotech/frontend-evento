@@ -98,7 +98,7 @@ export default function Profile() {
       const w = 600, h = 700;
       const x = window.screenX + (window.innerWidth - w) / 2;
       const y = window.screenY + (window.innerHeight - h) / 2;
-      const p = window.open(
+      window.open(
         data.url,
         'instagram-auth',
         `width=${w},height=${h},left=${x},top=${y},popup=1`,
