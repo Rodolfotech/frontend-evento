@@ -129,4 +129,4 @@ VITE_API_URL=/api
 
 #usuario de prueba
 Email: demo@eventos.cl
-Contraseña: 
+Contraseña: demo123
