@@ -1,0 +1,37 @@
+# Especificación de Flujo de Trabajo
+
+## Regla Fundamental (Inquebrantable)
+
+**Nunca trabajar directamente en `main`.**
+
+Todo cambio, sin excepción, debe seguir este flujo:
+
+## Flujo Obligatorio
+
+```
+1. Crear rama desde main → feature/<nombre-descritivo>
+2. Hacer cambios en la rama
+3. Commit + Push a GitHub
+4. Crear Pull Request (PR) en GitHub
+5. Merge a main solo después de PR aprobado
+```
+
+## Convención de Nombres de Ramas
+
+- `feature/<nombre>` — Nuevas funcionalidades
+- `fix/<nombre>` — Correcciones de bugs
+- `chore/<nombre>` — Tareas de mantenimiento
+
+## Commits
+
+Usar prefijos semánticos:
+
+- `feat:` — Nueva funcionalidad
+- `fix:` — Corrección
+- `chore:` — Mantenimiento
+- `docs:` — Documentación
+- `refactor:` — Refactorización
+
+## Deploy
+
+Solo se deploya desde `main` después del merge.
