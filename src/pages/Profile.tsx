@@ -325,7 +325,7 @@ export default function Profile() {
                     <div className="glass rounded-2xl p-16 text-center">
                       <Camera className="w-12 h-12 mx-auto mb-4 text-gray-500" />
                       <p className="text-gray-400">
-                        {filter ? 'No hay publicaciones que coincidan con tu búsqueda' : 'No hay publicaciones de Instagram'}
+                        {filter ? 'No hay publicaciones que coincidan con tu búsqueda' : 'Aún no hay publicaciones en Instagram'}
                       </p>
                       {!instagramConnected && (
                         <button
