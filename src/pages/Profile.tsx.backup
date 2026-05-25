@@ -98,7 +98,7 @@ export default function Profile() {
       const w = 600, h = 700;
       const x = window.screenX + (window.innerWidth - w) / 2;
       const y = window.screenY + (window.innerHeight - h) / 2;
-      window.open(
+      const p = window.open(
         data.url,
         'instagram-auth',
         `width=${w},height=${h},left=${x},top=${y},popup=1`,
@@ -112,8 +112,8 @@ export default function Profile() {
     }
   };
 
-  const filteredPosts = instagramPosts.filter((post) =>
-    !filter || (post.caption || '').toLowerCase().includes(filter.toLowerCase()),
+  const filteredPosts = instagramPosts.filter((p) =>
+    !filter || (p.caption || '').toLowerCase().includes(filter.toLowerCase()),
   );
 
   const tabs: { key: Tab; label: string; icon: typeof Calendar; count?: number }[] = [
