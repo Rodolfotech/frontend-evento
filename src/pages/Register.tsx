@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { UserPlus, Mail, Lock, User, Sparkles, Eye, EyeOff } from 'lucide-react';
 
 export default function Register() {
