@@ -64,6 +64,29 @@ pnpm dev
 
 El frontend corre en `http://localhost:5173` y redirige las peticiones `/api` al backend en `http://localhost:3000`.
 
+## Flujo de trabajo (Git)
+
+1. Crear una rama nueva desde `main`:
+   ```bash
+   git checkout -b feature/nombre-de-la-rama
+   ```
+2. Trabajar en la rama, hacer commits.
+3. Subir la rama a GitHub:
+   ```bash
+   git push origin feature/nombre-de-la-rama
+   ```
+4. En GitHub, crear un Pull Request (PR) de `feature/nombre-de-la-rama` a `main`.
+5. Revisar, resolver conflictos si los hay, y hacer merge.
+6. Eliminar la rama remota y local:
+   ```bash
+   git push origin --delete feature/nombre-de-la-rama
+   git branch -D feature/nombre-de-la-rama
+   git checkout main
+   git pull origin main
+   ```
+
+> Nunca trabajar directamente en `main`. Siempre usar ramas.
+
 ## Build para producción
 
 ```bash
