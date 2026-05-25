@@ -76,10 +76,23 @@ export default function Profile() {
     }
   };
 
+  const loadEvents = () => {
+    Promise.all([
+      eventsApi.getByOwner(),
+      attendeesApi.findByUser(),
+    ])
+      .then(([eventsRes, attendeesRes]) => {
+        setMyEvents(eventsRes.data);
+        setRegisteredEvents(attendeesRes.data?.map((a: any) => a.event) || []);
+      })
+      .catch(() => {});
+  };
+
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
       if (e.data?.type === 'instagram-connected') {
         socialApi.getStatus().then(({ data }) => setSocialStatus(data)).catch(() => {});
+        loadEvents();
       }
     };
     window.addEventListener('message', handleMessage);
