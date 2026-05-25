@@ -63,6 +63,7 @@ export default function Profile() {
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
       if (e.data?.type === 'instagram-connected') {
+        setConnecting(false);
         socialApi.getStatus().then(({ data }) => setInstagramConnected(data.instagram)).catch(() => {});
         loadUser();
       }
@@ -94,9 +95,8 @@ export default function Profile() {
         `width=${w},height=${h},left=${x},top=${y},popup=1`,
       );
     } catch {
-      alert('Error al obtener URL de autorización');
-    } finally {
       setConnecting(false);
+      alert('Error al obtener URL de autorización');
     }
   };
 
