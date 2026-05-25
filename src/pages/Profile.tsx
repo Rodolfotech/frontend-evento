@@ -71,6 +71,7 @@ export default function Profile() {
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
       if (e.data?.type === 'instagram-connected') {
+        clearTimeout((window as any).__igTimer);
         setConnecting(false);
         socialApi.getStatus().then(updateInstagramStatus).catch(() => {});
         loadUser();
@@ -92,21 +93,44 @@ export default function Profile() {
 
   const handleInstagramLink = async () => {
     setConnecting(true);
+    const popup = window.open('', 'instagram-auth');
+    if (popup) popup.close();
+
     try {
       const { data } = await socialApi.getInstagramAuthUrl();
       const w = 600, h = 700;
       const x = window.screenX + (window.innerWidth - w) / 2;
       const y = window.screenY + (window.innerHeight - h) / 2;
-      window.open(
+      const p = window.open(
         data.url,
         'instagram-auth',
         `width=${w},height=${h},left=${x},top=${y},popup=1`,
       );
+      // Timeout: si el popup no responde en 2 min, liberamos el estado
+      const timer = setTimeout(() => {
+        setConnecting(false);
+        try { p?.close(); } catch {}
+      }, 120000);
+      // Guardamos el timer para limpiarlo si el mensaje llega
+      (window as any).__igTimer = timer;
     } catch {
       setConnecting(false);
-      alert('Error al obtener URL de autorización');
     }
   };
+
+  // Escuchar cierre del popup manual
+  useEffect(() => {
+    const checkPopup = setInterval(() => {
+      const popup = window.open('', 'instagram-auth');
+      if (popup && popup.closed) {
+        clearInterval(checkPopup);
+        setConnecting(false);
+        clearTimeout((window as any).__igTimer);
+      }
+      if (popup) popup.close();
+    }, 1000);
+    return () => clearInterval(checkPopup);
+  }, []);
 
   const filteredPosts = instagramPosts.filter((p) =>
     !filter || (p.caption || '').toLowerCase().includes(filter.toLowerCase()),
@@ -255,15 +279,18 @@ export default function Profile() {
                     </div>
                   ) : (
                     <button
-                      onClick={handleInstagramLink}
-                      disabled={connecting}
+                      onClick={() => {
+                        clearTimeout((window as any).__igTimer);
+                        setConnecting(false);
+                        setTimeout(handleInstagramLink, 50);
+                      }}
                       className="w-full flex items-center justify-between px-4 py-3 rounded-xl glass text-gray-400 hover:text-white transition-all cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
                         <Camera className="w-5 h-5" />
                         <span className="text-sm">Instagram</span>
                       </div>
-                      <span className="text-xs">{connecting ? 'Conectando...' : 'Vincular'}</span>
+                      <span className="text-xs">{connecting ? 'Reintentar...' : 'Vincular'}</span>
                     </button>
                   )}
                 </div>
