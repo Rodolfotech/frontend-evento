@@ -11,7 +11,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [instagramLoading, setInstagramLoading] = useState(false);
-  const { login, instagramLogin, isAuthenticated } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {

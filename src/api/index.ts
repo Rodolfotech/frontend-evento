@@ -1,5 +1,5 @@
 import api from './client';
-import type { User, Event, Category, CreateEventPayload, SocialConnectPayload } from '../types';
+import type { User, Event, Category, CreateEventPayload, SocialConnectPayload, SocialPost } from '../types';
 
 export const authApi = {
   login: (email: string, password: string) =>
