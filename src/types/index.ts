@@ -51,6 +51,7 @@ export interface SocialPost {
   caption?: string;
   permalink?: string;
   timestamp: string;
+  media_type?: string;
 }
 
 export interface CreateEventPayload {

@@ -8,6 +8,10 @@ export const authApi = {
     api.post<{ access_token: string; user: User }>('/auth/register', data),
   forgotPassword: (email: string) => api.post('/auth/forgot-password', { email }),
   resetPassword: (token: string, password: string) => api.post('/auth/reset-password', { token, password }),
+  getInstagramAuthUrl: (state?: string) =>
+    api.get<{ url: string }>('/auth/instagram/url', { params: state ? { state } : {} }),
+  instagramLogin: (code: string) =>
+    api.post<{ access_token: string; user: User }>('/auth/instagram', { code }),
 };
 
 export const eventsApi = {
@@ -40,6 +44,7 @@ export const socialApi = {
   getStatus: () => api.get<{ facebook: boolean; instagram: boolean }>('/social/status'),
   refreshToken: () => api.post('/social/instagram/refresh'),
   syncFeed: (eventId: string) => api.post(`/social/sync/${eventId}`),
+  getUserMedia: () => api.get<SocialPost[]>('/social/instagram/media'),
 };
 
 export const usersApi = {

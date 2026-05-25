@@ -3,12 +3,9 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { eventsApi, socialApi, attendeesApi } from '../api';
 import EventCard from '../components/EventCard';
-import type { Event } from '../types';
+import type { Event, SocialPost } from '../types';
 import {
   Camera,
-  MessageCircle,
-  Link2,
-  Unlink,
   Calendar,
   Sparkles,
   LogOut,
@@ -16,11 +13,13 @@ import {
   CalendarCheck,
   Clock,
   Shield,
+  Search,
+  ExternalLink,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-type Tab = 'myevents' | 'registered';
+type Tab = 'myevents' | 'registered' | 'instagram';
 
 export default function Profile() {
   const { user, logout, isAuthenticated } = useAuth();
@@ -28,11 +27,10 @@ export default function Profile() {
   const [tab, setTab] = useState<Tab>('myevents');
   const [myEvents, setMyEvents] = useState<Event[]>([]);
   const [registeredEvents, setRegisteredEvents] = useState<Event[]>([]);
-  const [socialStatus, setSocialStatus] = useState({ facebook: false, instagram: false });
-  const [connecting, setConnecting] = useState<string | null>(null);
-  const [tokenInput, setTokenInput] = useState('');
-  const [showTokenInput, setShowTokenInput] = useState<string | null>(null);
-  const [syncing, setSyncing] = useState<string | null>(null);
+  const [instagramPosts, setInstagramPosts] = useState<SocialPost[]>([]);
+  const [instagramConnected, setInstagramConnected] = useState(false);
+  const [loadingPosts, setLoadingPosts] = useState(false);
+  const [filter, setFilter] = useState('');
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -42,91 +40,28 @@ export default function Profile() {
     Promise.all([
       eventsApi.getByOwner(),
       attendeesApi.findByUser(),
-      socialApi.getStatus(),
-    ])
-      .then(([eventsRes, attendeesRes, socialRes]) => {
-        setMyEvents(eventsRes.data);
-        setRegisteredEvents(attendeesRes.data?.map((a: any) => a.event) || []);
-        setSocialStatus(socialRes.data);
-      })
-      .catch(() => {});
-  }, [isAuthenticated, navigate]);
-
-  const handleSocialConnect = async (platform: 'facebook' | 'instagram') => {
-    setConnecting(platform);
-    try {
-      if (socialStatus[platform]) {
-        await socialApi.disconnect(platform);
-        setSocialStatus((prev) => ({ ...prev, [platform]: false }));
-      } else if (showTokenInput === platform && tokenInput) {
-        await socialApi[platform === 'facebook' ? 'facebookConnect' : 'instagramConnect']({
-          platform,
-          accessToken: tokenInput,
-        });
-        setSocialStatus((prev) => ({ ...prev, [platform]: true }));
-        setShowTokenInput(null);
-        setTokenInput('');
-      } else {
-        setShowTokenInput(platform);
-      }
-    } catch {
-      alert(`Error al conectar ${platform}`);
-    } finally {
-      setConnecting(null);
-    }
-  };
-
-  const loadEvents = () => {
-    Promise.all([
-      eventsApi.getByOwner(),
-      attendeesApi.findByUser(),
+      socialApi.getStatus().then(({ data }) => setInstagramConnected(data.instagram)).catch(() => {}),
     ])
       .then(([eventsRes, attendeesRes]) => {
         setMyEvents(eventsRes.data);
         setRegisteredEvents(attendeesRes.data?.map((a: any) => a.event) || []);
       })
       .catch(() => {});
-  };
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
-      if (e.data?.type === 'instagram-connected') {
-        socialApi.getStatus().then(({ data }) => setSocialStatus(data)).catch(() => {});
-        loadEvents();
-      }
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
-
-  const handleInstagramOAuth = async () => {
-    try {
-      const { data } = await socialApi.getInstagramAuthUrl();
-      const w = 600, h = 700;
-      const x = window.screenX + (window.innerWidth - w) / 2;
-      const y = window.screenY + (window.innerHeight - h) / 2;
-      window.open(
-        data.url,
-        'instagram-auth',
-        `width=${w},height=${h},left=${x},top=${y},popup=1`,
-      );
-    } catch {
-      alert('Error al obtener URL de autorización');
+    if (tab === 'instagram') {
+      setLoadingPosts(true);
+      socialApi.getUserMedia()
+        .then(({ data }) => setInstagramPosts(data))
+        .catch(() => {})
+        .finally(() => setLoadingPosts(false));
     }
-  };
+  }, [tab]);
 
-  const handleSync = async (eventId: string) => {
-    setSyncing(eventId);
-    try {
-      await socialApi.syncFeed(eventId);
-      const { data } = await eventsApi.getByOwner();
-      setMyEvents(data);
-    } catch {
-      alert('Error al sincronizar Instagram');
-    } finally {
-      setSyncing(null);
-    }
-  };
+  const filteredPosts = instagramPosts.filter((p) =>
+    !filter || (p.caption || '').toLowerCase().includes(filter.toLowerCase()),
+  );
 
   if (!user) {
     return (
@@ -136,9 +71,10 @@ export default function Profile() {
     );
   }
 
-  const tabs: { key: Tab; label: string; icon: typeof Calendar; count: number }[] = [
+  const tabs: { key: Tab; label: string; icon: typeof Calendar; count?: number }[] = [
     { key: 'myevents', label: 'Mis Eventos', icon: Calendar, count: myEvents.length },
     { key: 'registered', label: 'Inscripciones', icon: CalendarCheck, count: registeredEvents.length },
+    { key: 'instagram', label: 'Instagram', icon: Camera, count: instagramPosts.length },
   ];
 
   const displayEvents = tab === 'myevents' ? myEvents : registeredEvents;
@@ -160,6 +96,12 @@ export default function Profile() {
                   </div>
                   <h1 className="text-xl font-bold text-white">{user.name}</h1>
                   <p className="text-sm text-gray-400">{user.email}</p>
+                  {user.instagramId && (
+                    <span className="inline-flex items-center gap-1 mt-2 text-xs text-pink-400 bg-pink-500/10 px-3 py-1 rounded-full">
+                      <Camera className="w-3 h-3" />
+                      Instagram conectado
+                    </span>
+                  )}
                   <span className="inline-block mt-2 text-xs font-medium text-neon-cyan bg-white/5 px-3 py-1 rounded-full">
                     {user.role === 'ORGANIZER' ? 'Organizador' : user.role === 'ADMIN' ? 'Admin' : 'Usuario'}
                   </span>
@@ -176,90 +118,20 @@ export default function Profile() {
                   </div>
                 </div>
 
-                <hr className="border-white/5 my-4" />
-
-                {/* Social */}
-                <div>
-                  <h2 className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
-                    <Link2 className="w-4 h-4 text-neon-cyan" />
-                    Redes Sociales
-                  </h2>
-                  <div className="space-y-2">
-                    <button
-                      onClick={() => handleSocialConnect('facebook')}
-                      disabled={connecting === 'facebook'}
-                      className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-all cursor-pointer ${
-                        socialStatus.facebook
-                          ? 'bg-blue-500/10 border border-blue-500/20 text-blue-400'
-                          : 'glass text-gray-400 hover:text-white'
-                      }`}
+                {!instagramConnected && (
+                  <div className="mb-4 p-3 rounded-xl bg-pink-500/10 border border-pink-500/20 text-center">
+                    <p className="text-xs text-gray-400 mb-2">
+                      Conecta tu Instagram para ver tus publicaciones
+                    </p>
+                    <a
+                      href="/login"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-medium"
                     >
-                      <div className="flex items-center gap-3">
-                        <MessageCircle className="w-5 h-5" />
-                        <span>Facebook</span>
-                      </div>
-                      {socialStatus.facebook ? <Unlink className="w-4 h-4" /> : <Link2 className="w-4 h-4" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleSocialConnect('instagram')}
-                      disabled={connecting === 'instagram'}
-                      className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-all cursor-pointer ${
-                        socialStatus.instagram
-                          ? 'bg-pink-500/10 border border-pink-500/20 text-pink-400'
-                          : 'glass text-gray-400 hover:text-white'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Camera className="w-5 h-5" />
-                        <span>Instagram</span>
-                      </div>
-                      {socialStatus.instagram ? <Unlink className="w-4 h-4" /> : <Link2 className="w-4 h-4" />}
-                    </button>
-
-                    {showTokenInput === 'instagram' && !socialStatus.instagram && (
-                      <div className="space-y-2 pt-1">
-                        <button
-                          onClick={handleInstagramOAuth}
-                          disabled={connecting === 'instagram'}
-                          className="w-full py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
-                        >
-                          Conectar con Instagram
-                        </button>
-                        <div className="relative">
-                          <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-white/10" />
-                          </div>
-                          <div className="relative flex justify-center text-xs">
-                            <span className="bg-[#0f0f1a] px-2 text-gray-500">o con token</span>
-                          </div>
-                        </div>
-                        <input
-                          type="text"
-                          value={tokenInput}
-                          onChange={(e) => setTokenInput(e.target.value)}
-                          placeholder="Pega tu token de acceso aquí"
-                          className="w-full px-3 py-2 rounded-xl text-sm bg-white/5 border border-white/10 text-white placeholder-gray-500"
-                        />
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleSocialConnect('instagram')}
-                            disabled={!tokenInput || connecting === 'instagram'}
-                            className="flex-1 py-1.5 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
-                          >
-                            {connecting === 'instagram' ? 'Conectando...' : 'Usar token'}
-                          </button>
-                          <button
-                            onClick={() => { setShowTokenInput(null); setTokenInput(''); }}
-                            className="py-1.5 px-3 rounded-xl glass text-gray-400 text-xs hover:text-white transition-colors cursor-pointer"
-                          >
-                            Cancelar
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                      <Camera className="w-3 h-3" />
+                      Iniciar sesión con Instagram
+                    </a>
                   </div>
-                </div>
+                )}
 
                 <hr className="border-white/5 my-4" />
 
@@ -302,53 +174,154 @@ export default function Profile() {
                   >
                     <Icon className="w-4 h-4" />
                     {label}
-                    <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                      tab === key ? 'bg-white/10' : 'bg-white/5'
-                    }`}>
-                      {count}
-                    </span>
+                    {count !== undefined && (
+                      <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+                        tab === key ? 'bg-white/10' : 'bg-white/5'
+                      }`}>
+                        {count}
+                      </span>
+                    )}
                   </button>
                 ))}
               </div>
 
-              {/* Events */}
-              {displayEvents.length === 0 ? (
-                <div className="glass rounded-2xl p-16 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-neon-cyan/10 to-neon-purple/10 flex items-center justify-center">
-                    {tab === 'myevents' ? (
-                      <Sparkles className="w-8 h-8 text-gray-500" />
-                    ) : (
-                      <CalendarCheck className="w-8 h-8 text-gray-500" />
-                    )}
+              {/* Instagram Tab */}
+              {tab === 'instagram' && (
+                <div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="relative flex-1">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                      <input
+                        type="text"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                        placeholder="Buscar en captions..."
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm bg-white/5 border border-white/10 text-white placeholder-gray-500"
+                      />
+                    </div>
+                    <button
+                      onClick={() => {
+                        setLoadingPosts(true);
+                        socialApi.getUserMedia()
+                          .then(({ data }) => setInstagramPosts(data))
+                          .catch(() => {})
+                          .finally(() => setLoadingPosts(false));
+                      }}
+                      disabled={loadingPosts}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+                    >
+                      <RefreshCw className={`w-4 h-4 ${loadingPosts ? 'animate-spin' : ''}`} />
+                      Actualizar
+                    </button>
                   </div>
-                  <p className="text-gray-400 mb-2">
-                    {tab === 'myevents' ? 'No has publicado eventos aún' : 'No te has inscrito a ningún evento'}
-                  </p>
-                  <a
-                    href={tab === 'myevents' ? '/create-event' : '/events'}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-sm font-medium hover:opacity-90 transition-opacity"
-                  >
-                    {tab === 'myevents' ? 'Publicar mi primer evento' : 'Explorar eventos'}
-                  </a>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {displayEvents.map((event) => (
-                    <div key={event.id} className="relative group">
-                      <EventCard event={event} />
-                      {tab === 'myevents' && socialStatus.instagram && (
-                        <button
-                          onClick={() => handleSync(event.id)}
-                          disabled={syncing === event.id}
-                          className="absolute top-2 right-2 p-2 rounded-lg glass text-gray-400 hover:text-neon-cyan transition-all disabled:opacity-50 opacity-0 group-hover:opacity-100 cursor-pointer"
-                          title="Sincronizar Instagram"
+
+                  {loadingPosts ? (
+                    <div className="flex items-center justify-center py-20">
+                      <div className="w-8 h-8 border-2 border-neon-pink border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  ) : filteredPosts.length === 0 ? (
+                    <div className="glass rounded-2xl p-16 text-center">
+                      <Camera className="w-12 h-12 mx-auto mb-4 text-gray-500" />
+                      <p className="text-gray-400">
+                        {filter ? 'No hay publicaciones que coincidan con tu búsqueda' : 'No hay publicaciones de Instagram'}
+                      </p>
+                      {!instagramConnected && (
+                        <a
+                          href="/login"
+                          className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-medium"
                         >
-                          <RefreshCw className={`w-4 h-4 ${syncing === event.id ? 'animate-spin' : ''}`} />
-                        </button>
+                          Conectar Instagram
+                        </a>
                       )}
                     </div>
-                  ))}
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {filteredPosts.map((post) => (
+                        <div key={post.id} className="glass rounded-xl overflow-hidden group">
+                          {post.media_url && (
+                            <div className="aspect-square overflow-hidden">
+                              <img
+                                src={post.media_url}
+                                alt=""
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              />
+                            </div>
+                          )}
+                          <div className="p-4">
+                            {post.caption && (
+                              <p className="text-sm text-gray-400 mb-2 line-clamp-3">{post.caption}</p>
+                            )}
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-gray-500">
+                                {format(new Date(post.timestamp), "dd MMM yyyy", { locale: es })}
+                              </span>
+                              {post.permalink && (
+                                <a
+                                  href={post.permalink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-1 text-xs text-neon-cyan hover:underline"
+                                >
+                                  <ExternalLink className="w-3 h-3" />
+                                  Ver en Instagram
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+              )}
+
+              {/* Events tabs */}
+              {(tab === 'myevents' || tab === 'registered') && (
+                <>
+                  {displayEvents.length === 0 ? (
+                    <div className="glass rounded-2xl p-16 text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-neon-cyan/10 to-neon-purple/10 flex items-center justify-center">
+                        {tab === 'myevents' ? (
+                          <Sparkles className="w-8 h-8 text-gray-500" />
+                        ) : (
+                          <CalendarCheck className="w-8 h-8 text-gray-500" />
+                        )}
+                      </div>
+                      <p className="text-gray-400 mb-2">
+                        {tab === 'myevents' ? 'No has publicado eventos aún' : 'No te has inscrito a ningún evento'}
+                      </p>
+                      <a
+                        href={tab === 'myevents' ? '/create-event' : '/events'}
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                      >
+                        {tab === 'myevents' ? 'Publicar mi primer evento' : 'Explorar eventos'}
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {displayEvents.map((event) => (
+                        <div key={event.id} className="relative group">
+                          <EventCard event={event} />
+                          {tab === 'myevents' && instagramConnected && (
+                            <button
+                              onClick={async () => {
+                                try {
+                                  await socialApi.syncFeed(event.id);
+                                  const { data } = await eventsApi.getByOwner();
+                                  setMyEvents(data);
+                                } catch {}
+                              }}
+                              className="absolute top-2 right-2 p-2 rounded-lg glass text-gray-400 hover:text-neon-cyan transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+                              title="Sincronizar Instagram"
+                            >
+                              <RefreshCw className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>

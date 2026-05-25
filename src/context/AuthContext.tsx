@@ -7,6 +7,7 @@ interface AuthContextType {
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  instagramLogin: (code: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -49,6 +50,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('token', data.access_token);
   };
 
+  const instagramLogin = async (code: string) => {
+    const { data } = await authApi.instagramLogin(code);
+    setToken(data.access_token);
+    setUser(data.user);
+    localStorage.setItem('token', data.access_token);
+  };
+
   const logout = () => {
     setToken(null);
     setUser(null);
@@ -56,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={{ user, token, login, register, instagramLogin, logout, isAuthenticated: !!token }}>
       {children}
     </AuthContext.Provider>
   );
