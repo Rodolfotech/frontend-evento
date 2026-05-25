@@ -32,16 +32,24 @@ export default function Profile() {
   const [registeredEvents, setRegisteredEvents] = useState<Event[]>([]);
   const [instagramPosts, setInstagramPosts] = useState<SocialPost[]>([]);
   const [instagramConnected, setInstagramConnected] = useState(false);
+  const [instagramUsername, setInstagramUsername] = useState<string | null>(null);
+  const [instagramAvatar, setInstagramAvatar] = useState<string | null>(null);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [filter, setFilter] = useState('');
   const [validation, setValidation] = useState<any>(null);
   const [connecting, setConnecting] = useState(false);
 
+  const updateInstagramStatus = ({ data }: any) => {
+    setInstagramConnected(data.instagram);
+    setInstagramUsername(data.instagramUsername);
+    setInstagramAvatar(data.instagramAvatar);
+  };
+
   const loadUser = () => {
     Promise.all([
       eventsApi.getByOwner(),
       attendeesApi.findByUser(),
-      socialApi.getStatus().then(({ data }) => setInstagramConnected(data.instagram)).catch(() => {}),
+      socialApi.getStatus().then(updateInstagramStatus).catch(() => {}),
     ])
       .then(([eventsRes, attendeesRes]) => {
         setMyEvents(eventsRes.data);
@@ -64,7 +72,7 @@ export default function Profile() {
     const handleMessage = (e: MessageEvent) => {
       if (e.data?.type === 'instagram-connected') {
         setConnecting(false);
-        socialApi.getStatus().then(({ data }) => setInstagramConnected(data.instagram)).catch(() => {});
+        socialApi.getStatus().then(updateInstagramStatus).catch(() => {});
         loadUser();
       }
     };
@@ -203,8 +211,17 @@ export default function Profile() {
                   {instagramConnected ? (
                     <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-pink-500/10 border border-pink-500/20">
                       <div className="flex items-center gap-3">
-                        <Camera className="w-5 h-5 text-pink-400" />
-                        <span className="text-sm text-pink-400">Instagram</span>
+                        {instagramAvatar ? (
+                          <img src={instagramAvatar} alt="" className="w-8 h-8 rounded-full" />
+                        ) : (
+                          <Camera className="w-5 h-5 text-pink-400" />
+                        )}
+                        <div>
+                          <span className="text-sm text-pink-400 block">Instagram</span>
+                          {instagramUsername && (
+                            <span className="text-xs text-gray-400">@{instagramUsername}</span>
+                          )}
+                        </div>
                       </div>
                       <button
                         onClick={async () => {
@@ -290,6 +307,14 @@ export default function Profile() {
               {/* Instagram Tab */}
               {tab === 'instagram' && (
                 <div>
+                  {instagramUsername && (
+                    <div className="flex items-center gap-2 mb-4">
+                      {instagramAvatar && (
+                        <img src={instagramAvatar} alt="" className="w-6 h-6 rounded-full" />
+                      )}
+                      <span className="text-sm text-gray-300">@{instagramUsername}</span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-3 mb-6">
                     <div className="relative flex-1">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
