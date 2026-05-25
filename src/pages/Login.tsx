@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogIn, Mail, Lock, Sparkles, Eye, EyeOff, Camera } from 'lucide-react';
-import { authApi } from '../api';
+import { LogIn, Mail, Lock, Sparkles, Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -10,47 +9,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [instagramLoading, setInstagramLoading] = useState(false);
-  const { login, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isAuthenticated) navigate('/');
-  }, [isAuthenticated, navigate]);
-
-  const handleInstagramLogin = useCallback(async () => {
-    setInstagramLoading(true);
-    try {
-      const { data } = await authApi.getInstagramAuthUrl('login');
-      const w = 600, h = 700;
-      const x = window.screenX + (window.innerWidth - w) / 2;
-      const y = window.screenY + (window.innerHeight - h) / 2;
-      window.open(
-        data.url,
-        'instagram-login',
-        `width=${w},height=${h},left=${x},top=${y},popup=1`,
-      );
-    } catch {
-      setError('Error al conectar con Instagram');
-      setInstagramLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
-      if (e.data?.type === 'instagram-login') {
-        setInstagramLoading(false);
-        if (e.data.token && e.data.user) {
-          localStorage.setItem('token', e.data.token);
-          window.location.href = '/profile';
-        } else {
-          setError('Error al iniciar sesión con Instagram');
-        }
-      }
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +17,7 @@ export default function Login() {
     setError('');
     try {
       await login(email, password);
-      navigate('/');
+      window.location.href = '/';
     } catch {
       setError('Credenciales inválidas');
     } finally {
@@ -138,24 +97,6 @@ export default function Login() {
               {loading ? 'Ingresando...' : 'Ingresar'}
             </button>
           </form>
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10" />
-            </div>
-            <div className="relative flex justify-center text-xs">
-              <span className="bg-[#0f0f1a] px-3 text-gray-500">o continúa con</span>
-            </div>
-          </div>
-
-          <button
-            onClick={handleInstagramLogin}
-            disabled={instagramLoading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-orange-500 text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
-          >
-            <Camera className="w-4 h-4" />
-            {instagramLoading ? 'Conectando...' : 'Iniciar sesión con Instagram'}
-          </button>
 
           <p className="text-center text-sm text-gray-500 mt-4">
             <Link to="/forgot-password" className="text-neon-cyan hover:underline">

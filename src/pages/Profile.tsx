@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { eventsApi, socialApi, attendeesApi } from '../api';
 import EventCard from '../components/EventCard';
 import type { Event, SocialPost } from '../types';
@@ -19,6 +18,7 @@ import {
   AlertTriangle,
   TrendingUp,
   Award,
+  Link2,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -26,8 +26,7 @@ import { es } from 'date-fns/locale';
 type Tab = 'myevents' | 'registered' | 'instagram';
 
 export default function Profile() {
-  const { user, logout, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [tab, setTab] = useState<Tab>('myevents');
   const [myEvents, setMyEvents] = useState<Event[]>([]);
   const [registeredEvents, setRegisteredEvents] = useState<Event[]>([]);
@@ -36,12 +35,9 @@ export default function Profile() {
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [filter, setFilter] = useState('');
   const [validation, setValidation] = useState<any>(null);
+  const [connecting, setConnecting] = useState(false);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login');
-      return;
-    }
+  const loadUser = () => {
     Promise.all([
       eventsApi.getByOwner(),
       attendeesApi.findByUser(),
@@ -52,13 +48,28 @@ export default function Profile() {
         setRegisteredEvents(attendeesRes.data?.map((a: any) => a.event) || []);
       })
       .catch(() => {});
-  }, [isAuthenticated, navigate]);
+  };
+
+  useEffect(() => {
+    loadUser();
+  }, []);
 
   useEffect(() => {
     if (instagramConnected) {
       socialApi.getValidation().then(({ data }) => setValidation(data)).catch(() => {});
     }
   }, [instagramConnected]);
+
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data?.type === 'instagram-connected') {
+        socialApi.getStatus().then(({ data }) => setInstagramConnected(data.instagram)).catch(() => {});
+        loadUser();
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
 
   useEffect(() => {
     if (tab === 'instagram') {
@@ -70,17 +81,28 @@ export default function Profile() {
     }
   }, [tab]);
 
+  const handleInstagramLink = async () => {
+    setConnecting(true);
+    try {
+      const { data } = await socialApi.getInstagramAuthUrl();
+      const w = 600, h = 700;
+      const x = window.screenX + (window.innerWidth - w) / 2;
+      const y = window.screenY + (window.innerHeight - h) / 2;
+      window.open(
+        data.url,
+        'instagram-auth',
+        `width=${w},height=${h},left=${x},top=${y},popup=1`,
+      );
+    } catch {
+      alert('Error al obtener URL de autorización');
+    } finally {
+      setConnecting(false);
+    }
+  };
+
   const filteredPosts = instagramPosts.filter((p) =>
     !filter || (p.caption || '').toLowerCase().includes(filter.toLowerCase()),
   );
-
-  if (!user) {
-    return (
-      <div className="min-h-screen pt-16 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-neon-cyan border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
 
   const tabs: { key: Tab; label: string; icon: typeof Calendar; count?: number }[] = [
     { key: 'myevents', label: 'Mis Eventos', icon: Calendar, count: myEvents.length },
@@ -103,11 +125,11 @@ export default function Profile() {
               <div className="glass rounded-2xl p-6 glow-pink sticky top-24">
                 <div className="text-center mb-6">
                   <div className="w-24 h-24 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-neon-cyan via-neon-purple to-neon-pink flex items-center justify-center text-4xl font-bold text-white shadow-lg shadow-neon-purple/20">
-                    {(user.name || '?').charAt(0).toUpperCase()}
+                    {(user?.name || '?').charAt(0).toUpperCase()}
                   </div>
-                  <h1 className="text-xl font-bold text-white">{user.name}</h1>
-                  <p className="text-sm text-gray-400">{user.email}</p>
-                  {user.instagramId && (
+                  <h1 className="text-xl font-bold text-white">{user?.name}</h1>
+                  <p className="text-sm text-gray-400">{user?.email}</p>
+                  {user?.instagramId && (
                     <span className="inline-flex items-center gap-1 mt-2 text-xs text-pink-400 bg-pink-500/10 px-3 py-1 rounded-full">
                       <Camera className="w-3 h-3" />
                       Instagram conectado
@@ -155,7 +177,7 @@ export default function Profile() {
                     </div>
                   )}
                   <span className="inline-block mt-2 text-xs font-medium text-neon-cyan bg-white/5 px-3 py-1 rounded-full">
-                    {user.role === 'ORGANIZER' ? 'Organizador' : user.role === 'ADMIN' ? 'Admin' : 'Usuario'}
+                    {user?.role === 'ORGANIZER' ? 'Organizador' : user?.role === 'ADMIN' ? 'Admin' : 'Usuario'}
                   </span>
                 </div>
 
@@ -170,38 +192,66 @@ export default function Profile() {
                   </div>
                 </div>
 
-                {!instagramConnected && (
-                  <div className="mb-4 p-3 rounded-xl bg-pink-500/10 border border-pink-500/20 text-center">
-                    <p className="text-xs text-gray-400 mb-2">
-                      Conecta tu Instagram para ver tus publicaciones
-                    </p>
-                    <a
-                      href="/login"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-medium"
+                <hr className="border-white/5 my-4" />
+
+                {/* Vincular Instagram */}
+                <div className="mb-4">
+                  <h2 className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
+                    <Link2 className="w-4 h-4 text-neon-cyan" />
+                    Redes Sociales
+                  </h2>
+                  {instagramConnected ? (
+                    <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-pink-500/10 border border-pink-500/20">
+                      <div className="flex items-center gap-3">
+                        <Camera className="w-5 h-5 text-pink-400" />
+                        <span className="text-sm text-pink-400">Instagram</span>
+                      </div>
+                      <button
+                        onClick={async () => {
+                          try {
+                            await socialApi.disconnect('instagram');
+                            setInstagramConnected(false);
+                            setValidation(null);
+                            loadUser();
+                          } catch {}
+                        }}
+                        className="text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
+                      >
+                        Desconectar
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleInstagramLink}
+                      disabled={connecting}
+                      className="w-full flex items-center justify-between px-4 py-3 rounded-xl glass text-gray-400 hover:text-white transition-all cursor-pointer"
                     >
-                      <Camera className="w-3 h-3" />
-                      Iniciar sesión con Instagram
-                    </a>
-                  </div>
-                )}
+                      <div className="flex items-center gap-3">
+                        <Camera className="w-5 h-5" />
+                        <span className="text-sm">Instagram</span>
+                      </div>
+                      <span className="text-xs">{connecting ? 'Conectando...' : 'Vincular'}</span>
+                    </button>
+                  )}
+                </div>
 
                 <hr className="border-white/5 my-4" />
 
                 <div className="space-y-2 text-xs text-gray-500">
                   <div className="flex items-center gap-2">
                     <Clock className="w-3 h-3" />
-                    Miembro desde {format(new Date(user.createdAt), "MMMM yyyy", { locale: es })}
+                    Miembro desde {user?.createdAt ? format(new Date(user.createdAt), "MMMM yyyy", { locale: es }) : ''}
                   </div>
                   <div className="flex items-center gap-2">
                     <Shield className="w-3 h-3" />
-                    Rol: {user.role === 'ORGANIZER' ? 'Organizador' : user.role === 'ADMIN' ? 'Admin' : 'Usuario'}
+                    Rol: {user?.role === 'ORGANIZER' ? 'Organizador' : user?.role === 'ADMIN' ? 'Admin' : 'Usuario'}
                   </div>
                 </div>
 
                 <hr className="border-white/5 my-4" />
 
                 <button
-                  onClick={() => { logout(); navigate('/'); }}
+                  onClick={() => { logout(); window.location.href = '/'; }}
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl glass text-sm text-gray-400 hover:text-neon-pink hover:border-neon-pink/20 transition-all cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
@@ -278,12 +328,12 @@ export default function Profile() {
                         {filter ? 'No hay publicaciones que coincidan con tu búsqueda' : 'No hay publicaciones de Instagram'}
                       </p>
                       {!instagramConnected && (
-                        <a
-                          href="/login"
-                          className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-medium"
+                        <button
+                          onClick={handleInstagramLink}
+                          className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-medium cursor-pointer"
                         >
-                          Conectar Instagram
-                        </a>
+                          Vincular Instagram
+                        </button>
                       )}
                     </div>
                   ) : (

@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus, Mail, Lock, User, Sparkles, Eye, EyeOff, Camera } from 'lucide-react';
-import { authApi } from '../api';
+import { UserPlus, Mail, Lock, User, Sparkles, Eye, EyeOff } from 'lucide-react';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -11,47 +10,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [instagramLoading, setInstagramLoading] = useState(false);
-  const { register, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isAuthenticated) navigate('/');
-  }, [isAuthenticated, navigate]);
-
-  const handleInstagramRegister = useCallback(async () => {
-    setInstagramLoading(true);
-    try {
-      const { data } = await authApi.getInstagramAuthUrl('login');
-      const w = 600, h = 700;
-      const x = window.screenX + (window.innerWidth - w) / 2;
-      const y = window.screenY + (window.innerHeight - h) / 2;
-      window.open(
-        data.url,
-        'instagram-register',
-        `width=${w},height=${h},left=${x},top=${y},popup=1`,
-      );
-    } catch {
-      setError('Error al conectar con Instagram');
-      setInstagramLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
-      if (e.data?.type === 'instagram-login') {
-        setInstagramLoading(false);
-        if (e.data.token && e.data.user) {
-          localStorage.setItem('token', e.data.token);
-          window.location.href = '/profile';
-        } else {
-          setError('Error al registrarse con Instagram');
-        }
-      }
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +18,7 @@ export default function Register() {
     setError('');
     try {
       await register(name, email, password);
-      navigate('/');
+      window.location.href = '/';
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Error al registrarse');
     } finally {
@@ -156,24 +115,6 @@ export default function Register() {
               {loading ? 'Registrando...' : 'Crear Cuenta'}
             </button>
           </form>
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10" />
-            </div>
-            <div className="relative flex justify-center text-xs">
-              <span className="bg-[#0f0f1a] px-3 text-gray-500">o regístrate con</span>
-            </div>
-          </div>
-
-          <button
-            onClick={handleInstagramRegister}
-            disabled={instagramLoading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-orange-500 text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
-          >
-            <Camera className="w-4 h-4" />
-            {instagramLoading ? 'Conectando...' : 'Registrarse con Instagram'}
-          </button>
 
           <p className="text-center text-sm text-gray-500 mt-6">
             ¿Ya tienes cuenta?{' '}
