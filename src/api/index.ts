@@ -45,6 +45,7 @@ export const socialApi = {
   refreshToken: () => api.post('/social/instagram/refresh'),
   syncFeed: (eventId: string) => api.post(`/social/sync/${eventId}`),
   getUserMedia: () => api.get<SocialPost[]>('/social/instagram/media'),
+  getValidation: () => api.get<any>('/social/instagram/validation'),
 };
 
 export const usersApi = {

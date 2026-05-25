@@ -15,6 +15,10 @@ import {
   Shield,
   Search,
   ExternalLink,
+  CheckCircle,
+  AlertTriangle,
+  TrendingUp,
+  Award,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -31,6 +35,7 @@ export default function Profile() {
   const [instagramConnected, setInstagramConnected] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [filter, setFilter] = useState('');
+  const [validation, setValidation] = useState<any>(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -48,6 +53,12 @@ export default function Profile() {
       })
       .catch(() => {});
   }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (instagramConnected) {
+      socialApi.getValidation().then(({ data }) => setValidation(data)).catch(() => {});
+    }
+  }, [instagramConnected]);
 
   useEffect(() => {
     if (tab === 'instagram') {
@@ -101,6 +112,47 @@ export default function Profile() {
                       <Camera className="w-3 h-3" />
                       Instagram conectado
                     </span>
+                  )}
+                  {validation && (
+                    <div className="flex flex-wrap justify-center gap-1 mt-2">
+                      {validation.isProfessional ? (
+                        <span className="inline-flex items-center gap-1 text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                          <CheckCircle className="w-3 h-3" />
+                          Profesional
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-xs text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                          <AlertTriangle className="w-3 h-3" />
+                          Personal
+                        </span>
+                      )}
+                      {validation.hasMinAge ? (
+                        <span className="inline-flex items-center gap-1 text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                          <CheckCircle className="w-3 h-3" />
+                          +6 meses
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-xs text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                          <AlertTriangle className="w-3 h-3" />
+                          Cuenta nueva
+                        </span>
+                      )}
+                      {validation.hasMinPosts ? (
+                        <span className="inline-flex items-center gap-1 text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                          <TrendingUp className="w-3 h-3" />
+                          +5 posts
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-xs text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                          <AlertTriangle className="w-3 h-3" />
+                          Poca actividad
+                        </span>
+                      )}
+                      <span className="inline-flex items-center gap-1 text-xs text-neon-cyan bg-white/5 px-2 py-0.5 rounded-full">
+                        <Award className="w-3 h-3" />
+                        Nivel {validation.level}
+                      </span>
+                    </div>
                   )}
                   <span className="inline-block mt-2 text-xs font-medium text-neon-cyan bg-white/5 px-3 py-1 rounded-full">
                     {user.role === 'ORGANIZER' ? 'Organizador' : user.role === 'ADMIN' ? 'Admin' : 'Usuario'}
