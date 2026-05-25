@@ -80,20 +80,30 @@ Se pueden definir en un archivo `.env` en la raíz del proyecto:
 VITE_API_URL=/api
 ```
 
-## Conexión con redes sociales
+## Conexión con Instagram
 
-El componente `EventDetail` renderiza automáticamente el campo `socialFeed` del evento cuando contiene datos. El feed debe ser un array de objetos con la siguiente estructura:
+### Flujo OAuth con popup
 
-```typescript
-interface SocialPost {
-  media_url?: string;   // URL de imagen/video
-  caption?: string;     // Descripción de la publicación
-  permalink?: string;   // Enlace a la publicación original
-}
-```
+1. En el perfil (`Profile.tsx`), el usuario hace clic en "Conectar con Instagram"
+2. Se abre un popup con la URL de autorización de Instagram
+3. Tras autorizar, Instagram redirige a `/social/callback?code=...`
+4. `SocialCallback.tsx` envía el código al backend, que vincula la cuenta
+5. El popup envía un mensaje `postMessage` al padre indicando éxito
+6. `Profile.tsx` refresca el estado social y recarga los eventos
 
-Estos datos se sincronizan desde el backend a través de la Graph API de Meta.
+### Visualización de publicaciones
+
+- **EventCard**: muestra un contador y miniaturas de las últimas 3 publicaciones
+- **EventDetail**: muestra todas las publicaciones en un grid con imagen, caption y enlace al original
+- Los datos se sincronizan automáticamente al conectar Instagram o manualmente con el botón "Sincronizar Instagram"
+
+### Requisitos
+
+- La cuenta de Instagram debe ser **Business o Creator** (no personal)
+- En Meta Developers, la app debe tener configurado el **redirect URI** exacto
+- En modo Development, el usuario debe ser **tester** en la app de Meta
+- Para producción, se necesita **App Review** (modo Live)
 
 #usuario de prueba
 Email: demo@eventos.cl
-Contraseña: demo123
+Contraseña: 

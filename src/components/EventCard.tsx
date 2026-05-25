@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Globe, Users } from 'lucide-react';
+import { Calendar, MapPin, Globe, Users, Camera } from 'lucide-react';
 import type { Event } from '../types';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -64,6 +64,22 @@ export default function EventCard({ event, featured }: Props) {
           )}
         </div>
 
+        {event.socialFeed && event.socialFeed.length > 0 && (
+          <div className="mt-3 flex gap-1 overflow-x-auto">
+            {event.socialFeed.slice(0, 3).map((post, i) => (
+              <div key={i} className="w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-white/5">
+                {post.media_url ? (
+                  <img src={post.media_url} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Camera className="w-5 h-5 text-pink-400/50" />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center text-[10px] font-bold text-white">
@@ -71,12 +87,20 @@ export default function EventCard({ event, featured }: Props) {
             </div>
             <span className="text-xs text-gray-500">{event.owner?.name}</span>
           </div>
-          {event.attendees && (
-            <div className="flex items-center gap-1 text-xs text-gray-500">
-              <Users className="w-3 h-3" />
-              {event.attendees.length}
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            {event.socialFeed && event.socialFeed.length > 0 && (
+              <span className="flex items-center gap-1 text-xs text-pink-400" title="Publicaciones de Instagram">
+                <Camera className="w-3 h-3" />
+                {event.socialFeed.length}
+              </span>
+            )}
+            {event.attendees && (
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <Users className="w-3 h-3" />
+                {event.attendees.length}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </Link>
