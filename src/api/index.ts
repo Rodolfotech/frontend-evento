@@ -12,6 +12,10 @@ export const authApi = {
     api.get<{ url: string }>('/auth/instagram/url', { params: state ? { state } : {} }),
   instagramLogin: (code: string) =>
     api.post<{ access_token: string; user: User }>('/auth/instagram', { code }),
+  getGoogleAuthUrl: (state?: string) =>
+    api.get<{ url: string }>('/auth/google/url', { params: state ? { state } : {} }),
+  googleLogin: (code: string) =>
+    api.post<{ access_token: string; user: User }>('/auth/google', { code }),
 };
 
 export const eventsApi = {

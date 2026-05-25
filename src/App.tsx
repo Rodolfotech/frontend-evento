@@ -10,6 +10,7 @@ import EventDetail from './pages/EventDetail';
 import CreateEvent from './pages/CreateEvent';
 import Profile from './pages/Profile';
 import SocialCallback from './pages/SocialCallback';
+import GoogleCallback from './pages/GoogleCallback';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -30,6 +31,7 @@ function App() {
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/social/callback" element={<SocialCallback />} />
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/privacidad" element={<PrivacyPolicy />} />
