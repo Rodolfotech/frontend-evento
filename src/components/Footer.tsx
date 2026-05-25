@@ -15,21 +15,21 @@ export default function Footer() {
 
           <div className="flex items-center gap-6">
             <Link
-              to="/privacy"
+              to="/privacidad"
               className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-neon-cyan transition-colors"
             >
               <Shield className="w-3.5 h-3.5" />
               Privacidad
             </Link>
             <Link
-              to="/terms"
+              to="/terminosdelservicio"
               className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-neon-cyan transition-colors"
             >
               <FileText className="w-3.5 h-3.5" />
               Términos
             </Link>
             <Link
-              to="/data-deletion"
+              to="/eliminacion-datos"
               className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-neon-cyan transition-colors"
             >
               <Trash2 className="w-3.5 h-3.5" />

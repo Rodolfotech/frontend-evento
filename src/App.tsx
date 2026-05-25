@@ -32,9 +32,9 @@ function App() {
         <Route path="/social/callback" element={<SocialCallback />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
-        <Route path="/data-deletion" element={<DataDeletion />} />
+        <Route path="/privacidad" element={<PrivacyPolicy />} />
+        <Route path="/terminosdelservicio" element={<TermsOfService />} />
+        <Route path="/eliminacion-datos" element={<DataDeletion />} />
       </Routes>
       <Footer />
       </div>
