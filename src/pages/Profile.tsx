@@ -76,10 +76,27 @@ export default function Profile() {
     }
   };
 
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data?.type === 'instagram-connected') {
+        socialApi.getStatus().then(({ data }) => setSocialStatus(data)).catch(() => {});
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
   const handleInstagramOAuth = async () => {
     try {
       const { data } = await socialApi.getInstagramAuthUrl();
-      window.location.href = data.url;
+      const w = 600, h = 700;
+      const x = window.screenX + (window.innerWidth - w) / 2;
+      const y = window.screenY + (window.innerHeight - h) / 2;
+      window.open(
+        data.url,
+        'instagram-auth',
+        `width=${w},height=${h},left=${x},top=${y},popup=1`,
+      );
     } catch {
       alert('Error al obtener URL de autorización');
     }
