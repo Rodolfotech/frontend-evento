@@ -93,9 +93,6 @@ export default function Profile() {
 
   const handleInstagramLink = async () => {
     setConnecting(true);
-    const popup = window.open('', 'instagram-auth');
-    if (popup) popup.close();
-
     try {
       const { data } = await socialApi.getInstagramAuthUrl();
       const w = 600, h = 700;
@@ -106,31 +103,14 @@ export default function Profile() {
         'instagram-auth',
         `width=${w},height=${h},left=${x},top=${y},popup=1`,
       );
-      // Timeout: si el popup no responde en 2 min, liberamos el estado
       const timer = setTimeout(() => {
         setConnecting(false);
-        try { p?.close(); } catch {}
       }, 120000);
-      // Guardamos el timer para limpiarlo si el mensaje llega
       (window as any).__igTimer = timer;
     } catch {
       setConnecting(false);
     }
   };
-
-  // Escuchar cierre del popup manual
-  useEffect(() => {
-    const checkPopup = setInterval(() => {
-      const popup = window.open('', 'instagram-auth');
-      if (popup && popup.closed) {
-        clearInterval(checkPopup);
-        setConnecting(false);
-        clearTimeout((window as any).__igTimer);
-      }
-      if (popup) popup.close();
-    }, 1000);
-    return () => clearInterval(checkPopup);
-  }, []);
 
   const filteredPosts = instagramPosts.filter((p) =>
     !filter || (p.caption || '').toLowerCase().includes(filter.toLowerCase()),
