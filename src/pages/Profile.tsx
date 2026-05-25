@@ -112,8 +112,8 @@ export default function Profile() {
     }
   };
 
-  const filteredPosts = instagramPosts.filter((p) =>
-    !filter || (p.caption || '').toLowerCase().includes(filter.toLowerCase()),
+  const filteredPosts = instagramPosts.filter((post) =>
+    !filter || (post.caption || '').toLowerCase().includes(filter.toLowerCase()),
   );
 
   const tabs: { key: Tab; label: string; icon: typeof Calendar; count?: number }[] = [
