@@ -223,19 +223,35 @@ export default function Profile() {
                           )}
                         </div>
                       </div>
-                      <button
-                        onClick={async () => {
-                          try {
-                            await socialApi.disconnect('instagram');
-                            setInstagramConnected(false);
-                            setValidation(null);
-                            loadUser();
-                          } catch {}
-                        }}
-                        className="text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
-                      >
-                        Desconectar
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={async () => {
+                            try {
+                              await socialApi.disconnect('instagram');
+                              setInstagramConnected(false);
+                              setValidation(null);
+                              loadUser();
+                              setTimeout(handleInstagramLink, 100);
+                            } catch {}
+                          }}
+                          className="text-xs text-pink-400 hover:text-white transition-colors cursor-pointer"
+                        >
+                          Cambiar cuenta
+                        </button>
+                        <button
+                          onClick={async () => {
+                            try {
+                              await socialApi.disconnect('instagram');
+                              setInstagramConnected(false);
+                              setValidation(null);
+                              loadUser();
+                            } catch {}
+                          }}
+                          className="text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
+                        >
+                          Desconectar
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     <button
