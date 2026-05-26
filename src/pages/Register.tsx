@@ -26,7 +26,7 @@ export default function Register() {
         setGoogleLoading(false);
         if (e.data.token && e.data.user) {
           localStorage.setItem('token', e.data.token);
-          window.location.href = '/';
+          window.location.href = '/profile';
         } else {
           setError('Error al registrarse con Google');
         }
@@ -42,7 +42,7 @@ export default function Register() {
     setError('');
     try {
       await register(name, email, password);
-      window.location.href = '/';
+      window.location.href = '/profile';
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Error al registrarse');
     } finally {

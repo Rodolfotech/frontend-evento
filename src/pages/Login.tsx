@@ -25,7 +25,7 @@ export default function Login() {
         setGoogleLoading(false);
         if (e.data.token && e.data.user) {
           localStorage.setItem('token', e.data.token);
-          window.location.href = '/';
+          window.location.href = '/profile';
         } else {
           setError('Error al iniciar sesión con Google');
         }
@@ -41,7 +41,7 @@ export default function Login() {
     setError('');
     try {
       await login(email, password);
-      window.location.href = '/';
+      window.location.href = '/profile';
     } catch {
       setError('Credenciales inválidas');
     } finally {
