@@ -38,7 +38,6 @@ export default function Profile() {
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [filter, setFilter] = useState('');
   const [validation, setValidation] = useState<any>(null);
-  const [connecting, setConnecting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
@@ -154,7 +153,6 @@ export default function Profile() {
                     connected={instagramConnected}
                     username={instagramUsername}
                     avatar={instagramAvatar}
-                    connecting={connecting}
                     onConnect={() => setShowModal(true)}
                     onDisconnect={async () => {
                       try {

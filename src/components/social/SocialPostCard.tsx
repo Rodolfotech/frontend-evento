@@ -1,4 +1,4 @@
-import { Camera, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { SocialPost } from '../../types';
