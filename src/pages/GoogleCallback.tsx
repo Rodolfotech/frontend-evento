@@ -10,7 +10,7 @@ export default function GoogleCallback() {
 
     if (!code) {
       if (window.opener) {
-        window.opener.postMessage({ type: 'google-login', error: true }, window.location.origin);
+        window.opener.postMessage({ type: 'google-login', error: true }, '*');
         window.close();
       }
       return;
@@ -22,14 +22,14 @@ export default function GoogleCallback() {
         if (window.opener) {
           window.opener.postMessage(
             { type: 'google-login', token: data.access_token, user: data.user },
-            window.location.origin,
+            '*',
           );
           window.close();
         }
       })
       .catch(() => {
         if (window.opener) {
-          window.opener.postMessage({ type: 'google-login', error: true }, window.location.origin);
+          window.opener.postMessage({ type: 'google-login', error: true }, '*');
           window.close();
         }
       });

@@ -70,11 +70,22 @@ export default function Profile() {
 
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
-      if (e.data?.type === 'instagram-connected') {
+      if (e.data?.type === 'instagram-code') {
         clearTimeout((window as any).__igTimer);
-        setConnecting(false);
-        socialApi.getStatus().then(updateInstagramStatus).catch(() => {});
-        loadUser();
+        if (e.data.error) {
+          setConnecting(false);
+          return;
+        }
+        if (e.data.code) {
+          socialApi
+            .instagramCallback(e.data.code)
+            .then(() => {
+              setConnecting(false);
+              return socialApi.getStatus();
+            })
+            .then(updateInstagramStatus)
+            .catch(() => setConnecting(false));
+        }
       }
     };
     window.addEventListener('message', handleMessage);
