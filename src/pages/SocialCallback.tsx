@@ -23,6 +23,17 @@ export default function SocialCallback() {
       return;
     }
 
+    const token = window.opener?.localStorage.getItem('token');
+    if (token) {
+      localStorage.setItem('token', token);
+    }
+
+    if (!localStorage.getItem('token')) {
+      setStatus('error');
+      setErrorMsg('Sesión no encontrada. Intenta de nuevo.');
+      return;
+    }
+
     socialApi
       .instagramCallback(code)
       .then(() => {
@@ -32,7 +43,7 @@ export default function SocialCallback() {
             window.opener.postMessage({ type: 'instagram-connected', success: true }, window.location.origin);
             window.close();
           }
-        }, 1500);
+        }, 2000);
       })
       .catch((err) => {
         setStatus('error');
@@ -54,7 +65,7 @@ export default function SocialCallback() {
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
             </div>
-            <p className="text-green-400">Instagram conectado correctamente</p>
+            <p className="text-green-400">La vinculación ha sido correcta</p>
             <p className="text-gray-500 text-sm mt-2">Cerrando ventana...</p>
           </>
         )}
