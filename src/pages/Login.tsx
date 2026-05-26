@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { LogIn, Mail } from 'lucide-react';
+import { authApi } from '../api';
 import { GlassCard } from '../components/ui/GlassCard';
 import { FormInput } from '../components/ui/FormInput';
 import { PasswordInput } from '../components/ui/PasswordInput';
@@ -20,14 +21,22 @@ export default function Login() {
   const { login } = useAuth();
 
   useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
-      if (e.data?.type === 'google-login') {
-        setGoogleLoading(false);
-        if (e.data.token && e.data.user) {
-          localStorage.setItem('token', e.data.token);
-          window.location.href = '/profile';
-        } else {
+    const handleMessage = async (e: MessageEvent) => {
+      if (e.data?.type === 'google-code') {
+        if (e.data.error) {
+          setGoogleLoading(false);
           setError('Error al iniciar sesión con Google');
+          return;
+        }
+        if (e.data.code) {
+          try {
+            const { data } = await authApi.googleLogin(e.data.code);
+            localStorage.setItem('token', data.access_token);
+            window.location.href = '/profile';
+          } catch {
+            setGoogleLoading(false);
+            setError('Error al iniciar sesión con Google');
+          }
         }
       }
     };
