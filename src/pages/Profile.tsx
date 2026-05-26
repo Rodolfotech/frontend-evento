@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { eventsApi, socialApi, attendeesApi } from '../api';
 import EventCard from '../components/EventCard';
 import { SocialPostCard } from '../components/social/SocialPostCard';
 import { InstagramConnectButton } from '../components/social/InstagramConnectButton';
+import { InstagramLinkModal } from '../components/social/InstagramLinkModal';
 import { InstagramBadges } from '../components/social/InstagramBadges';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
+import { Toast } from '../components/ui/Toast';
 import type { Event, SocialPost } from '../types';
 import {
   Camera,
@@ -37,12 +39,24 @@ export default function Profile() {
   const [filter, setFilter] = useState('');
   const [validation, setValidation] = useState<any>(null);
   const [connecting, setConnecting] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  const updateInstagramStatus = ({ data }: any) => {
+  const updateInstagramStatus = useCallback(({ data }: any) => {
     setInstagramConnected(data.instagram);
     setInstagramUsername(data.instagramUsername);
     setInstagramAvatar(data.instagramAvatar);
-  };
+  }, []);
+
+  const handleLinkSuccess = useCallback(() => {
+    setToast({ message: 'Vinculación con Instagram correcta', type: 'success' });
+    socialApi.getStatus().then(updateInstagramStatus).catch(() => {});
+    loadUser();
+  }, [updateInstagramStatus]);
+
+  const handleLinkError = useCallback((msg: string) => {
+    setToast({ message: msg, type: 'error' });
+  }, []);
 
   const loadUser = () => {
     Promise.all([
@@ -68,30 +82,6 @@ export default function Profile() {
   }, [instagramConnected]);
 
   useEffect(() => {
-    const handleMessage = (e: MessageEvent) => {
-      if (e.data?.type === 'instagram-code') {
-        clearTimeout((window as any).__igTimer);
-        if (e.data.error) {
-          setConnecting(false);
-          return;
-        }
-        if (e.data.code) {
-          socialApi
-            .instagramCallback(e.data.code)
-            .then(() => {
-              setConnecting(false);
-              return socialApi.getStatus();
-            })
-            .then(updateInstagramStatus)
-            .catch(() => setConnecting(false));
-        }
-      }
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
-
-  useEffect(() => {
     if (tab === 'instagram') {
       setLoadingPosts(true);
       socialApi.getUserMedia()
@@ -100,27 +90,6 @@ export default function Profile() {
         .finally(() => setLoadingPosts(false));
     }
   }, [tab]);
-
-  const handleInstagramLink = async () => {
-    setConnecting(true);
-    try {
-      const { data } = await socialApi.getInstagramAuthUrl();
-      const w = 600, h = 700;
-      const x = window.screenX + (window.innerWidth - w) / 2;
-      const y = window.screenY + (window.innerHeight - h) / 2;
-      window.open(
-        data.url,
-        'instagram-auth',
-        `width=${w},height=${h},left=${x},top=${y},popup=1`,
-      );
-      const timer = setTimeout(() => {
-        setConnecting(false);
-      }, 120000);
-      (window as any).__igTimer = timer;
-    } catch {
-      setConnecting(false);
-    }
-  };
 
   const filteredPosts = instagramPosts.filter((post) =>
     !filter || (post.caption || '').toLowerCase().includes(filter.toLowerCase()),
@@ -186,27 +155,22 @@ export default function Profile() {
                     username={instagramUsername}
                     avatar={instagramAvatar}
                     connecting={connecting}
-                    onConnect={() => {
-                      clearTimeout((window as any).__igTimer);
-                      setConnecting(false);
-                      setTimeout(handleInstagramLink, 50);
-                    }}
+                    onConnect={() => setShowModal(true)}
                     onDisconnect={async () => {
                       try {
                         await socialApi.disconnect('instagram');
                         setInstagramConnected(false);
+                        setInstagramUsername(null);
+                        setInstagramAvatar(null);
                         setValidation(null);
                         loadUser();
-                      } catch {}
+                        setToast({ message: 'Instagram desvinculado correctamente', type: 'success' });
+                      } catch {
+                        setToast({ message: 'Error al desvincular Instagram', type: 'error' });
+                      }
                     }}
-                    onChangeAccount={async () => {
-                      try {
-                        await socialApi.disconnect('instagram');
-                        setInstagramConnected(false);
-                        setValidation(null);
-                        loadUser();
-                        setTimeout(handleInstagramLink, 100);
-                      } catch {}
+                    onChangeAccount={() => {
+                      setShowModal(true);
                     }}
                   />
                 </div>
@@ -313,7 +277,7 @@ export default function Profile() {
                       </p>
                       {!instagramConnected && (
                         <button
-                          onClick={handleInstagramLink}
+                          onClick={() => setShowModal(true)}
                           className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-medium cursor-pointer"
                         >
                           Vincular Instagram
@@ -382,6 +346,18 @@ export default function Profile() {
           </div>
         </div>
       </div>
+      <InstagramLinkModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onSuccess={handleLinkSuccess}
+        onError={handleLinkError}
+      />
+      <Toast
+        message={toast?.message || ''}
+        type={toast?.type || 'success'}
+        visible={!!toast}
+        onClose={() => setToast(null)}
+      />
     </div>
   );
 }
