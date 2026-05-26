@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { eventsApi, socialApi, attendeesApi } from '../api';
 import EventCard from '../components/EventCard';
+import { SocialPostCard } from '../components/social/SocialPostCard';
+import { InstagramConnectButton } from '../components/social/InstagramConnectButton';
+import { InstagramBadges } from '../components/social/InstagramBadges';
+import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import type { Event, SocialPost } from '../types';
 import {
   Camera,
@@ -13,11 +17,6 @@ import {
   Clock,
   Shield,
   Search,
-  ExternalLink,
-  CheckCircle,
-  AlertTriangle,
-  TrendingUp,
-  Award,
   Link2,
 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -158,47 +157,7 @@ export default function Profile() {
                       Instagram conectado
                     </span>
                   )}
-                  {validation && (
-                    <div className="flex flex-wrap justify-center gap-1 mt-2">
-                      {validation.isProfessional ? (
-                        <span className="inline-flex items-center gap-1 text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                          <CheckCircle className="w-3 h-3" />
-                          Profesional
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-xs text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
-                          <AlertTriangle className="w-3 h-3" />
-                          Personal
-                        </span>
-                      )}
-                      {validation.hasMinAge ? (
-                        <span className="inline-flex items-center gap-1 text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                          <CheckCircle className="w-3 h-3" />
-                          +6 meses
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-xs text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
-                          <AlertTriangle className="w-3 h-3" />
-                          Cuenta nueva
-                        </span>
-                      )}
-                      {validation.hasMinPosts ? (
-                        <span className="inline-flex items-center gap-1 text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                          <TrendingUp className="w-3 h-3" />
-                          +5 posts
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-xs text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
-                          <AlertTriangle className="w-3 h-3" />
-                          Poca actividad
-                        </span>
-                      )}
-                      <span className="inline-flex items-center gap-1 text-xs text-neon-cyan bg-white/5 px-2 py-0.5 rounded-full">
-                        <Award className="w-3 h-3" />
-                        Nivel {validation.level}
-                      </span>
-                    </div>
-                  )}
+                  <InstagramBadges validation={validation} />
                   <span className="inline-block mt-2 text-xs font-medium text-neon-cyan bg-white/5 px-3 py-1 rounded-full">
                     {user?.role === 'ORGANIZER' ? 'Organizador' : user?.role === 'ADMIN' ? 'Admin' : 'Usuario'}
                   </span>
@@ -217,73 +176,39 @@ export default function Profile() {
 
                 <hr className="border-white/5 my-4" />
 
-                {/* Vincular Instagram */}
                 <div className="mb-4">
                   <h2 className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
                     <Link2 className="w-4 h-4 text-neon-cyan" />
                     Redes Sociales
                   </h2>
-                  {instagramConnected ? (
-                    <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-pink-500/10 border border-pink-500/20">
-                      <div className="flex items-center gap-3">
-                        {instagramAvatar ? (
-                          <img src={instagramAvatar} alt="" className="w-8 h-8 rounded-full" />
-                        ) : (
-                          <Camera className="w-5 h-5 text-pink-400" />
-                        )}
-                        <div>
-                          <span className="text-sm text-pink-400 block">Instagram</span>
-                          {instagramUsername && (
-                            <span className="text-xs text-gray-400">@{instagramUsername}</span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={async () => {
-                            try {
-                              await socialApi.disconnect('instagram');
-                              setInstagramConnected(false);
-                              setValidation(null);
-                              loadUser();
-                              setTimeout(handleInstagramLink, 100);
-                            } catch {}
-                          }}
-                          className="text-xs text-pink-400 hover:text-white transition-colors cursor-pointer"
-                        >
-                          Cambiar cuenta
-                        </button>
-                        <button
-                          onClick={async () => {
-                            try {
-                              await socialApi.disconnect('instagram');
-                              setInstagramConnected(false);
-                              setValidation(null);
-                              loadUser();
-                            } catch {}
-                          }}
-                          className="text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
-                        >
-                          Desconectar
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        clearTimeout((window as any).__igTimer);
-                        setConnecting(false);
-                        setTimeout(handleInstagramLink, 50);
-                      }}
-                      className="w-full flex items-center justify-between px-4 py-3 rounded-xl glass text-gray-400 hover:text-white transition-all cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Camera className="w-5 h-5" />
-                        <span className="text-sm">Instagram</span>
-                      </div>
-                      <span className="text-xs">{connecting ? 'Reintentar...' : 'Vincular'}</span>
-                    </button>
-                  )}
+                  <InstagramConnectButton
+                    connected={instagramConnected}
+                    username={instagramUsername}
+                    avatar={instagramAvatar}
+                    connecting={connecting}
+                    onConnect={() => {
+                      clearTimeout((window as any).__igTimer);
+                      setConnecting(false);
+                      setTimeout(handleInstagramLink, 50);
+                    }}
+                    onDisconnect={async () => {
+                      try {
+                        await socialApi.disconnect('instagram');
+                        setInstagramConnected(false);
+                        setValidation(null);
+                        loadUser();
+                      } catch {}
+                    }}
+                    onChangeAccount={async () => {
+                      try {
+                        await socialApi.disconnect('instagram');
+                        setInstagramConnected(false);
+                        setValidation(null);
+                        loadUser();
+                        setTimeout(handleInstagramLink, 100);
+                      } catch {}
+                    }}
+                  />
                 </div>
 
                 <hr className="border-white/5 my-4" />
@@ -378,7 +303,7 @@ export default function Profile() {
 
                   {loadingPosts ? (
                     <div className="flex items-center justify-center py-20">
-                      <div className="w-8 h-8 border-2 border-neon-pink border-t-transparent rounded-full animate-spin" />
+                      <LoadingSpinner color="pink" />
                     </div>
                   ) : filteredPosts.length === 0 ? (
                     <div className="glass rounded-2xl p-16 text-center">
@@ -398,38 +323,7 @@ export default function Profile() {
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {filteredPosts.map((post) => (
-                        <div key={post.id} className="glass rounded-xl overflow-hidden group">
-                          {post.media_url && (
-                            <div className="aspect-square overflow-hidden">
-                              <img
-                                src={post.media_url}
-                                alt=""
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                              />
-                            </div>
-                          )}
-                          <div className="p-4">
-                            {post.caption && (
-                              <p className="text-sm text-gray-400 mb-2 line-clamp-3">{post.caption}</p>
-                            )}
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs text-gray-500">
-                                {format(new Date(post.timestamp), "dd MMM yyyy", { locale: es })}
-                              </span>
-                              {post.permalink && (
-                                <a
-                                  href={post.permalink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-1 text-xs text-neon-cyan hover:underline"
-                                >
-                                  <ExternalLink className="w-3 h-3" />
-                                  Ver en Instagram
-                                </a>
-                              )}
-                            </div>
-                          </div>
-                        </div>
+                        <SocialPostCard key={post.id} post={post} />
                       ))}
                     </div>
                   )}
