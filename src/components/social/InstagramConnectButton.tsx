@@ -1,11 +1,9 @@
 import { Camera } from 'lucide-react';
-import { socialApi } from '../../api';
 
 interface InstagramConnectButtonProps {
   connected: boolean;
   username: string | null;
   avatar: string | null;
-  connecting: boolean;
   onConnect: () => void;
   onDisconnect: () => void;
   onChangeAccount: () => void;
@@ -15,7 +13,6 @@ export function InstagramConnectButton({
   connected,
   username,
   avatar,
-  connecting,
   onConnect,
   onDisconnect,
   onChangeAccount,
@@ -61,7 +58,7 @@ export function InstagramConnectButton({
         <Camera className="w-5 h-5" />
         <span className="text-sm">Instagram</span>
       </div>
-      <span className="text-xs">{connecting ? 'Reintentar...' : 'Vincular'}</span>
+      <span className="text-xs">Vincular</span>
     </button>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import api from '../api/client';
-import { Lock, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { GlassCard } from '../components/ui/GlassCard';
 import { AuthHeader } from '../components/auth/AuthHeader';
 import { PasswordInput } from '../components/ui/PasswordInput';
