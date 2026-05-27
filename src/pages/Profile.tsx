@@ -86,7 +86,7 @@ export default function Profile() {
       setLoadingPosts(true);
       socialApi.getUserMedia()
         .then(({ data }) => setInstagramPosts(data))
-        .catch(() => {})
+        .catch(() => setToast({ message: 'Error al cargar publicaciones de Instagram. Intenta de nuevo.', type: 'error' }))
         .finally(() => setLoadingPosts(false));
     }
   }, [tab]);
@@ -250,10 +250,11 @@ export default function Profile() {
                     </div>
                     <button
                       onClick={() => {
+                        setToast(null);
                         setLoadingPosts(true);
                         socialApi.getUserMedia()
                           .then(({ data }) => setInstagramPosts(data))
-                          .catch(() => {})
+                          .catch(() => setToast({ message: 'Error al actualizar publicaciones de Instagram. Verifica tu conexión e intenta de nuevo.', type: 'error' }))
                           .finally(() => setLoadingPosts(false));
                       }}
                       disabled={loadingPosts}
