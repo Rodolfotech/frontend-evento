@@ -51,6 +51,7 @@ export default function Profile() {
     setToast({ message: 'Vinculación con Instagram correcta', type: 'success' });
     socialApi.getStatus().then(updateInstagramStatus).catch(() => {});
     loadUser();
+    setTab('instagram');
   }, [updateInstagramStatus]);
 
   const handleLinkError = useCallback((msg: string) => {
