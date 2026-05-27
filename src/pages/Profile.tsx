@@ -51,6 +51,7 @@ export default function Profile() {
     setToast({ message: 'Vinculación con Instagram correcta', type: 'success' });
     socialApi.getStatus().then(updateInstagramStatus).catch(() => {});
     loadUser();
+    setTab('instagram');
   }, [updateInstagramStatus]);
 
   const handleLinkError = useCallback((msg: string) => {
@@ -85,7 +86,7 @@ export default function Profile() {
       setLoadingPosts(true);
       socialApi.getUserMedia()
         .then(({ data }) => setInstagramPosts(data))
-        .catch(() => {})
+        .catch(() => setToast({ message: 'Error al cargar publicaciones de Instagram. Intenta de nuevo.', type: 'error' }))
         .finally(() => setLoadingPosts(false));
     }
   }, [tab]);
@@ -249,10 +250,11 @@ export default function Profile() {
                     </div>
                     <button
                       onClick={() => {
+                        setToast(null);
                         setLoadingPosts(true);
                         socialApi.getUserMedia()
                           .then(({ data }) => setInstagramPosts(data))
-                          .catch(() => {})
+                          .catch(() => setToast({ message: 'Error al actualizar publicaciones de Instagram. Verifica tu conexión e intenta de nuevo.', type: 'error' }))
                           .finally(() => setLoadingPosts(false));
                       }}
                       disabled={loadingPosts}
