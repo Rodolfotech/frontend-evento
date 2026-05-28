@@ -16,6 +16,8 @@ export interface Event {
   description: string;
   content?: string;
   date: string;
+  publicationStartDate?: string;
+  publicationEndDate?: string;
   locationName?: string;
   address?: string;
   city?: string;
@@ -58,12 +60,15 @@ export interface CreateEventPayload {
   title: string;
   description: string;
   date: string;
+  publicationStartDate?: string;
+  publicationEndDate?: string;
   locationName?: string;
   address?: string;
   city?: string;
   isOnline: boolean;
   imageUrl?: string;
   categoryId?: string;
+  categoryName?: string;
 }
 
 export interface SocialConnectPayload {
