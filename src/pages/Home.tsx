@@ -61,11 +61,10 @@ export default function Home() {
               Descubre experiencias únicas
             </div>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-              <span className="text-gradient">Eventos</span>{' '}
-              <span className="text-white">que inspiran</span>
+              <span className="text-gradient">Crea tu panorama</span>
             </h1>
             <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
-              Encuentra conciertos, festivales, experiencias turísticas y más.
+              Encuentra conciertos, experiencias turísticas y más.
               Conecta con tus redes sociales y comparte cada momento.
             </p>
 

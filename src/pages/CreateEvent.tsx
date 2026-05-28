@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { eventsApi, socialApi, attendeesApi } from '../api';
 import EventCard from '../components/EventCard';
 import CreateEventForm from '../components/events/CreateEventForm';
+import { InstagramPostPublisher } from '../components/social/InstagramPostPublisher';
 import type { Event, SocialPost } from '../types';
 import {
   Camera,
@@ -12,13 +13,10 @@ import {
   RefreshCw,
   CalendarCheck,
   Search,
-  ExternalLink,
   ArrowLeft,
   X,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
 
 type Tab = 'myevents' | 'registered' | 'instagram';
 
@@ -204,38 +202,15 @@ export default function CreateEventPage() {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {filteredPosts.map((post) => (
-                    <div key={post.id} className="glass rounded-xl overflow-hidden group">
-                      {post.media_url && (
-                        <div className="aspect-square overflow-hidden">
-                          <img
-                            src={post.media_url}
-                            alt=""
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                        </div>
-                      )}
-                      <div className="p-4">
-                        {post.caption && (
-                          <p className="text-sm text-gray-400 mb-2 line-clamp-3">{post.caption}</p>
-                        )}
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-gray-500">
-                            {format(new Date(post.timestamp), "dd MMM yyyy", { locale: es })}
-                          </span>
-                          {post.permalink && (
-                            <a
-                              href={post.permalink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1 text-xs text-neon-cyan hover:underline"
-                            >
-                              <ExternalLink className="w-3 h-3" />
-                              Ver en Instagram
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                    <InstagramPostPublisher
+                      key={post.id}
+                      post={post}
+                      onPublished={() => {
+                        socialApi.getUserMedia()
+                          .then(({ data }) => setInstagramPosts(data))
+                          .catch(() => {});
+                      }}
+                    />
                   ))}
                 </div>
               )}
