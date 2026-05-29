@@ -37,9 +37,6 @@ export default function EventCard({ event, featured }: Props) {
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
               <h3 className="text-sm font-semibold text-white line-clamp-1">{event.title}</h3>
-              {event.category && (
-                <span className="text-xs text-neon-cyan">{event.category.name}</span>
-              )}
             </div>
             {event.isOnline && (
               <Globe className="w-4 h-4 text-neon-cyan shrink-0 mt-0.5" />
