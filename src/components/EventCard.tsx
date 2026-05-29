@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Globe, Users, Camera, Heart } from 'lucide-react';
+import { Calendar, MapPin, Globe, Users, Camera } from 'lucide-react';
 import type { Event } from '../types';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -22,46 +22,13 @@ export default function EventCard({ event, featured }: Props) {
 
   if (event.imageUrl) {
     return (
-      <Link
-        to={`/events/${event.slug}`}
-        className="group block glass rounded-2xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:glow-purple"
-      >
-        <div className="aspect-square overflow-hidden">
-          <img
-            src={event.imageUrl}
-            alt={event.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        </div>
-        <div className="p-4 space-y-3">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-sm font-semibold text-white line-clamp-1">{event.title}</h3>
-              {event.category && (
-                <span className="text-xs text-neon-cyan">{event.category.name}</span>
-              )}
-            </div>
-            {event.isOnline && (
-              <Globe className="w-4 h-4 text-neon-cyan shrink-0 mt-0.5" />
-            )}
-          </div>
-          <p className="text-xs text-gray-400 line-clamp-2">{event.description}</p>
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-3 h-3" />
-              <span>{format(new Date(event.date), "d MMM yyyy", { locale: es })}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              {event.attendees && (
-                <span className="flex items-center gap-1">
-                  <Heart className="w-3 h-3" />
-                  {event.attendees.length}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </Link>
+      <div className="aspect-square rounded-xl overflow-hidden">
+        <img
+          src={event.imageUrl}
+          alt={event.title}
+          className="w-full h-full object-cover"
+        />
+      </div>
     );
   }
 
