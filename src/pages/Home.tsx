@@ -1,52 +1,29 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { eventsApi, categoriesApi } from '../api';
+import { eventsApi } from '../api';
 import EventCard from '../components/EventCard';
-import type { Event, Category } from '../types';
+import type { Event } from '../types';
 import {
   Sparkles,
   Calendar,
-  MapPin,
-  Music,
-  Mountain,
-  Palette,
-  UtensilsCrossed,
-  Trophy,
   ArrowRight,
   Search,
 } from 'lucide-react';
 
-const categoryIcons: Record<string, typeof Music> = {
-  Música: Music,
-  Turismo: Mountain,
-  Arte: Palette,
-  Gastronomía: UtensilsCrossed,
-  Deportes: Trophy,
-};
-
-const categoryGradients: Record<string, string> = {
-  Música: 'from-violet-600/20 to-purple-600/20 border-violet-500/30',
-  Turismo: 'from-emerald-600/20 to-teal-600/20 border-emerald-500/30',
-  Arte: 'from-pink-600/20 to-rose-600/20 border-pink-500/30',
-  Gastronomía: 'from-orange-600/20 to-amber-600/20 border-orange-500/30',
-  Deportes: 'from-blue-600/20 to-cyan-600/20 border-blue-500/30',
-};
-
 export default function Home() {
   const [events, setEvents] = useState<Event[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
     eventsApi.getAll().then(({ data }) => setEvents(data));
-    categoriesApi.getAll().then(({ data }) => setCategories(data));
   }, []);
 
-  const featured = events[0];
-
-  const filteredCategories = categories.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredEvents = search
+    ? events.filter((e) =>
+        e.title.toLowerCase().includes(search.toLowerCase()) ||
+        e.description.toLowerCase().includes(search.toLowerCase())
+      )
+    : events;
 
   return (
     <div className="min-h-screen pt-16">
@@ -86,47 +63,18 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative max-w-md mx-auto mb-12">
+          <div className="relative max-w-md mx-auto">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
             <input
               type="text"
-              placeholder="Buscar por categoría..."
+              placeholder="Buscar publicaciones..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-12 pr-4 py-3 rounded-xl glass text-sm"
             />
           </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-16">
-            {filteredCategories.map((cat) => {
-              const Icon = categoryIcons[cat.name] || MapPin;
-              const grad = categoryGradients[cat.name] || 'from-gray-600/20 to-slate-600/20 border-gray-500/30';
-              return (
-                <Link
-                  key={cat.id}
-                  to={`/events?category=${cat.id}`}
-                  className={`flex flex-col items-center gap-3 p-4 rounded-xl bg-gradient-to-br ${grad} border transition-all hover:scale-105 hover:glow-purple`}
-                >
-                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-sm font-medium text-white">{cat.name}</span>
-                </Link>
-              );
-            })}
-          </div>
         </div>
       </section>
-
-      {featured && (
-        <section className="max-w-7xl mx-auto px-4 mb-16">
-          <h2 className="text-2xl font-bold tracking-tight text-white mb-6 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-neon-cyan" />
-            Destacado
-          </h2>
-          <EventCard event={featured} featured />
-        </section>
-      )}
 
       <section className="max-w-7xl mx-auto px-4 pb-20">
         <div className="flex items-center justify-between mb-6">
@@ -141,7 +89,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {events.slice(1, 18).map((event) => (
+          {filteredEvents.slice(0, 18).map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
         </div>

@@ -15,8 +15,16 @@ import {
   Search,
   ArrowLeft,
   X,
+  Clock,
+  PauseCircle,
+  PlayCircle,
+  Trash2,
+  Edit3,
+  Check,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 type Tab = 'myevents' | 'registered' | 'instagram';
 
@@ -209,9 +217,31 @@ export default function CreateEventPage() {
                         socialApi.getUserMedia()
                           .then(({ data }) => setInstagramPosts(data))
                           .catch(() => {});
+                        loadUser();
                       }}
                     />
                   ))}
+                </div>
+              )}
+
+              {myEvents.filter(e => e.imageUrl).length > 0 && (
+                <div className="mt-10">
+                  <h3 className="text-lg font-semibold text-white mb-4">Publicaciones activas</h3>
+                  <div className="space-y-3">
+                    {myEvents.filter(e => e.imageUrl).map((event) => {
+                      const now = new Date();
+                      const endDate = event.publicationEndDate ? new Date(event.publicationEndDate) : null;
+                      const isActive = !endDate || endDate >= now;
+                      return (
+                        <PublishedEventCard
+                          key={event.id}
+                          event={event}
+                          isActive={isActive}
+                          onUpdate={loadUser}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </div>
@@ -319,6 +349,158 @@ export default function CreateEventPage() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isActive: boolean; onUpdate: () => void }) {
+  const [editing, setEditing] = useState(false);
+  const [startDate, setStartDate] = useState(
+    event.publicationStartDate
+      ? format(new Date(event.publicationStartDate), "yyyy-MM-dd'T'HH:mm")
+      : ''
+  );
+  const [endDate, setEndDate] = useState(
+    event.publicationEndDate
+      ? format(new Date(event.publicationEndDate), "yyyy-MM-dd'T'HH:mm")
+      : ''
+  );
+  const [loading, setLoading] = useState(false);
+
+  const handleUpdateDates = async () => {
+    if (!startDate || !endDate) return;
+    setLoading(true);
+    try {
+      await eventsApi.update(event.id, {
+        publicationStartDate: new Date(startDate).toISOString(),
+        publicationEndDate: new Date(endDate).toISOString(),
+      });
+      setEditing(false);
+      onUpdate();
+    } catch {
+      /* noop */
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStop = async () => {
+    setLoading(true);
+    try {
+      await eventsApi.update(event.id, {
+        publicationEndDate: new Date().toISOString(),
+      });
+      onUpdate();
+    } catch {
+      /* noop */
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('¿Eliminar esta publicación de la web?')) return;
+    setLoading(true);
+    try {
+      await eventsApi.delete(event.id);
+      onUpdate();
+    } catch {
+      /* noop */
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="glass rounded-xl p-3 flex items-center gap-3">
+      <div className="w-14 h-14 shrink-0 rounded-lg overflow-hidden">
+        <img src={event.imageUrl!} alt="" className="w-full h-full object-cover" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-white truncate">{event.title}</p>
+        <div className={`flex items-center gap-2 text-xs mt-0.5 ${isActive ? 'text-green-400' : 'text-red-400'}`}>
+          <Clock className="w-3 h-3" />
+          {isActive ? 'Publicado' : 'Detenido'}
+        </div>
+        {editing ? (
+          <div className="flex items-center gap-2 mt-2">
+            <input
+              type="datetime-local"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="flex-1 px-2 py-1 rounded text-[11px] bg-white/5 border border-white/10 text-white"
+            />
+            <span className="text-[11px] text-gray-500">→</span>
+            <input
+              type="datetime-local"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="flex-1 px-2 py-1 rounded text-[11px] bg-white/5 border border-white/10 text-white"
+            />
+            <button
+              onClick={handleUpdateDates}
+              disabled={loading}
+              className="p-1.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-all cursor-pointer"
+            >
+              <Check className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        ) : (
+          <p className="text-[11px] text-gray-500 mt-0.5">
+            {event.publicationStartDate
+              ? format(new Date(event.publicationStartDate), "d MMM HH:mm", { locale: es })
+              : '—'} → {event.publicationEndDate
+              ? format(new Date(event.publicationEndDate), "d MMM HH:mm", { locale: es })
+              : '—'}
+          </p>
+        )}
+      </div>
+      <div className="flex items-center gap-1 shrink-0">
+        {editing ? (
+          <button
+            onClick={() => setEditing(false)}
+            className="p-1.5 rounded-lg glass text-gray-400 hover:text-white transition-all cursor-pointer"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={() => setEditing(true)}
+              className="p-1.5 rounded-lg glass text-gray-400 hover:text-neon-cyan transition-all cursor-pointer"
+              title="Editar fechas"
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+            </button>
+            {isActive ? (
+              <button
+                onClick={handleStop}
+                disabled={loading}
+                className="p-1.5 rounded-lg glass text-gray-400 hover:text-red-400 transition-all cursor-pointer"
+                title="Detener publicación"
+              >
+                <PauseCircle className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <button
+                onClick={() => setEditing(true)}
+                className="p-1.5 rounded-lg glass text-gray-400 hover:text-green-400 transition-all cursor-pointer"
+                title="Reanudar publicación (editar fechas)"
+              >
+                <PlayCircle className="w-3.5 h-3.5" />
+              </button>
+            )}
+            <button
+              onClick={handleDelete}
+              disabled={loading}
+              className="p-1.5 rounded-lg glass text-gray-400 hover:text-red-400 transition-all cursor-pointer"
+              title="Eliminar"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
