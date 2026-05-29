@@ -41,7 +41,7 @@ export default function Home() {
               <span className="text-gradient">Crea tu panorama</span>
             </h1>
             <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
-              Encuentra conciertos, experiencias turísticas y más.
+              Encuentra eventos de la comunidad como conciertos, experiencias turísticas y más.
               Conecta con tus redes sociales y comparte cada momento.
             </p>
 
