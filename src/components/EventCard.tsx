@@ -27,7 +27,16 @@ export default function EventCard({ event, featured }: Props) {
         featured ? 'glow-cyan' : 'glass hover:glow-purple'
       }`}
     >
-      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-20 group-hover:opacity-30 transition-opacity`} />
+      {event.imageUrl && (
+        <div className="h-36 overflow-hidden">
+          <img
+            src={event.imageUrl}
+            alt=""
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+      )}
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} ${event.imageUrl ? 'opacity-40' : 'opacity-20'} group-hover:opacity-30 transition-opacity`} />
       <div className="relative p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
