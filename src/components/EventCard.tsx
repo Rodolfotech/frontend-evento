@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Globe, Users, Camera, Heart } from 'lucide-react';
+import { Calendar, MapPin, Globe, Users, Camera } from 'lucide-react';
 import type { Event } from '../types';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -22,37 +22,13 @@ export default function EventCard({ event, featured }: Props) {
 
   if (event.imageUrl) {
     return (
-      <Link
-        to={`/events/${event.slug}`}
-        className="group block glass rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:glow-purple"
-      >
-        <div className="flex gap-3 p-3">
-          <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden">
-            <img
-              src={event.imageUrl}
-              alt={event.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-          <div className="flex-1 min-w-0 space-y-1">
-            <h3 className="text-xs font-semibold text-white line-clamp-1">{event.title}</h3>
-            <p className="text-[11px] text-gray-400 line-clamp-2 leading-relaxed">{event.description}</p>
-            <div className="flex items-center gap-2 text-[11px] text-gray-500">
-              <Calendar className="w-3 h-3 shrink-0" />
-              <span className="truncate">{format(new Date(event.date), "d MMM yyyy", { locale: es })}</span>
-              {event.attendees && (
-                <span className="flex items-center gap-1 ml-auto">
-                  <Heart className="w-3 h-3" />
-                  {event.attendees.length}
-                </span>
-              )}
-            </div>
-          </div>
-          {event.isOnline && (
-            <Globe className="w-3.5 h-3.5 text-neon-cyan shrink-0 mt-0.5" />
-          )}
-        </div>
-      </Link>
+      <div className="aspect-square rounded-xl overflow-hidden">
+        <img
+          src={event.imageUrl}
+          alt={event.title}
+          className="w-full h-full object-cover"
+        />
+      </div>
     );
   }
 
