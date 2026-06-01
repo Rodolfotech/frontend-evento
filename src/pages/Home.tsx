@@ -8,6 +8,8 @@ import {
   Calendar,
   ArrowRight,
   Search,
+  MapPin,
+  MapPinned,
 } from 'lucide-react';
 
 export default function Home() {
@@ -15,7 +17,7 @@ export default function Home() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    eventsApi.getAll().then(({ data }) => setEvents(data));
+    eventsApi.getAll().then(({ data: { data } }) => setEvents(data));
   }, []);
 
   const filteredEvents = search
@@ -73,6 +75,34 @@ export default function Home() {
               className="w-full pl-12 pr-4 py-3 rounded-xl glass text-sm"
             />
           </div>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 pb-12">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <MapPinned className="w-6 h-6 text-neon-cyan" />
+            Explora por comuna
+          </h2>
+          <Link
+            to="/events"
+            className="text-sm text-neon-cyan hover:underline flex items-center gap-1"
+          >
+            Ver todas <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
+        <div className="flex flex-wrap gap-2" role="list" aria-label="Comunas de La Araucanía">
+          {['Temuco', 'Pucón', 'Villarrica', 'Lautaro', 'Angol', 'Padre Las Casas', 'Nueva Imperial', 'Victoria'].map((comuna) => (
+            <Link
+              key={comuna}
+              to={`/events?comuna=${encodeURIComponent(comuna)}`}
+              role="listitem"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-sm text-gray-300 hover:text-white hover:glow-purple transition-all"
+            >
+              <MapPin className="w-3 h-3 text-neon-cyan" />
+              {comuna}
+            </Link>
+          ))}
         </div>
       </section>
 

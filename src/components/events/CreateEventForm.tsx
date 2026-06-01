@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { eventsApi, categoriesApi } from '../../api';
 import type { Category } from '../../types';
+import { COMUNAS } from '../../constants/comunas';
 import {
   Sparkles,
   Calendar,
@@ -174,20 +175,24 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              <label htmlFor="comuna" className="block text-sm font-medium text-gray-300 mb-1.5">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-neon-pink" />
-                  Ciudad
+                  Comuna
                 </div>
               </label>
-              <input
-                type="text"
+              <select
+                id="comuna"
                 name="city"
                 value={form.city}
                 onChange={handleChange}
                 className="w-full px-4 py-2.5 rounded-xl text-sm"
-                placeholder="Ej: Pucón"
-              />
+              >
+                <option value="">Selecciona una comuna</option>
+                {COMUNAS.map((comuna) => (
+                  <option key={comuna} value={comuna}>{comuna}</option>
+                ))}
+              </select>
             </div>
           </div>
 
