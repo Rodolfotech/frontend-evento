@@ -56,6 +56,13 @@ export interface SocialPost {
   media_type?: string;
 }
 
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export interface CreateEventPayload {
   title: string;
   description: string;

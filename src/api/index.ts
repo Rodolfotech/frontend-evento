@@ -1,5 +1,5 @@
 import api from './client';
-import type { User, Event, Category, CreateEventPayload, SocialConnectPayload, SocialPost } from '../types';
+import type { User, Event, Category, CreateEventPayload, SocialConnectPayload, SocialPost, PaginatedResponse } from '../types';
 
 export const authApi = {
   login: (email: string, password: string) =>
@@ -19,8 +19,8 @@ export const authApi = {
 };
 
 export const eventsApi = {
-  getAll: (params?: { dateFrom?: string; dateTo?: string; categoryId?: string; city?: string }) =>
-    api.get<Event[]>('/events', { params }),
+  getAll: (params?: { dateFrom?: string; dateTo?: string; categoryId?: string; city?: string; page?: number; limit?: number }) =>
+    api.get<PaginatedResponse<Event>>('/events', { params }),
   getBySlug: (slug: string) => api.get<Event>(`/events/${slug}`),
   create: (data: CreateEventPayload) => api.post<Event>('/events', data),
   update: (id: string, data: Partial<CreateEventPayload>) => api.put<Event>(`/events/${id}`, data),
