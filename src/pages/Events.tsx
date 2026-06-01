@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { eventsApi, categoriesApi } from '../api';
+import { eventsApi } from '../api';
 import EventCard from '../components/EventCard';
-import type { Event, Category } from '../types';
-import { COMUNAS, REGION } from '../constants/comunas';
+import type { Event } from '../types';
+import { COMUNAS } from '../constants/comunas';
 import { Calendar, Search, MapPin, ChevronLeft, ChevronRight, MapPinned } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -85,7 +85,6 @@ function Pagination({ page, totalPages, onPageChange }: {
 export default function Events() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [events, setEvents] = useState<Event[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState('');
   const [selectedComuna, setSelectedComuna] = useState(searchParams.get('comuna') || '');
   const [dateFrom, setDateFrom] = useState('');
@@ -94,10 +93,6 @@ export default function Events() {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    categoriesApi.getAll().then(({ data }) => setCategories(data));
-  }, []);
 
   const defaultDateFrom = useMemo(() => {
     if (dateFrom || dateTo) return '';
