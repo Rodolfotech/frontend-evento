@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -16,6 +17,9 @@ import ResetPassword from './pages/ResetPassword';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import DataDeletion from './pages/DataDeletion';
+import { ADMIN_ROUTE } from './constants/admin';
+
+const Admin = lazy(() => import('./pages/Admin'));
 
 function Layout() {
   return (
@@ -32,24 +36,31 @@ function Layout() {
 function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route path="/auth/google/callback" element={<GoogleCallback />} />
-        <Route path="/social/callback" element={<SocialCallback />} />
-        <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/events/:slug" element={<EventDetail />} />
-          <Route path="/create-event" element={<CreateEvent />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/privacidad" element={<PrivacyPolicy />} />
-          <Route path="/terminosdelservicio" element={<TermsOfService />} />
-          <Route path="/eliminacion-datos" element={<DataDeletion />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={
+        <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-neon-cyan border-t-transparent rounded-full animate-spin" />
+        </div>
+      }>
+        <Routes>
+          <Route path="/auth/google/callback" element={<GoogleCallback />} />
+          <Route path="/social/callback" element={<SocialCallback />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/events/:slug" element={<EventDetail />} />
+            <Route path="/create-event" element={<CreateEvent />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/privacidad" element={<PrivacyPolicy />} />
+            <Route path="/terminosdelservicio" element={<TermsOfService />} />
+            <Route path="/eliminacion-datos" element={<DataDeletion />} />
+            <Route path={ADMIN_ROUTE} element={<Admin />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </AuthProvider>
   );
 }

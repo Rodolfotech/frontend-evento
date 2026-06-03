@@ -1,6 +1,8 @@
 import { ExternalLink } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useAuth } from '../../context/AuthContext';
+import { adminApi } from '../../api';
 import type { SocialPost } from '../../types';
 
 interface SocialPostCardProps {
@@ -8,6 +10,14 @@ interface SocialPostCardProps {
 }
 
 export function SocialPostCard({ post }: SocialPostCardProps) {
+  const { isAuthenticated } = useAuth();
+
+  const handleInstagramClick = () => {
+    if (isAuthenticated && post.permalink) {
+      adminApi.trackInstagramClick().catch(() => {});
+    }
+  };
+
   return (
     <div className="glass rounded-xl overflow-hidden group">
       {post.media_url && (
@@ -32,6 +42,7 @@ export function SocialPostCard({ post }: SocialPostCardProps) {
               href={post.permalink}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleInstagramClick}
               className="flex items-center gap-1 text-xs text-neon-cyan hover:underline"
             >
               <ExternalLink className="w-3 h-3" />

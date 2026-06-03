@@ -9,6 +9,7 @@ interface AuthContextType {
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -16,22 +17,30 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        setUser({ id: payload.sub, email: payload.email } as User);
-        usersApi.getProfile().then(({ data }) => setUser(data)).catch((err) => {
+        usersApi.getProfile().then(({ data }) => {
+          setUser(data);
+          setLoading(false);
+        }).catch((err) => {
           if (err?.response?.status === 401) {
             setToken(null);
             localStorage.removeItem('token');
           }
+          setLoading(false);
         });
       } catch {
         setToken(null);
         localStorage.removeItem('token');
+        setLoading(false);
       }
+    } else {
+      setUser(null);
+      setLoading(false);
     }
   }, [token]);
 
@@ -56,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={{ user, token, login, register, logout, isAuthenticated: !!token, loading }}>
       {children}
     </AuthContext.Provider>
   );

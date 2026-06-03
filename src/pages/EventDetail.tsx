@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { eventsApi, attendeesApi, socialApi } from '../api';
+import { eventsApi, attendeesApi, socialApi, adminApi } from '../api';
 import { useAuth } from '../context/AuthContext';
 import type { Event } from '../types';
 import {
@@ -229,6 +229,7 @@ export default function EventDetail() {
                               href={post.permalink}
                               target="_blank"
                               rel="noopener noreferrer"
+                              onClick={() => { if (isAuthenticated) adminApi.trackInstagramClick(event?.id).catch(() => {}); }}
                               className="text-xs text-neon-cyan hover:underline"
                             >
                               Ver original
