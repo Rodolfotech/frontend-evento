@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (token) {
       try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        JSON.parse(atob(token.split('.')[1]));
         usersApi.getProfile().then(({ data }) => {
           setUser(data);
           setLoading(false);
