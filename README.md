@@ -130,3 +130,8 @@ VITE_API_URL=/api
 #usuario de prueba
 Email: demo@eventos.cl
 Contraseña: demo123
+
+http://localhost:5173/panel-g9k2x
+Email: admin@eventos.cl
+Contraseña: W^t,Ly0={I!LQiK9z+5a
+
