@@ -133,6 +133,7 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
         )}
 
         <button
+          type="button"
           onClick={handlePublish}
           disabled={loading}
           className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"

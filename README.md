@@ -128,10 +128,13 @@ VITE_API_URL=/api
 - Para producción, se necesita **App Review** (modo Live)
 
 #usuario de prueba
+http://localhost:5173/register
+http://localhost:5173/login
 Email: demo@eventos.cl
 Contraseña: demo123
 
-
-http://localhost:5172/panel-g9k2x
-Email: admin@eventos.cl 
+#usuario administrador
+http://localhost:5173/panel-g9k2x
+Email: admin@eventos.cl
 Contraseña: W^t,Ly0={I!LQiK9z+5a
+

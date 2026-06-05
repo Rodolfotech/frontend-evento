@@ -1,4 +1,5 @@
 import api from './client';
+import { ADMIN_API_PREFIX } from '../constants/admin';
 import type { User, Event, Category, CreateEventPayload, SocialConnectPayload, SocialPost, PaginatedResponse } from '../types';
 
 export const authApi = {
@@ -55,4 +56,15 @@ export const socialApi = {
 export const usersApi = {
   getProfile: () => api.get<User>('/users/profile'),
   updateProfile: (data: Partial<User>) => api.put<User>('/users/profile', data),
+};
+
+const A = ADMIN_API_PREFIX;
+
+export const adminApi = {
+  getUsers: (comuna?: string) =>
+    api.get<User[]>(`/${A}/users`, { params: comuna ? { comuna } : {} }),
+  getUserById: (id: string) => api.get<User>(`/${A}/users/${id}`),
+  getComunas: () => api.get<string[]>(`/${A}/comunas`),
+  getStats: () => api.get<{ totalUsers: number; totalEvents: number; totalAttendees: number; totalInstagramClicks: number }>(`/${A}/stats`),
+  trackInstagramClick: (eventId?: string) => api.post(`/${A}/instagram-click`, { eventId }),
 };

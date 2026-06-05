@@ -5,7 +5,7 @@ export function AuthDivider() {
         <div className="w-full border-t border-white/10" />
       </div>
       <div className="relative flex justify-center text-xs">
-        <span className="bg-[#0f0f1a] px-3 text-gray-500">o con correo</span>
+        <span className="bg-dark-900 px-3 text-gray-500">o con correo</span>
       </div>
     </div>
   );

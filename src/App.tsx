@@ -1,8 +1,10 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from './components/shared/Navbar';
+import Footer from './components/shared/Footer';
+import AuthGuard from './routes/AuthGuard';
+import AdminGuard from './routes/AdminGuard';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -50,14 +52,16 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/events" element={<Events />} />
             <Route path="/events/:slug" element={<EventDetail />} />
-            <Route path="/create-event" element={<CreateEvent />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route element={<AuthGuard />}>
+              <Route path="/create-event" element={<CreateEvent />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/privacidad" element={<PrivacyPolicy />} />
             <Route path="/terminosdelservicio" element={<TermsOfService />} />
             <Route path="/eliminacion-datos" element={<DataDeletion />} />
-            <Route path={ADMIN_ROUTE} element={<Admin />} />
+            <Route path={ADMIN_ROUTE} element={<AdminGuard><Admin /></AdminGuard>} />
           </Route>
         </Routes>
       </Suspense>

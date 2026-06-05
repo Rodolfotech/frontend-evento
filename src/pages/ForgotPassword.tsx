@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../api/client';
 import { Mail, Send, ArrowLeft } from 'lucide-react';
 import { GlassCard } from '../components/ui/GlassCard';
-import { AuthHeader } from '../components/auth/AuthHeader';
+import { AuthHeader } from '../features/auth/AuthHeader';
 import { FormInput } from '../components/ui/FormInput';
 import { GradientButton } from '../components/ui/GradientButton';
 
