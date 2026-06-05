@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { eventsApi } from '../api';
-import EventCard from '../components/EventCard';
+import EventCard from '../features/events/EventCard';
 import type { Event } from '../types';
 import {
   Sparkles,

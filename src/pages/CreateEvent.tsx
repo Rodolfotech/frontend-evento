@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { eventsApi, socialApi, attendeesApi } from '../api';
-import EventCard from '../components/EventCard';
-import CreateEventForm from '../components/events/CreateEventForm';
-import { InstagramPostPublisher } from '../components/social/InstagramPostPublisher';
+import EventCard from '../features/events/EventCard';
+import CreateEventForm from '../features/events/CreateEventForm';
+import { InstagramPostPublisher } from '../features/social/InstagramPostPublisher';
 import type { Event, SocialPost } from '../types';
 import {
   Camera,
@@ -130,6 +130,7 @@ export default function CreateEventPage() {
             {tabs.map(({ key, label, icon: Icon, count }) => (
               <button
                 key={key}
+                type="button"
                 onClick={() => setTab(key)}
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                   tab === key
@@ -173,6 +174,7 @@ export default function CreateEventPage() {
                   />
                 </div>
                 <button
+                  type="button"
                   onClick={() => {
                     setLoadingPosts(true);
                     socialApi.getUserMedia()
@@ -200,6 +202,7 @@ export default function CreateEventPage() {
                   </p>
                   {!instagramConnected && (
                     <button
+                      type="button"
                       onClick={handleInstagramLink}
                       className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-medium cursor-pointer"
                     >
@@ -264,6 +267,7 @@ export default function CreateEventPage() {
                   </p>
                   {tab === 'myevents' ? (
                     <button
+                      type="button"
                       onClick={() => setCreateModalOpen(true)}
                       className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
                     >
@@ -285,6 +289,7 @@ export default function CreateEventPage() {
                       <EventCard event={event} />
                       {tab === 'myevents' && instagramConnected && (
                         <button
+                          type="button"
                           onClick={async () => {
                             try {
                               await socialApi.syncFeed(event.id);
@@ -311,6 +316,7 @@ export default function CreateEventPage() {
           {tab === 'myevents' && myEvents.length > 0 && (
             <div className="mt-8 text-center">
               <button
+                type="button"
                 onClick={() => setCreateModalOpen(true)}
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
               >
@@ -330,6 +336,7 @@ export default function CreateEventPage() {
             <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-dark-800/80 backdrop-blur-sm border-b border-white/5">
               <h2 className="text-lg font-semibold text-white">Publicar Evento</h2>
               <button
+                type="button"
                 onClick={() => setCreateModalOpen(false)}
                 className="p-2 rounded-lg glass text-gray-400 hover:text-white transition-all cursor-pointer"
               >
@@ -438,6 +445,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
               className="flex-1 px-2 py-1 rounded text-[11px] bg-white/5 border border-white/10 text-white"
             />
             <button
+              type="button"
               onClick={handleUpdateDates}
               disabled={loading}
               className="p-1.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-all cursor-pointer"
@@ -458,6 +466,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
       <div className="flex items-center gap-1 shrink-0">
         {editing ? (
           <button
+            type="button"
             onClick={() => setEditing(false)}
             className="p-1.5 rounded-lg glass text-gray-400 hover:text-white transition-all cursor-pointer"
           >
@@ -466,6 +475,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
         ) : (
           <>
             <button
+              type="button"
               onClick={() => setEditing(true)}
               className="p-1.5 rounded-lg glass text-gray-400 hover:text-neon-cyan transition-all cursor-pointer"
               title="Editar fechas"
@@ -474,6 +484,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
             </button>
             {isActive ? (
               <button
+                type="button"
                 onClick={handleStop}
                 disabled={loading}
                 className="p-1.5 rounded-lg glass text-gray-400 hover:text-red-400 transition-all cursor-pointer"
@@ -483,6 +494,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
               </button>
             ) : (
               <button
+                type="button"
                 onClick={() => setEditing(true)}
                 className="p-1.5 rounded-lg glass text-gray-400 hover:text-green-400 transition-all cursor-pointer"
                 title="Reanudar publicación (editar fechas)"
@@ -491,6 +503,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
               </button>
             )}
             <button
+              type="button"
               onClick={handleDelete}
               disabled={loading}
               className="p-1.5 rounded-lg glass text-gray-400 hover:text-red-400 transition-all cursor-pointer"

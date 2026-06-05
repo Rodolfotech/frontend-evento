@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
+import { ADMIN_ROUTE } from '../../constants/admin';
 import {
   Sparkles,
   Calendar,
@@ -9,6 +10,7 @@ import {
   LogOut,
   Menu,
   X,
+  Shield,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -60,6 +62,19 @@ export default function Navbar() {
                   <PlusCircle className="w-4 h-4" />
                   Publicar Evento
                 </Link>
+                {user?.role === 'ADMIN' && (
+                  <Link
+                    to={ADMIN_ROUTE}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                      location.pathname === ADMIN_ROUTE
+                        ? 'bg-white/10 text-neon-cyan'
+                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <Shield className="w-4 h-4" />
+                    Panel
+                  </Link>
+                )}
                 <Link
                   to="/profile"
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -72,6 +87,7 @@ export default function Navbar() {
                   {user?.name}
                 </Link>
                 <button
+                  type="button"
                   onClick={logout}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-neon-pink hover:bg-white/5 transition-all cursor-pointer"
                 >
@@ -99,6 +115,7 @@ export default function Navbar() {
           </div>
 
           <button
+            type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden p-2 text-gray-400 hover:text-white cursor-pointer"
           >
@@ -136,6 +153,16 @@ export default function Navbar() {
                   <PlusCircle className="w-4 h-4" />
                   Publicar Evento
                 </Link>
+                {user?.role === 'ADMIN' && (
+                  <Link
+                    to={ADMIN_ROUTE}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-neon-cyan"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Panel
+                  </Link>
+                )}
                 <Link
                   to="/profile"
                   onClick={() => setMobileOpen(false)}
@@ -145,6 +172,7 @@ export default function Navbar() {
                   {user?.name}
                 </Link>
                 <button
+                  type="button"
                   onClick={() => { logout(); setMobileOpen(false); }}
                   className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-neon-pink w-full cursor-pointer"
                 >

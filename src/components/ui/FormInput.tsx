@@ -1,6 +1,8 @@
+import { useId } from 'react';
 import type { LucideIcon } from 'lucide-react';
 
 interface FormInputProps {
+  id?: string;
   icon?: LucideIcon;
   label?: string;
   type?: string;
@@ -13,6 +15,7 @@ interface FormInputProps {
 }
 
 export function FormInput({
+  id: propId,
   icon: Icon,
   label,
   type = 'text',
@@ -23,16 +26,20 @@ export function FormInput({
   rightElement,
   autoComplete,
 }: FormInputProps) {
+  const generatedId = useId();
+  const inputId = propId ?? generatedId;
+
   return (
     <div>
       {label && (
-        <label className="block text-sm font-medium text-gray-300 mb-1.5">{label}</label>
+        <label htmlFor={inputId} className="block text-sm font-medium text-gray-300 mb-1.5">{label}</label>
       )}
       <div className="relative">
         {Icon && (
           <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
         )}
         <input
+          id={inputId}
           type={type}
           value={value}
           onChange={onChange}

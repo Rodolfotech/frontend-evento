@@ -8,9 +8,9 @@ import { FormInput } from '../components/ui/FormInput';
 import { PasswordInput } from '../components/ui/PasswordInput';
 import { GradientButton } from '../components/ui/GradientButton';
 import { ErrorBanner } from '../components/ui/ErrorBanner';
-import { GoogleOAuthButton } from '../components/auth/GoogleOAuthButton';
-import { AuthHeader } from '../components/auth/AuthHeader';
-import { AuthDivider } from '../components/auth/AuthDivider';
+import { GoogleOAuthButton } from '../features/auth/GoogleOAuthButton';
+import { AuthHeader } from '../features/auth/AuthHeader';
+import { AuthDivider } from '../features/auth/AuthDivider';
 
 export default function Register() {
   const [name, setName] = useState('');

@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { eventsApi, socialApi, attendeesApi } from '../api';
-import { InstagramConnectButton } from '../components/social/InstagramConnectButton';
-import { InstagramLinkModal } from '../components/social/InstagramLinkModal';
-import { InstagramBadges } from '../components/social/InstagramBadges';
+import { InstagramConnectButton } from '../features/social/InstagramConnectButton';
+import { InstagramLinkModal } from '../features/social/InstagramLinkModal';
+import { InstagramBadges } from '../features/social/InstagramBadges';
 import { Toast } from '../components/ui/Toast';
 import {
   Camera,
@@ -153,6 +153,7 @@ export default function Profile() {
 
           {/* Logout */}
           <button
+            type="button"
             onClick={() => { logout(); window.location.href = '/'; }}
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl glass text-sm text-gray-400 hover:text-neon-pink hover:border-neon-pink/20 transition-all cursor-pointer mt-3"
           >

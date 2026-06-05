@@ -4,9 +4,19 @@ export interface User {
   name: string;
   avatar?: string;
   role: 'USER' | 'ADMIN' | 'ORGANIZER';
+  comuna?: string;
   facebookId?: string;
   instagramId?: string;
+  instagramUsername?: string;
+  instagramAvatar?: string;
+  isActive?: boolean;
   createdAt: string;
+  updatedAt?: string;
+  eventCount?: number;
+  registrationCount?: number;
+  instagramClickCount?: number;
+  ownedEvents?: Array<{ id: string; title: string; slug: string; date: string; city?: string }>;
+  registrations?: Array<{ id: string; event: { id: string; title: string; slug: string; date: string }; createdAt: string }>;
 }
 
 export interface Event {
