@@ -133,7 +133,7 @@ export default function EventDetail() {
                     {event.title}
                   </h1>
                 </div>
-                <button className="p-2 rounded-xl glass text-gray-400 hover:text-neon-cyan transition-all cursor-pointer">
+                <button type="button" className="p-2 rounded-xl glass text-gray-400 hover:text-neon-cyan transition-all cursor-pointer">
                   <Share2 className="w-5 h-5" />
                 </button>
               </div>
@@ -184,6 +184,7 @@ export default function EventDetail() {
               {user && event.owner?.id === user.id && (
                 <div className="mb-8 flex items-center gap-3">
                   <button
+                    type="button"
                     onClick={handleSync}
                     disabled={syncing}
                     className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
@@ -251,6 +252,7 @@ export default function EventDetail() {
                     </span>
                   ) : (
                     <button
+                      type="button"
                       onClick={handleRegister}
                       className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
                     >

@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import api from '../api/client';
 import { AlertCircle } from 'lucide-react';
 import { GlassCard } from '../components/ui/GlassCard';
-import { AuthHeader } from '../components/auth/AuthHeader';
+import { AuthHeader } from '../features/auth/AuthHeader';
 import { PasswordInput } from '../components/ui/PasswordInput';
 import { GradientButton } from '../components/ui/GradientButton';
 import { ErrorBanner } from '../components/ui/ErrorBanner';

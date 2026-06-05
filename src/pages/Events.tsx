@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { eventsApi } from '../api';
-import EventCard from '../components/EventCard';
+import EventCard from '../features/events/EventCard';
 import type { Event } from '../types';
 import { COMUNAS } from '../constants/comunas';
 import { Calendar, Search, MapPin, ChevronLeft, ChevronRight, MapPinned } from 'lucide-react';

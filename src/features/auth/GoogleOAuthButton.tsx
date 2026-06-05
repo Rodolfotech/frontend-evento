@@ -31,6 +31,7 @@ export function GoogleOAuthButton({
 
   return (
     <button
+      type="button"
       onClick={handleClick}
       disabled={loading}
       className="w-full flex items-center justify-center gap-3 py-2.5 rounded-xl bg-white text-gray-800 text-sm font-medium hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer mb-4"

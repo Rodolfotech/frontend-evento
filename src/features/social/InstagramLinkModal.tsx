@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Camera, X } from 'lucide-react';
 import { socialApi } from '../../api';
-import { LoadingSpinner } from '../ui/LoadingSpinner';
+import { LoadingSpinner } from '../../components/ui/LoadingSpinner';
 
 interface InstagramLinkModalProps {
   open: boolean;
@@ -85,6 +85,7 @@ export function InstagramLinkModal({ open, onClose, onSuccess, onError }: Instag
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <div className="glass rounded-2xl p-8 w-full max-w-md mx-4 relative">
         <button
+          type="button"
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"
         >
@@ -119,6 +120,7 @@ export function InstagramLinkModal({ open, onClose, onSuccess, onError }: Instag
         </div>
 
         <button
+          type="button"
           onClick={handlePermitir}
           disabled={linking || !username.trim()}
           className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"

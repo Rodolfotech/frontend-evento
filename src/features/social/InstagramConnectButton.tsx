@@ -33,12 +33,14 @@ export function InstagramConnectButton({
         </div>
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={onChangeAccount}
             className="text-xs text-pink-400 hover:text-white transition-colors cursor-pointer"
           >
             Cambiar cuenta
           </button>
           <button
+            type="button"
             onClick={onDisconnect}
             className="text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
           >
@@ -51,6 +53,7 @@ export function InstagramConnectButton({
 
   return (
     <button
+      type="button"
       onClick={onConnect}
       className="w-full flex items-center justify-between px-4 py-3 rounded-xl glass text-gray-400 hover:text-white transition-all cursor-pointer"
     >
