@@ -1,3 +1,14 @@
+#SPEC.md explica qué estamos construyendo y cómo debe funcionar el negocio.
+
+"¿Qué debe contener?
+
+-El alcance del MVP (Mínimo Producto Viable).
+-Historias de usuario y flujos lógicos (ej: "El cliente hace click en solicitar, se abre el formulario, si el formulario es válido se envía al backend...").
+-Reglas de negocio (ej: "Un reparador no puede aceptar más de 3 trabajos simultáneos").
+-Casos de borde (Edge Cases) y manejo de errores que el producto requiere.
+-Regla de oro: Es el contrato funcional. Si la IA tiene dudas de cómo debe comportarse un botón o una pantalla, viene a leer este archivo.
+
+
 # Especificación de Flujo de Trabajo
 
 ## Regla Fundamental (Inquebrantable)

@@ -1,5 +1,16 @@
 # CLAUDE.md
 
+#Este archivo es exclusivo para la IA que programa (como Claude Code). Es una guía de ingeniería de software viva que le dice cómo escribir #código en este repositorio específico para no romper la arquitectura.
+
+#¿Qué debe contener?
+
+-El stack tecnológico exacto y los comandos de desarrollo (npm run dev, etc.).
+-La estructura de carpetas y las reglas de dónde va cada cosa.
+-Los patrones de arquitectura (como el flujo BFF y las cookies httpOnly que vimos).
+-El sistema de diseño (tokens de color, tipografía).
+-Las reglas de Git (Conventional Commits).
+-Regla de oro: Es un archivo de normas técnicas de desarrollo. No cambia a menos que cambies la arquitectura del proyecto.
+
 This file provides strict architectural guidelines and structural rules for Claude Code when working in this repository.
 
 ## Project Overview
