@@ -30,7 +30,7 @@ export function HeroSearch() {
           {/* Título y subtítulo */}
           <div className="relative z-10 flex flex-col items-center justify-end h-full pb-28 text-center px-4">
             <h1
-              className="text-4xl md:text-6xl font-semibold text-white drop-shadow-lg"
+              className="text-3xl md:text-5xl font-semibold text-white drop-shadow-lg"
               style={{ fontFamily: 'var(--font-brand)' }}
             >
               Descubre La Araucanía
