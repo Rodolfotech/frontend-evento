@@ -28,7 +28,7 @@ export function OrganizerCTA({
         <Link
           to={buttonTo}
           className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
-          style={{ backgroundColor: '#FFFFFF', color: '#2563EB' }}
+          style={{ backgroundColor: '#FFFFFF', color: '#1D1D1F' }}
         >
           {buttonText}
         </Link>
