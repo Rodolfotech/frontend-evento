@@ -17,30 +17,33 @@ export function HeroSearch() {
   };
 
   return (
-    <section className="px-4 py-6 bg-white">
-      <div className="relative max-w-7xl mx-auto rounded-3xl overflow-hidden min-h-105 flex items-center justify-center">
-        {/* Background image */}
+    <div className="bg-white">
+      {/* Hero image — full width, sin margin top */}
+      <div className="relative w-full overflow-hidden" style={{ height: '400px' }}>
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: 'url(/home/home_eventos.jpg)' }}
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/55" />
 
-        {/* Content */}
-        <div className="relative w-full max-w-5xl mx-auto px-8 py-14 text-center">
+        {/* Título y subtítulo centrados en la parte superior de la imagen */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full pb-10 text-center px-4">
           <h1
-            className="text-4xl md:text-6xl font-semibold text-white mb-3 drop-shadow"
+            className="text-4xl md:text-6xl font-semibold text-white mb-3 drop-shadow-lg"
             style={{ fontFamily: 'var(--font-brand)' }}
           >
             Descubre La Araucanía
           </h1>
-          <p className="text-base md:text-lg text-white/80 mb-10">
+          <p className="text-base md:text-lg text-white/85">
             Explora eventos únicos, naturaleza y cultura en el corazón del sur de Chile
           </p>
-
-          <EventSearchForm onSearch={handleSearch} />
         </div>
       </div>
-    </section>
+
+      {/* Card que sobresale de la imagen hacia abajo */}
+      <div className="max-w-5xl mx-auto px-4 -mt-14 relative z-20 pb-6">
+        <EventSearchForm onSearch={handleSearch} />
+      </div>
+    </div>
   );
 }

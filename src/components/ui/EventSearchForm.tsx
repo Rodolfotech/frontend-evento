@@ -163,10 +163,9 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
             onClick={() => handleQuick(key)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all cursor-pointer ${
               activeQuick === key
-                ? 'text-white border-[#2563EB]'
-                : 'text-gray-600 border-gray-200 hover:border-[#2563EB] hover:text-[#2563EB]'
+                ? 'bg-[#2563EB] text-white border-[#2563EB]'
+                : 'text-[#2563EB] border-[#2563EB] hover:bg-[#2563EB] hover:text-white'
             }`}
-            style={activeQuick === key ? { backgroundColor: '#2563EB' } : {}}
           >
             {label}
           </button>
