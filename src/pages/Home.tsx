@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { eventsApi } from '../api';
 import { HeroSearch } from '../features/events/HeroSearch';
 import { FeaturedEventCard } from '../features/events/FeaturedEventCard';
+import { CategoryGrid } from '../features/events/CategoryGrid';
 import type { Event } from '../types';
 import { ChevronRight } from 'lucide-react';
 
@@ -25,7 +26,7 @@ export default function Home() {
     <div className="min-h-screen pt-16" style={{ backgroundColor: '#FFFFFF' }}>
       <HeroSearch />
 
-
+      <CategoryGrid />
 
       {/* Eventos destacados */}
       <section className="max-w-7xl mx-auto px-4 pb-20">
