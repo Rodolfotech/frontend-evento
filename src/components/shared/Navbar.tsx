@@ -29,7 +29,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2 group">
-            <img src="/logo.webp" alt="HoySesale.cl" className="h-12 w-auto" />
+            <img src="/Isotipo.svg" alt="HoySesale.cl" className="h-12 w-auto" />
             <span className="text-xl font-bold tracking-tight text-gradient">
               HoySesale.cl
             </span>
