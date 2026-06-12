@@ -2,10 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/client';
 import { Mail, Send, ArrowLeft } from 'lucide-react';
-import { GlassCard } from '../components/ui/GlassCard';
-import { AuthHeader } from '../features/auth/AuthHeader';
-import { FormInput } from '../components/ui/FormInput';
-import { GradientButton } from '../components/ui/GradientButton';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -26,64 +22,80 @@ export default function ForgotPassword() {
 
   if (sent) {
     return (
-      <div className="min-h-screen pt-16 flex items-center justify-center relative overflow-hidden">
-        <div className="absolute top-[-100px] right-[-100px] w-[300px] h-[300px] bg-neon-purple/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-[-100px] left-[-100px] w-[300px] h-[300px] bg-neon-cyan/10 rounded-full blur-3xl" />
-        <div className="relative w-full max-w-md mx-4">
-          <GlassCard glow="purple" className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-500/20 flex items-center justify-center">
-              <Mail className="w-8 h-8 text-emerald-400" />
+      <div className="min-h-screen pt-16 flex items-center justify-center" style={{ backgroundColor: '#F8FAFC' }}>
+        <div className="w-full max-w-sm mx-4">
+          <div className="rounded-2xl p-8 text-center shadow-sm" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
+            <div className="w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#DCFCE7' }}>
+              <Mail className="w-7 h-7" style={{ color: '#16A34A' }} />
             </div>
-            <h1 className="text-xl font-bold text-white mb-2">Revisa tu bandeja de entrada</h1>
-            <p className="text-sm text-gray-400 mb-6">
-              Si el correo <strong>{email}</strong> está registrado, recibirás un enlace para restablecer tu contraseña.
+            <h1 className="text-lg font-bold mb-2" style={{ color: '#1D1D1F' }}>Revisa tu bandeja de entrada</h1>
+            <p className="text-sm mb-6" style={{ color: '#1D1D1F99' }}>
+              Si el correo <strong style={{ color: '#1D1D1F' }}>{email}</strong> está registrado, recibirás un enlace para restablecer tu contraseña.
             </p>
-            <Link to="/login" className="text-neon-cyan hover:underline text-sm inline-flex items-center gap-1">
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-1 text-sm font-medium hover:underline"
+              style={{ color: '#2563EB' }}
+            >
               <ArrowLeft className="w-3 h-3" />
               Volver a inicio de sesión
             </Link>
-          </GlassCard>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-16 flex items-center justify-center relative overflow-hidden">
-      <div className="absolute top-[-100px] right-[-100px] w-[300px] h-[300px] bg-neon-purple/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-[-100px] left-[-100px] w-[300px] h-[300px] bg-neon-cyan/10 rounded-full blur-3xl" />
+    <div className="min-h-screen pt-16 flex items-center justify-center" style={{ backgroundColor: '#F8FAFC' }}>
+      <div className="w-full max-w-sm mx-4">
+        <div className="rounded-2xl p-8 shadow-sm" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
 
-      <div className="relative w-full max-w-md mx-4">
-        <GlassCard glow="purple">
-          <AuthHeader title="Recuperar Contraseña" subtitle="Te enviaremos un enlace a tu correo" />
+          {/* Header */}
+          <div className="text-center mb-6">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#2563EB' }}>
+              <Mail className="w-7 h-7 text-white" />
+            </div>
+            <h1 className="text-xl font-bold" style={{ color: '#1D1D1F' }}>Recuperar Contraseña</h1>
+            <p className="text-sm mt-1" style={{ color: '#1D1D1F99' }}>Te enviaremos un enlace a tu correo</p>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            <FormInput
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="tu@email.com"
-              required
-            />
-            <GradientButton type="submit" disabled={loading || !email} loading={loading} loadingText="Enviando..." icon={Send}>
-              Enviar enlace
-            </GradientButton>
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: '#1D1D1F' }}>Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="tu@email.com"
+                required
+                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none light-form"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading || !email}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              style={{ backgroundColor: '#2563EB' }}
+            >
+              <Send className="w-4 h-4" />
+              {loading ? 'Enviando...' : 'Enviar enlace'}
+            </button>
           </form>
-          <p className="text-center text-sm text-gray-500 mt-6">
-            <Link to="/login" className="text-neon-cyan hover:underline inline-flex items-center gap-1">
+
+          <p className="text-center mt-5">
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-1 text-sm font-medium hover:underline"
+              style={{ color: '#2563EB' }}
+            >
               <ArrowLeft className="w-3 h-3" />
               Volver a inicio de sesión
             </Link>
           </p>
-          <div className="mt-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
-            <p className="text-xs text-amber-400">
-              Modo desarrollo: los correos se capturan en{' '}
-              <a href="https://ethereal.email/login" target="_blank" rel="noopener noreferrer" className="underline">
-                Ethereal
-              </a>. Revisa la terminal del backend para ver las credenciales.
-            </p>
-          </div>
-        </GlassCard>
+
+        </div>
       </div>
     </div>
   );

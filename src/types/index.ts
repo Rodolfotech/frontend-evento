@@ -61,6 +61,7 @@ export interface SocialPost {
   id: string;
   platform: 'instagram' | 'facebook';
   media_url?: string;
+  thumbnail_url?: string;
   caption?: string;
   permalink?: string;
   timestamp: string;
