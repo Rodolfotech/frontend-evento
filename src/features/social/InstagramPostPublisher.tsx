@@ -24,6 +24,7 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
   const handlePublish = async () => {
     if (!startDate) { setError('La fecha de inicio es obligatoria'); return; }
     if (!endDate) { setError('La fecha de término es obligatoria'); return; }
+    if (!category) { setError('La categoría es obligatoria'); return; }
     setLoading(true);
     setError('');
     try {
@@ -118,7 +119,7 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
               onChange={(e) => setCategory(e.target.value)}
               className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
             >
-              <option value="">Categoría (opcional)</option>
+              <option value="" disabled>Selecciona una categoría</option>
               <option value="Música">Música</option>
               <option value="Cultura">Cultura</option>
               <option value="Gastronomía">Gastronomía</option>
