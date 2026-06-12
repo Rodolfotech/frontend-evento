@@ -207,7 +207,7 @@ export default function Events() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 aria-label="Buscar eventos por título o descripción"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm light-form"
               />
             </div>
             <div className="relative sm:w-64">
@@ -216,7 +216,7 @@ export default function Events() {
                 value={selectedComuna}
                 onChange={(e) => handleComunaChange(e.target.value)}
                 aria-label="Filtrar por comuna"
-                className="w-full pl-10 pr-8 py-2.5 rounded-xl text-sm appearance-none bg-white cursor-pointer"
+                className="w-full pl-10 pr-8 py-2.5 rounded-xl text-sm appearance-none cursor-pointer light-form"
               >
                 <option value="">Todas las comunas</option>
                 {COMUNAS.map((comuna) => (
@@ -253,7 +253,7 @@ export default function Events() {
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     <input id="dateFrom" type="date" value={dateFrom}
                       onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
-                      className="w-full pl-10 pr-4 py-2 rounded-xl text-sm" />
+                      className="w-full pl-10 pr-4 py-2 rounded-xl text-sm light-form" />
                   </div>
                 </div>
                 <div>
@@ -262,7 +262,7 @@ export default function Events() {
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     <input id="dateTo" type="date" value={dateTo}
                       onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
-                      className="w-full pl-10 pr-4 py-2 rounded-xl text-sm" />
+                      className="w-full pl-10 pr-4 py-2 rounded-xl text-sm light-form" />
                   </div>
                 </div>
                 <div>
@@ -271,7 +271,7 @@ export default function Events() {
                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     <select id="comuna" value={selectedComuna}
                       onChange={(e) => handleComunaChange(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 rounded-xl text-sm appearance-none cursor-pointer">
+                      className="w-full pl-10 pr-4 py-2 rounded-xl text-sm appearance-none cursor-pointer light-form">
                       <option value="">Todas las comunas</option>
                       {COMUNAS.map((comuna) => (
                         <option key={comuna} value={comuna}>{comuna}</option>
