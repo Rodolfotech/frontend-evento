@@ -60,7 +60,7 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
   return (
     <div className={`light-form bg-white rounded-2xl shadow-xl p-6 ${className}`}>
       {/* Inputs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] gap-3 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] gap-3 mb-4 mt-6">
         {/* Texto */}
         <div>
           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
@@ -149,7 +149,7 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
       </div>
 
       {/* Filtros rápidos */}
-      <div className="flex items-center gap-2 flex-wrap mt-8">
+      <div className="flex items-center gap-2 flex-wrap mt-12">
         {(
           [
             { key: 'gratis', label: 'Gratis' },
