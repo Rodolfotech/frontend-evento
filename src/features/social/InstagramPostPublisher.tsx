@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Calendar, Tag, Send, ExternalLink } from 'lucide-react';
+import { Calendar, Clock, Tag, Send, ExternalLink, MapPin } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { eventsApi } from '../../api';
 import type { SocialPost } from '../../types';
+import { COMUNAS } from '../../constants/comunas';
 
 interface InstagramPostPublisherProps {
   post: SocialPost;
@@ -11,6 +12,9 @@ interface InstagramPostPublisherProps {
 }
 
 export function InstagramPostPublisher({ post, onPublished }: InstagramPostPublisherProps) {
+  const [eventDate, setEventDate] = useState('');
+  const [eventTime, setEventTime] = useState('');
+  const [comuna, setComuna] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [category, setCategory] = useState('');
@@ -22,8 +26,11 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
   if (imageError) return null;
 
   const handlePublish = async () => {
-    if (!startDate) { setError('La fecha de inicio es obligatoria'); return; }
-    if (!endDate) { setError('La fecha de término es obligatoria'); return; }
+    if (!eventDate) { setError('La fecha del evento es obligatoria'); return; }
+    if (!eventTime) { setError('La hora del evento es obligatoria'); return; }
+    if (!comuna) { setError('La comuna es obligatoria'); return; }
+    if (!startDate) { setError('La fecha de inicio de publicación es obligatoria'); return; }
+    if (!endDate) { setError('La fecha de término de publicación es obligatoria'); return; }
     if (!category) { setError('La categoría es obligatoria'); return; }
     setLoading(true);
     setError('');
@@ -31,15 +38,17 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
       const title = post.caption
         ? post.caption.split('\n')[0].slice(0, 80)
         : 'Publicación de Instagram';
+      const eventDateTime = new Date(`${eventDate}T${eventTime}`).toISOString();
       await eventsApi.create({
         title,
         description: post.caption || title,
-        date: new Date(startDate).toISOString(),
+        date: eventDateTime,
         publicationStartDate: new Date(startDate).toISOString(),
         publicationEndDate: new Date(endDate).toISOString(),
         categoryName: category || undefined,
         imageUrl: post.media_url || undefined,
-        isOnline: true,
+        city: comuna,
+        isOnline: false,
       });
       setSuccess(true);
       onPublished?.();
@@ -93,43 +102,84 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
           )}
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
-            <input
-              type="datetime-local"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
-            />
+        {/* Datos del evento */}
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: '#1D1D1F99' }}>Datos del evento</p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
+              <input
+                type="date"
+                value={eventDate}
+                onChange={(e) => setEventDate(e.target.value)}
+                className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
+                placeholder="Fecha del evento"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
+              <input
+                type="time"
+                value={eventTime}
+                onChange={(e) => setEventTime(e.target.value)}
+                className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
+              <select
+                value={comuna}
+                onChange={(e) => setComuna(e.target.value)}
+                className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
+              >
+                <option value="" disabled>Selecciona una comuna</option>
+                {COMUNAS.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <Tag className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
+              >
+                <option value="" disabled>Selecciona una categoría</option>
+                <option value="Música">Música</option>
+                <option value="Cultura">Cultura</option>
+                <option value="Gastronomía">Gastronomía</option>
+                <option value="Turismo">Turismo</option>
+                <option value="Trekking">Trekking</option>
+                <option value="Deportes">Deportes</option>
+                <option value="Ferias">Ferias</option>
+                <option value="Bienestar">Bienestar</option>
+                <option value="Fiestas">Fiestas</option>
+              </select>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
-            <input
-              type="datetime-local"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Tag className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
-            >
-              <option value="" disabled>Selecciona una categoría</option>
-              <option value="Música">Música</option>
-              <option value="Cultura">Cultura</option>
-              <option value="Gastronomía">Gastronomía</option>
-              <option value="Turismo">Turismo</option>
-              <option value="Trekking">Trekking</option>
-              <option value="Deportes">Deportes</option>
-              <option value="Ferias">Ferias</option>
-              <option value="Bienestar">Bienestar</option>
-              <option value="Fiestas">Fiestas</option>
-            </select>
+        </div>
+
+        {/* Período de publicación */}
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: '#1D1D1F99' }}>Período de publicación</p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
+              <input
+                type="datetime-local"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
+              <input
+                type="datetime-local"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
+              />
+            </div>
           </div>
         </div>
 

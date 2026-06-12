@@ -1,52 +1,91 @@
+import { Link } from 'react-router-dom';
+
 export default function DataDeletion() {
   return (
-    <div className="min-h-screen pt-16">
-      <div className="relative overflow-hidden">
-        <div className="absolute top-[-200px] left-[-100px] w-[500px] h-[500px] bg-neon-pink/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-[-100px] right-[-100px] w-[400px] h-[400px] bg-neon-cyan/5 rounded-full blur-3xl" />
-        <div className="relative max-w-4xl mx-auto px-4 py-16">
-          <div className="glass rounded-2xl p-8 md:p-12">
-            <h1 className="text-3xl font-bold text-white mb-8">Eliminación de Datos</h1>
+    <div className="min-h-screen pt-16" style={{ backgroundColor: '#F8FAFC' }}>
+      <div className="max-w-4xl mx-auto px-4 py-16">
+        <div className="rounded-2xl p-8 md:p-12" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: '#1D1D1F' }}>Eliminación de Datos</h1>
+          <p className="text-sm mb-10" style={{ color: '#1D1D1F99' }}>
+            En HoySeSale respetamos tu privacidad y te garantizamos control total sobre la información que almacenamos.
+          </p>
 
-            <div className="space-y-6 text-gray-300 text-sm leading-relaxed">
-              <p>En Eventos, respetamos tu privacidad y te ofrecemos control total sobre tus datos. Puedes solicitar la eliminación de tu información en cualquier momento.</p>
+          <div className="space-y-8 text-sm leading-relaxed" style={{ color: '#1D1D1F99' }}>
 
-              <section>
-                <h2 className="text-lg font-semibold text-white mb-3">Eliminar tu cuenta desde la plataforma</h2>
-                <p>La forma más sencilla es desde la aplicación:</p>
-                <ol className="list-decimal pl-5 mt-2 space-y-1">
-                  <li>Inicia sesión en tu cuenta</li>
-                  <li>Ve a tu <strong>Perfil</strong></li>
-                  <li>En la sección de redes sociales, haz clic en <strong>Desconectar</strong> junto a Instagram</li>
-                  <li>Esto eliminará inmediatamente tu ID de Instagram y token de acceso de nuestros servidores</li>
-                </ol>
-              </section>
+            {/* Qué datos almacenamos */}
+            <section>
+              <h2 className="text-lg font-semibold mb-3" style={{ color: '#1D1D1F' }}>¿Qué datos almacenamos?</h2>
+              <p className="mb-3">Al usar la plataforma, podemos guardar la siguiente información según cómo uses el servicio:</p>
+              <ul className="space-y-2">
+                {[
+                  { label: 'Cuenta de usuario', desc: 'Nombre, correo electrónico y contraseña cifrada.' },
+                  { label: 'Eventos publicados', desc: 'Título, descripción, fechas, ubicación, categoría e imagen de los eventos que creas.' },
+                  { label: 'Inscripciones', desc: 'Registro de los eventos a los que te has inscrito.' },
+                  { label: 'Conexión con Instagram', desc: 'ID de usuario de Instagram, nombre de usuario y token de acceso (solo si conectaste tu cuenta).' },
+                  { label: 'Publicaciones de Instagram', desc: 'Imágenes y descripciones de tus posts sincronizados para mostrarlos en tus eventos.' },
+                ].map(({ label, desc }) => (
+                  <li key={label} className="flex gap-3">
+                    <span className="mt-0.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: '#2563EB', marginTop: '6px' }} />
+                    <span><strong style={{ color: '#1D1D1F' }}>{label}:</strong> {desc}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
 
-              <section>
-                <h2 className="text-lg font-semibold text-white mb-3">Solicitar eliminación completa de datos</h2>
-                <p>Si deseas eliminar toda tu información de nuestra plataforma (incluyendo tu cuenta de usuario), envía un correo electrónico a la dirección de contacto con el asunto "Solicitud de eliminación de datos" incluyendo tu nombre de usuario registrado.</p>
-                <p className="mt-2">Procesaremos tu solicitud en un plazo máximo de 30 días hábiles y te confirmaremos una vez completada.</p>
-              </section>
+            {/* Opción 1: Desconectar Instagram */}
+            <section>
+              <h2 className="text-lg font-semibold mb-3" style={{ color: '#1D1D1F' }}>Desconectar Instagram desde tu perfil</h2>
+              <p className="mb-3">Si solo quieres eliminar tu vinculación con Instagram, puedes hacerlo directamente desde la plataforma:</p>
+              <ol className="space-y-2 list-decimal pl-5">
+                <li>Inicia sesión en tu cuenta de HoySeSale.</li>
+                <li>Ve a tu <Link to="/profile" className="font-medium underline" style={{ color: '#2563EB' }}>Perfil</Link>.</li>
+                <li>En la sección <strong style={{ color: '#1D1D1F' }}>Redes sociales</strong>, haz clic en <strong style={{ color: '#1D1D1F' }}>Desconectar</strong> junto a Instagram.</li>
+                <li>Tu ID de Instagram, nombre de usuario y token de acceso serán eliminados de forma inmediata.</li>
+              </ol>
+            </section>
 
-              <section>
-                <h2 className="text-lg font-semibold text-white mb-3">Datos que se eliminarán</h2>
-                <ul className="list-disc pl-5 mt-2 space-y-1">
-                  <li>Información de perfil (nombre, correo electrónico)</li>
-                  <li>ID de Instagram y token de acceso</li>
-                  <li>Eventos creados</li>
-                  <li>Publicaciones sincronizadas de Instagram</li>
-                  <li>Registros de actividad</li>
-                </ul>
-              </section>
+            {/* Opción 2: Eliminar cuenta completa */}
+            <section>
+              <h2 className="text-lg font-semibold mb-3" style={{ color: '#1D1D1F' }}>Solicitar la eliminación completa de tu cuenta</h2>
+              <p className="mb-3">Si deseas eliminar todos tus datos de HoySeSale (cuenta, eventos, inscripciones y conexión con Instagram), envíanos un correo a:</p>
+              <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium" style={{ backgroundColor: '#E4EBFA', color: '#2563EB' }}>
+                contacto@hoysesale.cl
+              </div>
+              <p className="mt-3">Incluye en el asunto: <strong style={{ color: '#1D1D1F' }}>"Solicitud de eliminación de datos"</strong> y tu correo registrado en la plataforma.</p>
+              <p className="mt-2">Procesaremos tu solicitud en un plazo máximo de <strong style={{ color: '#1D1D1F' }}>30 días hábiles</strong> y te confirmaremos por correo cuando esté completada.</p>
+            </section>
 
-              <section>
-                <h2 className="text-lg font-semibold text-white mb-3">Callback de eliminación (para Meta)</h2>
-                <p>Esta página sirve como el callback de eliminación de datos requerido por Meta. Cuando recibimos una solicitud de eliminación a través de Meta, procesamos la desvinculación de tu cuenta de Instagram y eliminamos todos los datos asociados.</p>
-                <p className="mt-4">Código de confirmación: <code className="bg-white/10 px-3 py-1 rounded text-neon-cyan">DEL-{Date.now().toString(36).toUpperCase()}</code></p>
-              </section>
+            {/* Qué se elimina */}
+            <section>
+              <h2 className="text-lg font-semibold mb-3" style={{ color: '#1D1D1F' }}>¿Qué se elimina al dar de baja tu cuenta?</h2>
+              <ul className="space-y-2">
+                {[
+                  'Tu perfil (nombre y correo electrónico)',
+                  'Todos los eventos que hayas creado en la plataforma',
+                  'Tus inscripciones a eventos',
+                  'La conexión con Instagram y el token de acceso',
+                  'Las publicaciones de Instagram sincronizadas',
+                ].map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span className="mt-0.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: '#2563EB', marginTop: '6px' }} />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </section>
 
-              <p className="text-gray-500 text-xs pt-4">Última actualización: Mayo 2026</p>
-            </div>
+            {/* Nota Meta */}
+            <section className="rounded-xl p-5" style={{ backgroundColor: '#F8FAFC', border: '1px solid #E4EBFA' }}>
+              <h2 className="text-base font-semibold mb-2" style={{ color: '#1D1D1F' }}>Información para Meta / Instagram</h2>
+              <p>
+                Esta página cumple con el requisito de <em>Data Deletion Callback</em> de Meta. Cuando un usuario revoca los permisos de HoySeSale desde su cuenta de Instagram, procesamos automáticamente la eliminación del token de acceso y los datos de Instagram vinculados a esa cuenta.
+              </p>
+              <p className="mt-2">
+                Para cualquier consulta técnica sobre este proceso, escríbenos a <strong style={{ color: '#1D1D1F' }}>contacto@hoysesale.cl</strong>.
+              </p>
+            </section>
+
+            <p className="text-xs pt-2" style={{ color: '#1D1D1F66' }}>Última actualización: Junio 2026 · HoySeSale — La Araucanía, Chile</p>
           </div>
         </div>
       </div>
