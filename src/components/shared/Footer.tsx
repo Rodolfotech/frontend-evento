@@ -1,42 +1,90 @@
 import { Link } from 'react-router-dom';
-import { Shield, FileText, Trash2 } from 'lucide-react';
+
+const columns = [
+  {
+    title: 'Explorar',
+    links: [
+      { label: 'Eventos', to: '/' },
+      { label: 'Categorías', to: '/categorias' },
+      { label: 'Comunas', to: '/comunas' },
+    ],
+  },
+  {
+    title: 'Organizadores',
+    links: [
+      { label: 'Publicar evento', to: '/create-event' },
+    ],
+  },
+  {
+    title: 'Sobre nosotros',
+    links: [
+      { label: 'Quiénes somos', to: '/' },
+      { label: 'Contacto', to: '/' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { label: 'Términos y condiciones', to: '/terminosdelservicio' },
+      { label: 'Privacidad', to: '/privacidad' },
+      { label: 'Eliminar datos', to: '/eliminacion-datos' },
+    ],
+  },
+];
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/5 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/Isotipo.svg" alt="HoySesale.cl" className="h-10 w-auto" />
-            <span className="text-sm font-semibold" style={{ fontFamily: 'var(--font-brand)', color: '#2563EB' }}>HoySeSale</span>
-          </Link>
+    <footer className="mt-auto" style={{ backgroundColor: '#F8FAFC' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6">
 
-          <div className="flex items-center gap-6">
-            <Link
-              to="/privacidad"
-              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-neon-cyan transition-colors"
-            >
-              <Shield className="w-3.5 h-3.5" />
-              Privacidad
-            </Link>
-            <Link
-              to="/terminosdelservicio"
-              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-neon-cyan transition-colors"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              Términos
-            </Link>
-            <Link
-              to="/eliminacion-datos"
-              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-neon-cyan transition-colors"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              Eliminar datos
-            </Link>
-          </div>
-
-          <p className="text-xs text-gray-600">© {new Date().getFullYear()} HoySesale.cl. Todos los derechos reservados.</p>
+        {/* Columnas */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+          {columns.map((col) => (
+            <div key={col.title}>
+              <h4
+                className="font-semibold mb-4"
+                style={{ color: '#1D1D1F', fontSize: '14px' }}
+              >
+                {col.title}
+              </h4>
+              <ul className="space-y-3">
+                {col.links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.to}
+                      className="text-sm transition-colors"
+                      style={{ color: '#1D1D1F99' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = '#2563EB')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = '#1D1D1F99')}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
+
+        {/* Divisor */}
+        <hr style={{ borderColor: '#E4EBFA' }} />
+
+        {/* Bottom */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6">
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/Isotipo.svg" alt="HoySeSale" className="h-9 w-auto" />
+            <span
+              className="font-semibold text-base"
+              style={{ fontFamily: 'var(--font-brand)', color: '#1D1D1F' }}
+            >
+              HoySeSale
+            </span>
+          </Link>
+          <p className="text-sm" style={{ color: '#1D1D1F99' }}>
+            © {new Date().getFullYear()} hoysesale.cl — La Araucanía, Chile
+          </p>
+        </div>
+
       </div>
     </footer>
   );
