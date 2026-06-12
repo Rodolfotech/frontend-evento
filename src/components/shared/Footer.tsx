@@ -13,6 +13,8 @@ const columns = [
     title: 'Organizadores',
     links: [
       { label: 'Publicar evento', to: '/create-event' },
+      { label: 'Planes', to: '/' },
+      { label: 'Ayuda', to: '/' },
     ],
   },
   {
