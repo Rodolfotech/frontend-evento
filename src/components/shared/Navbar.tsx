@@ -2,9 +2,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ADMIN_ROUTE } from '../../constants/admin';
 import {
-  Sparkles,
-  Calendar,
-  MapPin,
   PlusCircle,
   LogIn,
   User,
@@ -16,9 +13,9 @@ import {
 import { useState } from 'react';
 
 const navLinks = [
-  { to: '/', label: 'Eventos', icon: Sparkles },
-  { to: '/categorias', label: 'Categorias', icon: Calendar },
-  { to: '/comunas', label: 'Comunas', icon: MapPin },
+  { to: '/', label: 'Eventos' },
+  { to: '/categorias', label: 'Categorias' },
+  { to: '/comunas', label: 'Comunas' },
 ];
 
 export default function Navbar() {
@@ -27,39 +24,43 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 group">
-            <img src="/Isotipo.svg" alt="HoySesale.cl" className="h-12 w-auto" />
-            <span className="text-xl font-semibold tracking-tight" style={{ fontFamily: 'var(--font-brand)', color: '#2563EB' }}>
+
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/Isotipo.svg" alt="HoySeSale" className="h-10 w-auto" />
+            <span className="text-xl font-semibold" style={{ fontFamily: 'var(--font-brand)', color: '#1D1D1F' }}>
               HoySeSale
             </span>
           </Link>
 
+          {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map(({ to, label, icon: Icon }) => (
+            {navLinks.map(({ to, label }) => (
               <Link
                 key={to}
                 to={to}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-4 py-2 text-sm font-medium transition-colors rounded-lg ${
                   location.pathname === to
-                    ? 'bg-white/10 text-neon-cyan'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'text-[#2563EB]'
+                    : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <Icon className="w-4 h-4" />
                 {label}
               </Link>
             ))}
           </div>
 
+          {/* Desktop auth buttons */}
           <div className="hidden md:flex items-center gap-3">
             {isAuthenticated ? (
               <>
                 <Link
                   to="/create-event"
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: '#2563EB' }}
                 >
                   <PlusCircle className="w-4 h-4" />
                   Publicar Evento
@@ -67,10 +68,10 @@ export default function Navbar() {
                 {user?.role === 'ADMIN' && (
                   <Link
                     to={ADMIN_ROUTE}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       location.pathname === ADMIN_ROUTE
-                        ? 'bg-white/10 text-neon-cyan'
-                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                        ? 'text-[#2563EB]'
+                        : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
                     <Shield className="w-4 h-4" />
@@ -79,10 +80,10 @@ export default function Navbar() {
                 )}
                 <Link
                   to="/profile"
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                     location.pathname === '/profile'
-                      ? 'bg-white/10 text-neon-cyan'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                      ? 'text-[#2563EB]'
+                      : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
                   <User className="w-4 h-4" />
@@ -91,7 +92,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={logout}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-neon-pink hover:bg-white/5 transition-all cursor-pointer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-red-500 transition-colors cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   Salir
@@ -101,14 +102,16 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-colors"
+                  style={{ borderColor: '#2563EB', color: '#2563EB' }}
                 >
                   <LogIn className="w-4 h-4" />
-                  Ingresar
+                  Iniciar sesión
                 </Link>
                 <Link
                   to="/register"
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-neon-purple to-neon-pink text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: '#2563EB' }}
                 >
                   Registrarse
                 </Link>
@@ -116,41 +119,43 @@ export default function Navbar() {
             )}
           </div>
 
+          {/* Mobile menu toggle */}
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-gray-400 hover:text-white cursor-pointer"
+            className="md:hidden p-2 text-gray-500 hover:text-gray-900 cursor-pointer"
           >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
+      {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden glass border-t border-white/5">
-          <div className="px-4 py-3 space-y-2">
-            {navLinks.map(({ to, label, icon: Icon }) => (
+        <div className="md:hidden bg-white border-t border-gray-100">
+          <div className="px-4 py-3 space-y-1">
+            {navLinks.map(({ to, label }) => (
               <Link
                 key={to}
                 to={to}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm ${
+                className={`block px-3 py-2 rounded-lg text-sm font-medium ${
                   location.pathname === to
-                    ? 'bg-white/10 text-neon-cyan'
-                    : 'text-gray-400'
+                    ? 'text-[#2563EB] bg-blue-50'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                <Icon className="w-4 h-4" />
                 {label}
               </Link>
             ))}
-            <hr className="border-white/5" />
+            <hr className="border-gray-100 my-2" />
             {isAuthenticated ? (
               <>
                 <Link
                   to="/create-event"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-neon-cyan"
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-white"
+                  style={{ backgroundColor: '#2563EB' }}
                 >
                   <PlusCircle className="w-4 h-4" />
                   Publicar Evento
@@ -159,7 +164,7 @@ export default function Navbar() {
                   <Link
                     to={ADMIN_ROUTE}
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-neon-cyan"
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-600"
                   >
                     <Shield className="w-4 h-4" />
                     Panel
@@ -168,7 +173,7 @@ export default function Navbar() {
                 <Link
                   to="/profile"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-400"
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-600"
                 >
                   <User className="w-4 h-4" />
                   {user?.name}
@@ -176,7 +181,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => { logout(); setMobileOpen(false); }}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-neon-pink w-full cursor-pointer"
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-red-500 w-full cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   Salir
@@ -187,15 +192,17 @@ export default function Navbar() {
                 <Link
                   to="/login"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-400"
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium border"
+                  style={{ borderColor: '#2563EB', color: '#2563EB' }}
                 >
                   <LogIn className="w-4 h-4" />
-                  Ingresar
+                  Iniciar sesión
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setMobileOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-sm text-neon-purple font-medium"
+                  className="block px-3 py-2 rounded-lg text-sm font-medium text-white text-center"
+                  style={{ backgroundColor: '#2563EB' }}
                 >
                   Registrarse
                 </Link>
