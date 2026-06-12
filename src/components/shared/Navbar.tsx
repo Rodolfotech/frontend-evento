@@ -4,6 +4,7 @@ import { ADMIN_ROUTE } from '../../constants/admin';
 import {
   Sparkles,
   Calendar,
+  MapPin,
   PlusCircle,
   LogIn,
   User,
@@ -15,8 +16,9 @@ import {
 import { useState } from 'react';
 
 const navLinks = [
-  { to: '/', label: 'Inicio', icon: Sparkles },
-  { to: '/events', label: 'Eventos', icon: Calendar },
+  { to: '/', label: 'Eventos', icon: Sparkles },
+  { to: '/categorias', label: 'Categorias', icon: Calendar },
+  { to: '/comunas', label: 'Comunas', icon: MapPin },
 ];
 
 export default function Navbar() {

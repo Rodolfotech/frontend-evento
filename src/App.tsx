@@ -19,6 +19,7 @@ import ResetPassword from './pages/ResetPassword';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import DataDeletion from './pages/DataDeletion';
+import Comunas from './pages/Comunas';
 import { ADMIN_ROUTE } from './constants/admin';
 
 const Admin = lazy(() => import('./pages/Admin'));
@@ -50,8 +51,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/events/:slug" element={<EventDetail />} />
+            <Route path="/categorias" element={<Events />} />
+            <Route path="/categorias/:slug" element={<EventDetail />} />
+            <Route path="/comunas" element={<Comunas />} />
             <Route element={<AuthGuard />}>
               <Route path="/create-event" element={<CreateEvent />} />
               <Route path="/profile" element={<Profile />} />

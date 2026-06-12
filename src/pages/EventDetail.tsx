@@ -95,7 +95,7 @@ export default function EventDetail() {
 
         <div className="relative max-w-4xl mx-auto px-4 pt-8 pb-20">
           <Link
-            to="/events"
+            to="/categorias"
             className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />

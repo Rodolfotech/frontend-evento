@@ -275,7 +275,7 @@ export default function CreateEventPage() {
                     </button>
                   ) : (
                     <Link
-                      to="/events"
+                      to="/categorias"
                       className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-sm font-medium hover:opacity-90 transition-opacity"
                     >
                       Explorar eventos
