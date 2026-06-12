@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { eventsApi, socialApi, attendeesApi } from '../api';
+import { eventsApi, socialApi, attendeesApi, usersApi } from '../api';
 import { InstagramConnectButton } from '../features/social/InstagramConnectButton';
 import { InstagramLinkModal } from '../features/social/InstagramLinkModal';
 import { InstagramBadges } from '../features/social/InstagramBadges';
@@ -12,6 +12,8 @@ import {
   CalendarCheck,
   Clock,
   Shield,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -30,6 +32,8 @@ export default function Profile() {
     level: number;
   } | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const loadUser = useCallback(() => {
@@ -66,6 +70,19 @@ export default function Profile() {
       socialApi.getValidation().then(({ data }) => setValidation(data)).catch(() => {});
     }
   }, [instagramConnected]);
+
+  const handleDeleteAccount = async () => {
+    setDeleteLoading(true);
+    try {
+      await usersApi.deleteAccount();
+      logout();
+      window.location.href = '/';
+    } catch {
+      setDeleteLoading(false);
+      setShowDeleteModal(false);
+      setToast({ message: 'Error al eliminar la cuenta. Inténtalo de nuevo.', type: 'error' });
+    }
+  };
 
   const roleLabel = user?.role === 'ORGANIZER' ? 'Organizador' : user?.role === 'ADMIN' ? 'Admin' : 'Usuario';
 
@@ -173,8 +190,58 @@ export default function Profile() {
             <LogOut className="w-4 h-4" />
             Cerrar Sesión
           </button>
+
+          {/* Delete account */}
+          <button
+            type="button"
+            onClick={() => setShowDeleteModal(true)}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm border transition-all cursor-pointer mt-2"
+            style={{ color: '#DC2626', borderColor: '#FEE2E2', backgroundColor: '#FFF5F5' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FEE2E2'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FFF5F5'; }}
+          >
+            <Trash2 className="w-4 h-4" />
+            Eliminar cuenta
+          </button>
         </div>
       </div>
+
+      {/* Modal eliminar cuenta */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
+          <div className="w-full max-w-sm rounded-2xl p-6 shadow-xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
+            <div className="flex flex-col items-center text-center mb-5">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style={{ backgroundColor: '#FEE2E2' }}>
+                <AlertTriangle className="w-6 h-6" style={{ color: '#DC2626' }} />
+              </div>
+              <h2 className="text-base font-bold mb-1" style={{ color: '#1D1D1F' }}>¿Eliminar tu cuenta?</h2>
+              <p className="text-sm" style={{ color: '#1D1D1F99' }}>
+                Se eliminarán permanentemente tu perfil, eventos, inscripciones y conexión con Instagram. Esta acción no se puede deshacer.
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                disabled={deleteLoading}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-opacity disabled:opacity-60 cursor-pointer"
+                style={{ backgroundColor: '#DC2626' }}
+              >
+                {deleteLoading ? 'Eliminando...' : 'Sí, eliminar mi cuenta'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                disabled={deleteLoading}
+                className="w-full px-4 py-2.5 rounded-xl text-sm border cursor-pointer"
+                style={{ color: '#1D1D1F99', borderColor: '#E4EBFA', backgroundColor: '#F8FAFC' }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <InstagramLinkModal
         open={showModal}

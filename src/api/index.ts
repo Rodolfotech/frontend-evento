@@ -56,6 +56,7 @@ export const socialApi = {
 export const usersApi = {
   getProfile: () => api.get<User>('/users/profile'),
   updateProfile: (data: Partial<User>) => api.put<User>('/users/profile', data),
+  deleteAccount: () => api.delete('/users/me'),
 };
 
 const A = ADMIN_API_PREFIX;
