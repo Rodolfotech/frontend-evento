@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Calendar, Clock, Tag, Send, ExternalLink, MapPin } from 'lucide-react';
+import { SocialPostMedia } from './SocialPostMedia';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { eventsApi } from '../../api';
@@ -74,11 +75,10 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
     <div className="rounded-xl overflow-hidden border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
       {post.media_url && (
         <div className="aspect-square overflow-hidden">
-          <img
-            src={post.media_url}
-            alt=""
+          <SocialPostMedia
+            post={post}
             className="w-full h-full object-cover"
-            onError={() => setImageError(true)}
+            onImageError={() => setImageError(true)}
           />
         </div>
       )}
