@@ -30,7 +30,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2 group">
             <img src="/Isotipo.svg" alt="HoySesale.cl" className="h-12 w-auto" />
-            <span className="text-xl font-semibold tracking-tight text-white" style={{ fontFamily: 'var(--font-brand)' }}>
+            <span className="text-xl font-semibold tracking-tight" style={{ fontFamily: 'var(--font-brand)', color: '#2563EB' }}>
               HoySeSale
             </span>
           </Link>
