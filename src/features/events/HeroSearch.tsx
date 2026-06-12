@@ -25,7 +25,7 @@ export function HeroSearch() {
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: 'url(/home/home_eventos.jpg)' }}
           />
-          <div className="absolute inset-0 bg-black/55" />
+          <div className="absolute inset-0 bg-black/70" />
 
           {/* Título y subtítulo */}
           <div className="relative z-10 flex flex-col items-center justify-center h-full pb-10 text-center px-4">
@@ -43,7 +43,7 @@ export function HeroSearch() {
       </div>
 
       {/* Card que sobresale de la imagen hacia abajo */}
-      <div className="max-w-7xl mx-auto px-10 -mt-24 relative z-20 pb-6">
+      <div className="max-w-7xl mx-auto px-10 -mt-20 relative z-20 pb-6">
         <EventSearchForm onSearch={handleSearch} />
       </div>
     </div>
