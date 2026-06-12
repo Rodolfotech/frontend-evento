@@ -43,7 +43,7 @@ export function HeroSearch() {
       </div>
 
       {/* Card que sobresale de la imagen hacia abajo */}
-      <div className="max-w-7xl mx-auto px-4 -mt-14 relative z-20 pb-6">
+      <div className="max-w-7xl mx-auto px-10 -mt-14 relative z-20 pb-6">
         <EventSearchForm onSearch={handleSearch} />
       </div>
     </div>
