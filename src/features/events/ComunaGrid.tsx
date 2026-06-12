@@ -66,7 +66,7 @@ export function ComunaGrid({
   const visible = comunas.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   return (
-    <section className="w-full py-12" style={{ backgroundColor: '#F8FAFC' }}>
+    <section className="w-full py-12" style={{ backgroundColor: '#FFFFFF' }}>
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold" style={{ color: '#1D1D1F' }}>{title}</h2>
