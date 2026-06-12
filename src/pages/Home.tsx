@@ -6,6 +6,7 @@ import { FeaturedEventCard } from '../features/events/FeaturedEventCard';
 import { CategoryGrid } from '../features/events/CategoryGrid';
 import { ComunaGrid } from '../features/events/ComunaGrid';
 import { UpcomingEventsCarousel } from '../features/events/UpcomingEventsCarousel';
+import { OrganizerCTA } from '../features/events/OrganizerCTA';
 import type { Event } from '../types';
 import { ChevronRight } from 'lucide-react';
 
@@ -79,6 +80,7 @@ export default function Home() {
       <CategoryGrid />
       <ComunaGrid />
       <UpcomingEventsCarousel />
+      <OrganizerCTA />
     </div>
   );
 }
