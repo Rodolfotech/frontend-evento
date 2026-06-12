@@ -174,9 +174,8 @@ export default function Events() {
   const hasFilters = selectedComuna || dateFrom || dateTo || selectedCategory || showGratis;
 
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen pt-16" style={{ backgroundColor: '#FFFFFF' }}>
       <div className="relative overflow-hidden">
-        <div className="absolute top-[-100px] left-[-100px] w-[400px] h-[400px] bg-neon-cyan/5 rounded-full blur-3xl" />
         <div className="relative max-w-7xl mx-auto px-4 pt-12 pb-12">
 
           {/* Header */}
