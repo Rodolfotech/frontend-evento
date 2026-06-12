@@ -124,34 +124,37 @@ export default function Admin() {
 
   if (accessGranted === null) {
     return (
-      <div className="min-h-screen pt-16 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-neon-cyan border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen pt-16 flex items-center justify-center" style={{ backgroundColor: '#F8FAFC' }}>
+        <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#2563EB', borderTopColor: 'transparent' }} />
       </div>
     );
   }
 
   if (!accessGranted) {
     return (
-      <div className="min-h-screen pt-16 flex items-center justify-center">
+      <div className="min-h-screen pt-16 flex items-center justify-center" style={{ backgroundColor: '#F8FAFC' }}>
         <div className="w-full max-w-sm mx-4">
-          <div className="glass rounded-2xl p-8 glow-purple">
+          <div className="rounded-2xl p-8 shadow-sm" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
             <div className="text-center mb-6">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-neon-purple to-neon-pink flex items-center justify-center">
+              <div
+                className="w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center"
+                style={{ backgroundColor: '#2563EB' }}
+              >
                 <Shield className="w-7 h-7 text-white" />
               </div>
-              <h1 className="text-xl font-bold text-white">Panel de Administración</h1>
-              <p className="text-sm text-gray-400 mt-1">Inicia sesión como administrador</p>
+              <h1 className="text-xl font-bold" style={{ color: '#1D1D1F' }}>Panel de Administración</h1>
+              <p className="text-sm mt-1" style={{ color: '#1D1D1F99' }}>Inicia sesión como administrador</p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-xs text-gray-500 mb-1.5">Email</label>
+                <label className="block text-xs font-medium mb-1.5" style={{ color: '#1D1D1F' }}>Email</label>
                 <input
                   type="email"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
                   placeholder="admin@ejemplo.cl"
-                  className="w-full px-4 py-2.5 rounded-xl bg-dark-700 border border-white/10 text-sm text-gray-200 focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan/20 outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl text-sm outline-none light-form"
                   required
                 />
               </div>
@@ -165,13 +168,14 @@ export default function Admin() {
               />
 
               {loginError && (
-                <p className="text-xs text-red-400 text-center">{loginError}</p>
+                <p className="text-xs text-center" style={{ color: '#DC2626' }}>{loginError}</p>
               )}
 
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+                style={{ backgroundColor: '#2563EB' }}
               >
                 {loginLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -183,7 +187,7 @@ export default function Admin() {
             </form>
 
             {accessError && (
-              <p className="text-xs text-gray-500 text-center mt-4">{accessError}</p>
+              <p className="text-xs text-center mt-4" style={{ color: '#1D1D1F66' }}>{accessError}</p>
             )}
           </div>
         </div>
