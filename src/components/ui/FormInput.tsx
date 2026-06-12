@@ -32,11 +32,17 @@ export function FormInput({
   return (
     <div>
       {label && (
-        <label htmlFor={inputId} className="block text-sm font-medium text-gray-300 mb-1.5">{label}</label>
+        <label
+          htmlFor={inputId}
+          className="block text-sm font-medium mb-1.5"
+          style={{ color: '#1D1D1F', fontSize: '14px' }}
+        >
+          {label}
+        </label>
       )}
       <div className="relative">
         {Icon && (
-          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: '#2563EB' }} />
         )}
         <input
           id={inputId}
@@ -46,7 +52,7 @@ export function FormInput({
           placeholder={placeholder}
           required={required}
           autoComplete={autoComplete}
-          className={`w-full ${Icon ? 'pl-10' : 'pl-4'} ${rightElement ? 'pr-10' : 'pr-4'} py-2.5 rounded-xl text-sm`}
+          className={`w-full ${Icon ? 'pl-10' : 'pl-4'} ${rightElement ? 'pr-10' : 'pr-4'} py-2.5 rounded-xl text-sm light-form`}
         />
         {rightElement && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
