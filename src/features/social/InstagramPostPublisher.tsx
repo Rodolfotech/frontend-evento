@@ -113,13 +113,22 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
           </div>
           <div className="flex items-center gap-2">
             <Tag className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
-            <input
-              type="text"
+            <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
-              placeholder="Categoría (opcional)"
-            />
+            >
+              <option value="">Categoría (opcional)</option>
+              <option value="Música">Música</option>
+              <option value="Cultura">Cultura</option>
+              <option value="Gastronomía">Gastronomía</option>
+              <option value="Turismo">Turismo</option>
+              <option value="Trekking">Trekking</option>
+              <option value="Deportes">Deportes</option>
+              <option value="Ferias">Ferias</option>
+              <option value="Bienestar">Bienestar</option>
+              <option value="Fiestas">Fiestas</option>
+            </select>
           </div>
         </div>
 
