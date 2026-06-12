@@ -20,7 +20,7 @@ export function HeroSearch() {
     <div className="bg-white">
       {/* Imagen contenida con bordes redondeados */}
       <div className="max-w-7xl mx-auto px-4">
-        <div className="relative w-full rounded-3xl overflow-hidden" style={{ height: '380px' }}>
+        <div className="relative w-full rounded-b-3xl overflow-hidden" style={{ height: '380px' }}>
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: 'url(/home/home_eventos.jpg)' }}
