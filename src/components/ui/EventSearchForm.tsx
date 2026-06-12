@@ -1,16 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Search, Calendar, ChevronDown } from 'lucide-react';
-import { categoriesApi } from '../../api';
 import { COMUNAS } from '../../constants/comunas';
-import type { Category } from '../../types';
-
-const FIXED_CATEGORIES = ['Música', 'Cultura', 'Gastronomía', 'Turismo', 'Trekking', 'Deportes', 'Ferias', 'Bienestar', 'Fiestas'];
 import { format, nextSaturday, nextSunday, isSaturday, isSunday, addDays } from 'date-fns';
+
+const CATEGORIAS = ['Música', 'Cultura', 'Gastronomía', 'Turismo', 'Trekking', 'Deportes', 'Ferias', 'Bienestar', 'Fiestas'];
 
 export interface EventSearchParams {
   q?: string;
   fecha?: string;
-  categoriaId?: string;
+  categoria?: string;
   ciudad?: string;
   gratis?: boolean;
   dateFrom?: string;
@@ -32,18 +30,13 @@ function getWeekendRange() {
 export function EventSearchForm({ onSearch, className = '' }: Props) {
   const [q, setQ] = useState('');
   const [fecha, setFecha] = useState('');
-  const [categoriaId, setCategoriaId] = useState('');
+  const [categoria, setCategoria] = useState('');
   const [ciudad, setCiudad] = useState('');
   const [activeQuick, setActiveQuick] = useState<'gratis' | 'hoy' | 'findesemana' | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    categoriesApi.getAll().then(({ data }) => setCategories(data)).catch(() => {});
-  }, []);
 
   const handleSearch = () => {
     setActiveQuick(null);
-    onSearch({ q, fecha, categoriaId, ciudad });
+    onSearch({ q, fecha, categoria, ciudad });
   };
 
   const handleQuick = (type: 'gratis' | 'hoy' | 'findesemana') => {
@@ -61,9 +54,8 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
 
   return (
     <div className={`light-form bg-white rounded-2xl shadow-xl p-6 ${className}`}>
-      {/* Inputs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] gap-3 mb-4 mt-6">
-        {/* Texto */}
+        {/* Buscar evento */}
         <div>
           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
             Buscar evento
@@ -104,17 +96,14 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
           </label>
           <div className="relative">
             <select
-              value={categoriaId}
-              onChange={(e) => setCategoriaId(e.target.value)}
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
               className="w-full pl-3 pr-8 py-2.5 border rounded-xl text-sm appearance-none focus:outline-none cursor-pointer"
             >
               <option value="">Todas las categorías</option>
-              {categories
-                .filter((c) => FIXED_CATEGORIES.includes(c.name))
-                .sort((a, b) => FIXED_CATEGORIES.indexOf(a.name) - FIXED_CATEGORIES.indexOf(b.name))
-                .map((c) => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
+              {CATEGORIAS.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
             </select>
             <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
           </div>
@@ -168,8 +157,8 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
             onClick={() => handleQuick(key)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all cursor-pointer ${
               activeQuick === key
-                ? 'bg-[#2563EB] text-white border-[#2563EB]'
-                : 'text-[#2563EB] border-[#2563EB] hover:bg-[#2563EB] hover:text-white'
+                ? 'bg-brand-blue text-white border-brand-blue'
+                : 'text-brand-blue border-brand-blue hover:bg-brand-blue hover:text-white'
             }`}
           >
             {label}
