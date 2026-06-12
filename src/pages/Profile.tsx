@@ -70,27 +70,34 @@ export default function Profile() {
   const roleLabel = user?.role === 'ORGANIZER' ? 'Organizador' : user?.role === 'ADMIN' ? 'Admin' : 'Usuario';
 
   return (
-    <div className="min-h-screen pt-16 flex items-start justify-center">
-      <div className="relative w-full max-w-md mx-4 pt-12 pb-20">
-        <div className="absolute top-[-150px] left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-neon-pink/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-[-100px] right-[-80px] w-[300px] h-[300px] bg-neon-cyan/5 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen pt-16 flex items-start justify-center" style={{ backgroundColor: '#F8FAFC' }}>
+      <div className="w-full max-w-md mx-4 pt-12 pb-20">
 
-        <div className="relative glass rounded-2xl p-6 glow-pink">
+        <div className="rounded-2xl p-6 shadow-sm" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
           {/* Avatar */}
           <div className="text-center mb-5">
-            <div className="w-20 h-20 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-neon-cyan via-neon-purple to-neon-pink flex items-center justify-center text-3xl font-bold text-white shadow-lg shadow-neon-purple/20 ring-2 ring-white/10">
+            <div
+              className="w-20 h-20 mx-auto mb-3 rounded-2xl flex items-center justify-center text-3xl font-bold text-white shadow-sm"
+              style={{ backgroundColor: '#2563EB' }}
+            >
               {(user?.name || '?').charAt(0).toUpperCase()}
             </div>
-            <h1 className="text-lg font-bold text-white">{user?.name}</h1>
-            <p className="text-sm text-gray-400">{user?.email}</p>
+            <h1 className="text-lg font-bold" style={{ color: '#1D1D1F' }}>{user?.name}</h1>
+            <p className="text-sm mt-0.5" style={{ color: '#1D1D1F99' }}>{user?.email}</p>
             <div className="flex items-center justify-center gap-2 mt-2">
               {user?.instagramId && (
-                <span className="inline-flex items-center gap-1 text-xs text-pink-400 bg-pink-500/10 px-2.5 py-0.5 rounded-full">
+                <span
+                  className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-full"
+                  style={{ backgroundColor: '#FCE7F3', color: '#BE185D' }}
+                >
                   <Camera className="w-3 h-3" />
                   Instagram conectado
                 </span>
               )}
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-neon-cyan bg-white/5 px-2.5 py-0.5 rounded-full">
+              <span
+                className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-0.5 rounded-full"
+                style={{ backgroundColor: '#E4EBFA', color: '#2563EB' }}
+              >
                 {roleLabel}
               </span>
             </div>
@@ -100,21 +107,21 @@ export default function Profile() {
 
           {/* Stats */}
           <div className="grid grid-cols-2 gap-3 mb-5">
-            <div className="glass rounded-xl p-3 text-center">
-              <Sparkles className="w-4 h-4 mx-auto mb-1 text-neon-cyan" />
-              <p className="text-xl font-bold text-white">{myEvents}</p>
-              <p className="text-xs text-gray-400">Eventos</p>
+            <div className="rounded-xl p-3 text-center border" style={{ backgroundColor: '#F8FAFC', borderColor: '#E4EBFA' }}>
+              <Sparkles className="w-4 h-4 mx-auto mb-1" style={{ color: '#2563EB' }} />
+              <p className="text-xl font-bold" style={{ color: '#1D1D1F' }}>{myEvents}</p>
+              <p className="text-xs" style={{ color: '#1D1D1F99' }}>Eventos</p>
             </div>
-            <div className="glass rounded-xl p-3 text-center">
-              <CalendarCheck className="w-4 h-4 mx-auto mb-1 text-neon-purple" />
-              <p className="text-xl font-bold text-white">{registeredEvents}</p>
-              <p className="text-xs text-gray-400">Inscripciones</p>
+            <div className="rounded-xl p-3 text-center border" style={{ backgroundColor: '#F8FAFC', borderColor: '#E4EBFA' }}>
+              <CalendarCheck className="w-4 h-4 mx-auto mb-1" style={{ color: '#2563EB' }} />
+              <p className="text-xl font-bold" style={{ color: '#1D1D1F' }}>{registeredEvents}</p>
+              <p className="text-xs" style={{ color: '#1D1D1F99' }}>Inscripciones</p>
             </div>
           </div>
 
           {/* Instagram */}
           <div className="mb-5">
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            <h2 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#1D1D1F99' }}>
               Redes Sociales
             </h2>
             <InstagramConnectButton
@@ -140,13 +147,16 @@ export default function Profile() {
           </div>
 
           {/* Meta */}
-          <div className="flex items-center justify-between text-xs text-gray-500 py-3 border-t border-white/5">
+          <div
+            className="flex items-center justify-between text-xs py-3 border-t"
+            style={{ color: '#1D1D1F99', borderColor: '#E4EBFA' }}
+          >
             <div className="flex items-center gap-1.5">
-              <Clock className="w-3 h-3" />
+              <Clock className="w-3 h-3" style={{ color: '#2563EB' }} />
               {user?.createdAt ? format(new Date(user.createdAt), "MMMM yyyy", { locale: es }) : ''}
             </div>
             <div className="flex items-center gap-1.5">
-              <Shield className="w-3 h-3" />
+              <Shield className="w-3 h-3" style={{ color: '#2563EB' }} />
               {roleLabel}
             </div>
           </div>
@@ -155,7 +165,10 @@ export default function Profile() {
           <button
             type="button"
             onClick={() => { logout(); window.location.href = '/'; }}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl glass text-sm text-gray-400 hover:text-neon-pink hover:border-neon-pink/20 transition-all cursor-pointer mt-3"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm border transition-all cursor-pointer mt-3"
+            style={{ color: '#1D1D1F99', borderColor: '#E4EBFA', backgroundColor: '#F8FAFC' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#2563EB33'; e.currentTarget.style.color = '#1D1D1F'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#E4EBFA'; e.currentTarget.style.color = '#1D1D1F99'; }}
           >
             <LogOut className="w-4 h-4" />
             Cerrar Sesión

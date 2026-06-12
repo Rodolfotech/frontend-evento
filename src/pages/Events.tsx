@@ -96,6 +96,7 @@ export default function Events() {
     searchParams.get('fecha') || searchParams.get('dateTo') || ''
   );
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('categoriaId') || '');
+  const selectedCategoryName = searchParams.get('categoria') || '';
   const [showGratis, setShowGratis] = useState(searchParams.get('gratis') === 'true');
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -150,8 +151,13 @@ export default function Events() {
     if (showGratis) {
       result = result.filter((e) => !e.price || e.price === 0);
     }
+    if (selectedCategoryName) {
+      result = result.filter((e) =>
+        e.category?.name?.toLowerCase() === selectedCategoryName.toLowerCase()
+      );
+    }
     return result;
-  }, [events, search, showGratis]);
+  }, [events, search, showGratis, selectedCategoryName]);
 
   const months = useMemo(() => groupByMonth(filtered), [filtered]);
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);

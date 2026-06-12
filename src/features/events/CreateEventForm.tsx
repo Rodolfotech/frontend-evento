@@ -3,14 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { eventsApi, categoriesApi } from '../../api';
 import type { Category } from '../../types';
 import { COMUNAS } from '../../constants/comunas';
-import {
-  Sparkles,
-  Calendar,
-  MapPin,
-  Globe,
-  Image,
-  Send,
-} from 'lucide-react';
+import { Sparkles, Calendar, MapPin, Globe, Image, Send } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface CreateEventFormProps {
@@ -66,32 +59,38 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
     }
   };
 
+  const labelStyle = { color: '#1D1D1F', fontSize: '14px', fontWeight: 500 };
+  const iconStyle = { color: '#2563EB' };
+
   return (
     <div>
       {showHeader && (
         <div className="text-center mb-10">
-          <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center">
+          <div
+            className="w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center"
+            style={{ backgroundColor: '#2563EB' }}
+          >
             <Sparkles className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gradient">
+          <h1 className="text-3xl font-bold tracking-tight" style={{ color: '#1D1D1F' }}>
             Publicar Evento
           </h1>
-          <p className="text-gray-400 mt-2">
+          <p className="mt-2 text-sm" style={{ color: '#1D1D1F99' }}>
             Comparte tu evento con la comunidad
           </p>
         </div>
       )}
 
-      <div className="glass rounded-2xl p-8 glow-purple">
+      <div className="rounded-2xl p-8 border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-xl mb-6 text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl mb-6 text-sm">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label className="block mb-1.5" style={labelStyle}>
               Título del Evento
             </label>
             <input
@@ -99,14 +98,14 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
               name="title"
               value={form.title}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 rounded-xl text-sm"
+              className="w-full px-4 py-2.5 rounded-xl text-sm light-form"
               placeholder="Ej: Concierto de Rock en Pucón"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label className="block mb-1.5" style={labelStyle}>
               Descripción
             </label>
             <textarea
@@ -114,7 +113,7 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
               value={form.description}
               onChange={handleChange}
               rows={4}
-              className="w-full px-4 py-2.5 rounded-xl text-sm resize-none"
+              className="w-full px-4 py-2.5 rounded-xl text-sm resize-none light-form"
               placeholder="Describe tu evento, artistas, actividades..."
               required
             />
@@ -122,9 +121,9 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              <label className="block mb-1.5" style={labelStyle}>
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-neon-cyan" />
+                  <Calendar className="w-4 h-4" style={iconStyle} />
                   Fecha y Hora
                 </div>
               </label>
@@ -133,20 +132,20 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
                 name="date"
                 value={form.date}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-xl text-sm"
+                className="w-full px-4 py-2.5 rounded-xl text-sm light-form"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              <label className="block mb-1.5" style={labelStyle}>
                 Categoría
               </label>
               <select
                 name="categoryId"
                 value={form.categoryId}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-xl text-sm"
+                className="w-full px-4 py-2.5 rounded-xl text-sm light-form"
               >
                 <option value="">Seleccionar categoría</option>
                 {categories.map((cat) => (
@@ -158,9 +157,9 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              <label className="block mb-1.5" style={labelStyle}>
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-neon-purple" />
+                  <MapPin className="w-4 h-4" style={iconStyle} />
                   Lugar
                 </div>
               </label>
@@ -169,15 +168,15 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
                 name="locationName"
                 value={form.locationName}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-xl text-sm"
+                className="w-full px-4 py-2.5 rounded-xl text-sm light-form"
                 placeholder="Ej: Teatro Municipal"
               />
             </div>
 
             <div>
-              <label htmlFor="comuna" className="block text-sm font-medium text-gray-300 mb-1.5">
+              <label htmlFor="comuna" className="block mb-1.5" style={labelStyle}>
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-neon-pink" />
+                  <MapPin className="w-4 h-4" style={iconStyle} />
                   Comuna
                 </div>
               </label>
@@ -186,7 +185,7 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
                 name="city"
                 value={form.city}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-xl text-sm"
+                className="w-full px-4 py-2.5 rounded-xl text-sm light-form"
               >
                 <option value="">Selecciona una comuna</option>
                 {COMUNAS.map((comuna) => (
@@ -197,7 +196,7 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label className="block mb-1.5" style={labelStyle}>
               Dirección
             </label>
             <input
@@ -205,16 +204,16 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
               name="address"
               value={form.address}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 rounded-xl text-sm"
+              className="w-full px-4 py-2.5 rounded-xl text-sm light-form"
               placeholder="Dirección del evento"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              <label className="block mb-1.5" style={labelStyle}>
                 <div className="flex items-center gap-2">
-                  <Image className="w-4 h-4 text-neon-cyan" />
+                  <Image className="w-4 h-4" style={iconStyle} />
                   URL de Imagen
                 </div>
               </label>
@@ -223,7 +222,7 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
                 name="imageUrl"
                 value={form.imageUrl}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-xl text-sm"
+                className="w-full px-4 py-2.5 rounded-xl text-sm light-form"
                 placeholder="https://..."
               />
             </div>
@@ -238,11 +237,14 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
                     onChange={handleChange}
                     className="sr-only peer"
                   />
-                  <div className="w-10 h-6 rounded-full bg-dark-600 peer-checked:bg-gradient-to-r peer-checked:from-neon-cyan peer-checked:to-neon-purple transition-all" />
-                  <div className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white peer-checked:translate-x-4 transition-transform" />
+                  <div
+                    className="w-10 h-6 rounded-full transition-all"
+                    style={{ backgroundColor: form.isOnline ? '#2563EB' : '#E4EBFA' }}
+                  />
+                  <div className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow peer-checked:translate-x-4 transition-transform" />
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <Globe className="w-4 h-4" />
+                <div className="flex items-center gap-2 text-sm" style={{ color: '#1D1D1F' }}>
+                  <Globe className="w-4 h-4" style={iconStyle} />
                   Evento Online
                 </div>
               </label>
@@ -254,7 +256,8 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
               <button
                 type="button"
                 onClick={onCancel}
-                className="flex-1 py-3 rounded-xl glass text-gray-400 hover:text-white transition-all cursor-pointer"
+                className="flex-1 py-3 rounded-xl border text-sm transition-all cursor-pointer"
+                style={{ borderColor: '#E4EBFA', color: '#1D1D1F99', backgroundColor: '#F8FAFC' }}
               >
                 Cancelar
               </button>
@@ -262,9 +265,10 @@ export default function CreateEventForm({ onSuccess, onCancel, showHeader = true
             <button
               type="submit"
               disabled={loading}
-              className={`flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer ${
+              className={`flex items-center justify-center gap-2 py-3 rounded-xl text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer ${
                 onCancel ? 'flex-1' : 'w-full'
               }`}
+              style={{ backgroundColor: '#2563EB' }}
             >
               <Send className="w-4 h-4" />
               {loading ? 'Publicando...' : 'Publicar Evento'}

@@ -8,7 +8,7 @@ export function HeroSearch() {
     const qs = new URLSearchParams();
     if (params.q) qs.set('q', params.q);
     if (params.fecha) qs.set('fecha', params.fecha);
-    if (params.categoriaId) qs.set('categoriaId', params.categoriaId);
+    if (params.categoria) qs.set('categoria', params.categoria);
     if (params.ciudad) qs.set('ciudad', params.ciudad);
     if (params.gratis) qs.set('gratis', 'true');
     if (params.dateFrom) qs.set('dateFrom', params.dateFrom);
