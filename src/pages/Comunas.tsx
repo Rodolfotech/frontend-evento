@@ -4,7 +4,7 @@ import { COMUNAS } from '../constants/comunas';
 
 export default function Comunas() {
   return (
-    <div className="min-h-screen pt-24 pb-20" style={{ backgroundColor: '#F8FAFC' }}>
+    <div className="min-h-screen pt-24 pb-20" style={{ backgroundColor: '#FFFFFF' }}>
       <div className="max-w-7xl mx-auto px-4">
         <div className="mb-10">
           <h1 className="font-semibold mb-2" style={{ color: '#1D1D1F', fontSize: '36px', lineHeight: '60px' }}>Comunas</h1>
