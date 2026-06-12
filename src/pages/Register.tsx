@@ -104,9 +104,9 @@ export default function Register() {
               Crear Cuenta
             </GradientButton>
           </form>
-          <p className="text-center text-sm text-gray-500 mt-6">
+          <p className="text-center text-sm mt-6" style={{ color: '#1D1D1F99' }}>
             ¿Ya tienes cuenta?{' '}
-            <Link to="/login" className="text-neon-cyan hover:underline">
+            <Link to="/login" className="font-medium hover:underline" style={{ color: '#2563EB' }}>
               Iniciar Sesión
             </Link>
           </p>

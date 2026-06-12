@@ -59,12 +59,9 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen pt-16 flex items-center justify-center relative overflow-hidden">
-      <div className="absolute top-[-100px] right-[-100px] w-[300px] h-[300px] bg-neon-purple/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-[-100px] left-[-100px] w-[300px] h-[300px] bg-neon-cyan/10 rounded-full blur-3xl" />
-
-      <div className="relative w-full max-w-md mx-4">
-        <GlassCard glow="purple">
+    <div className="min-h-screen pt-16 flex items-center justify-center" style={{ backgroundColor: '#F8FAFC' }}>
+      <div className="w-full max-w-md mx-4">
+        <GlassCard>
           <AuthHeader title="Bienvenido de vuelta" subtitle="Ingresa a tu cuenta" />
           <ErrorBanner message={error} />
           <GoogleOAuthButton
@@ -85,7 +82,6 @@ export default function Login() {
               required
             />
             <PasswordInput
-              icon={Mail}
               label="Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -95,14 +91,14 @@ export default function Login() {
               Ingresar
             </GradientButton>
           </form>
-          <p className="text-center text-sm text-gray-500 mt-4">
-            <Link to="/forgot-password" className="text-neon-cyan hover:underline">
+          <p className="text-center text-sm mt-4" style={{ color: '#1D1D1F99' }}>
+            <Link to="/forgot-password" className="hover:underline font-medium" style={{ color: '#2563EB' }}>
               ¿Olvidaste tu contraseña?
             </Link>
           </p>
-          <p className="text-center text-sm text-gray-500 mt-4">
+          <p className="text-center text-sm mt-3" style={{ color: '#1D1D1F99' }}>
             ¿No tienes cuenta?{' '}
-            <Link to="/register" className="text-neon-cyan hover:underline">
+            <Link to="/register" className="font-medium hover:underline" style={{ color: '#2563EB' }}>
               Registrarse
             </Link>
           </p>

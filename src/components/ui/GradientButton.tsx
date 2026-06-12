@@ -13,12 +13,6 @@ interface GradientButtonProps {
   fullWidth?: boolean;
 }
 
-const gradientClasses = {
-  'cyan-purple': 'from-neon-cyan to-neon-purple',
-  'purple-pink': 'from-neon-purple to-neon-pink',
-  'pink-purple': 'from-pink-500 to-purple-600',
-};
-
 export function GradientButton({
   onClick,
   type = 'button',
@@ -27,7 +21,6 @@ export function GradientButton({
   loadingText,
   icon: Icon,
   children,
-  gradient = 'cyan-purple',
   className = '',
   fullWidth = true,
 }: GradientButtonProps) {
@@ -36,7 +29,8 @@ export function GradientButton({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      className={`${fullWidth ? 'w-full' : ''} flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r ${gradientClasses[gradient]} text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer ${className}`}
+      className={`${fullWidth ? 'w-full' : ''} flex items-center justify-center gap-2 py-2.5 rounded-xl text-white font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer ${className}`}
+      style={{ backgroundColor: '#2563EB', fontSize: '14px' }}
     >
       {Icon && <Icon className="w-4 h-4" />}
       {loading ? (loadingText || 'Procesando...') : children}

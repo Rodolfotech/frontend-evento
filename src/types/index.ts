@@ -32,6 +32,7 @@ export interface Event {
   address?: string;
   city?: string;
   isOnline: boolean;
+  price?: number;
   imageUrl?: string;
   socialFeed?: SocialPost[];
   lastSync?: string;

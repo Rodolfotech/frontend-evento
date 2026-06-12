@@ -1,19 +1,11 @@
 import type { ReactNode } from 'react';
 
-type Glow = 'cyan' | 'purple' | 'pink';
-
 interface GlassCardProps {
   children: ReactNode;
   className?: string;
-  glow?: Glow;
+  glow?: 'cyan' | 'purple' | 'pink';
   padding?: 'sm' | 'md' | 'lg';
 }
-
-const glowClasses: Record<Glow, string> = {
-  cyan: 'glow-cyan',
-  purple: 'glow-purple',
-  pink: 'glow-pink',
-};
 
 const paddingClasses = {
   sm: 'p-4',
@@ -21,10 +13,11 @@ const paddingClasses = {
   lg: 'p-8',
 };
 
-export function GlassCard({ children, className = '', glow, padding = 'lg' }: GlassCardProps) {
+export function GlassCard({ children, className = '', padding = 'lg' }: GlassCardProps) {
   return (
     <div
-      className={`glass rounded-2xl ${paddingClasses[padding]} ${glow ? glowClasses[glow] : ''} ${className}`}
+      className={`rounded-2xl shadow-sm ${paddingClasses[padding]} ${className}`}
+      style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}
     >
       {children}
     </div>
