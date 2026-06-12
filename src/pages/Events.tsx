@@ -85,11 +85,18 @@ function Pagination({ page, totalPages, onPageChange }: {
 export default function Events() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [events, setEvents] = useState<Event[]>([]);
-  const [search, setSearch] = useState('');
-  const [selectedComuna, setSelectedComuna] = useState(searchParams.get('comuna') || '');
-  const [dateFrom, setDateFrom] = useState('');
-  const [dateTo, setDateTo] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [search, setSearch] = useState(searchParams.get('q') || '');
+  const [selectedComuna, setSelectedComuna] = useState(
+    searchParams.get('ciudad') || searchParams.get('comuna') || ''
+  );
+  const [dateFrom, setDateFrom] = useState(
+    searchParams.get('fecha') || searchParams.get('dateFrom') || ''
+  );
+  const [dateTo, setDateTo] = useState(
+    searchParams.get('fecha') || searchParams.get('dateTo') || ''
+  );
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('categoriaId') || '');
+  const [showGratis, setShowGratis] = useState(searchParams.get('gratis') === 'true');
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -120,7 +127,7 @@ export default function Events() {
       setTotal(total);
       setLoading(false);
     });
-  }, [page, dateFrom, dateTo, defaultDateFrom, defaultDateTo, selectedCategory, selectedComuna]);
+  }, [page, dateFrom, dateTo, defaultDateFrom, defaultDateTo, selectedCategory, selectedComuna, showGratis]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -133,12 +140,18 @@ export default function Events() {
   }, [selectedComuna]);
 
   const filtered = useMemo(() => {
-    if (!search) return events;
-    return events.filter((e) =>
-      e.title.toLowerCase().includes(search.toLowerCase()) ||
-      e.description.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [events, search]);
+    let result = events;
+    if (search) {
+      result = result.filter((e) =>
+        e.title.toLowerCase().includes(search.toLowerCase()) ||
+        e.description.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    if (showGratis) {
+      result = result.filter((e) => !e.price || e.price === 0);
+    }
+    return result;
+  }, [events, search, showGratis]);
 
   const months = useMemo(() => groupByMonth(filtered), [filtered]);
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
@@ -154,10 +167,11 @@ export default function Events() {
     setDateTo('');
     setSelectedCategory('');
     setSearch('');
+    setShowGratis(false);
     setPage(1);
   };
 
-  const hasFilters = selectedComuna || dateFrom || dateTo || selectedCategory;
+  const hasFilters = selectedComuna || dateFrom || dateTo || selectedCategory || showGratis;
 
   return (
     <div className="min-h-screen pt-16">
