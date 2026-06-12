@@ -17,6 +17,9 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  if (imageError) return null;
 
   const handlePublish = async () => {
     if (!startDate) { setError('La fecha de inicio es obligatoria'); return; }
@@ -61,7 +64,12 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
     <div className="rounded-xl overflow-hidden border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
       {post.media_url && (
         <div className="aspect-square overflow-hidden">
-          <img src={post.media_url} alt="" className="w-full h-full object-cover" />
+          <img
+            src={post.media_url}
+            alt=""
+            className="w-full h-full object-cover"
+            onError={() => setImageError(true)}
+          />
         </div>
       )}
       <div className="p-4 space-y-3">
