@@ -1,22 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { eventsApi } from '../api';
-import EventCard from '../features/events/EventCard';
 import { HeroSearch } from '../features/events/HeroSearch';
+import { FeaturedEventCard } from '../features/events/FeaturedEventCard';
 import type { Event } from '../types';
-import { ArrowRight, MapPin, MapPinned } from 'lucide-react';
+import { ArrowRight, ChevronRight, MapPin, MapPinned } from 'lucide-react';
 
 export default function Home() {
   const [events, setEvents] = useState<Event[]>([]);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     eventsApi.getAll({ limit: 8 }).then(({ data: { data } }) => setEvents(data));
   }, []);
 
+  function scrollRight() {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  }
+
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen pt-16" style={{ backgroundColor: '#FFFFFF' }}>
       <HeroSearch />
 
+      {/* Comunas */}
       <section className="max-w-7xl mx-auto px-4 pt-12 pb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2" style={{ color: '#1D1D1F' }}>
@@ -49,23 +57,55 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Eventos destacados */}
       <section className="max-w-7xl mx-auto px-4 pb-20">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold tracking-tight" style={{ color: '#1D1D1F' }}>
-            Próximos Eventos
+        {/* Encabezado centrado */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold tracking-tight" style={{ color: '#1D1D1F' }}>
+            Eventos destacados
           </h2>
+          <p className="mt-2 text-sm" style={{ color: '#1D1D1F99' }}>
+            Experiencias únicas que no te puedes perder
+          </p>
+        </div>
+
+        {/* Carrusel */}
+        <div className="relative">
+          <div
+            ref={carouselRef}
+            className="flex gap-4 overflow-x-auto pb-2"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {events.map((event) => (
+              <div key={event.id} className="shrink-0 w-64">
+                <FeaturedEventCard event={event} />
+              </div>
+            ))}
+          </div>
+
+          {/* Flecha siguiente */}
+          {events.length > 4 && (
+            <button
+              type="button"
+              onClick={scrollRight}
+              aria-label="Ver más eventos"
+              className="absolute -right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-colors hover:opacity-90"
+              style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}
+            >
+              <ChevronRight className="w-5 h-5" style={{ color: '#2563EB' }} />
+            </button>
+          )}
+        </div>
+
+        {/* Ver todos */}
+        <div className="text-center mt-8">
           <Link
             to="/categorias"
-            className="text-sm font-medium flex items-center gap-1 hover:underline"
+            className="text-sm font-medium hover:underline"
             style={{ color: '#2563EB' }}
           >
-            Ver todos <ArrowRight className="w-3 h-3" />
+            Ver todos los eventos →
           </Link>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {events.map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
         </div>
       </section>
     </div>

@@ -1,0 +1,119 @@
+import { Link } from 'react-router-dom';
+import { Calendar, Clock, MapPin } from 'lucide-react';
+import type { Event } from '../../types';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
+const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
+  Música:       { bg: '#1D3461', text: '#FFFFFF' },
+  Cultura:      { bg: '#0F766E', text: '#FFFFFF' },
+  Deporte:      { bg: '#EA580C', text: '#FFFFFF' },
+  Documental:   { bg: '#374151', text: '#FFFFFF' },
+  Arte:         { bg: '#7C3AED', text: '#FFFFFF' },
+  Gastronomía:  { bg: '#B45309', text: '#FFFFFF' },
+  Educación:    { bg: '#0369A1', text: '#FFFFFF' },
+  Teatro:       { bg: '#BE185D', text: '#FFFFFF' },
+  Tecnología:   { bg: '#0891B2', text: '#FFFFFF' },
+  Naturaleza:   { bg: '#15803D', text: '#FFFFFF' },
+};
+
+function getCategoryStyle(name?: string) {
+  if (!name) return { bg: '#374151', text: '#FFFFFF' };
+  return CATEGORY_COLORS[name] ?? { bg: '#374151', text: '#FFFFFF' };
+}
+
+interface Props {
+  event: Event;
+}
+
+export function FeaturedEventCard({ event }: Props) {
+  const isFree = !event.price || event.price === 0;
+  const eventDate = new Date(event.date);
+  const catStyle = getCategoryStyle(event.category?.name);
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden border flex flex-col h-full"
+      style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}
+    >
+      {/* Imagen */}
+      <div className="relative shrink-0" style={{ height: '210px' }}>
+        {event.imageUrl ? (
+          <img
+            src={event.imageUrl}
+            alt={event.title}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{ backgroundColor: '#E4EBFA' }}
+          >
+            <span style={{ color: '#1D1D1F33', fontSize: '13px' }}>Sin imagen</span>
+          </div>
+        )}
+
+        {/* Badge categoría */}
+        {event.category && (
+          <span
+            className="absolute top-3 left-3 text-xs font-medium px-2.5 py-1 rounded-full"
+            style={{ backgroundColor: catStyle.bg, color: catStyle.text }}
+          >
+            {event.category.name}
+          </span>
+        )}
+
+        {/* Badge gratuito */}
+        {isFree && (
+          <span
+            className="absolute bottom-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full"
+            style={{ backgroundColor: '#2563EB', color: '#FFFFFF' }}
+          >
+            Gratis
+          </span>
+        )}
+      </div>
+
+      {/* Contenido */}
+      <div className="flex flex-col flex-1 p-4 gap-3">
+        <h3
+          className="font-semibold text-sm leading-snug line-clamp-2"
+          style={{ color: '#1D1D1F' }}
+        >
+          {event.title}
+        </h3>
+
+        <div className="space-y-1.5 flex-1">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-3.5 h-3.5 shrink-0" style={{ color: '#2563EB' }} />
+            <span className="text-xs" style={{ color: '#1D1D1F99' }}>
+              {format(eventDate, "dd 'de' MMMM, yyyy", { locale: es })}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Clock className="w-3.5 h-3.5 shrink-0" style={{ color: '#2563EB' }} />
+            <span className="text-xs" style={{ color: '#1D1D1F99' }}>
+              {format(eventDate, 'HH:mm')} hs
+            </span>
+          </div>
+          {(event.city || event.locationName) && (
+            <div className="flex items-center gap-2">
+              <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: '#2563EB' }} />
+              <span className="text-xs" style={{ color: '#1D1D1F99' }}>
+                {event.city || event.locationName}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <Link
+          to={`/categorias/${event.slug}`}
+          className="flex items-center justify-center gap-1 py-2 rounded-xl text-sm font-medium transition-opacity hover:opacity-90"
+          style={{ backgroundColor: '#2563EB', color: '#FFFFFF' }}
+        >
+          Ver más →
+        </Link>
+      </div>
+    </div>
+  );
+}
