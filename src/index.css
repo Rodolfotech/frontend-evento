@@ -12,6 +12,20 @@
   --color-glass-border: rgba(255, 255, 255, 0.1);
   --font-sans: 'Raleway', system-ui, -apple-system, sans-serif;
   --font-brand: 'Raleway', system-ui, sans-serif;
+
+  /* Escala tipográfica de marca */
+  --text-h1: 60px;
+  --text-h1--line-height: 70px;
+  --text-h2: 36px;
+  --text-h2--line-height: 60px;
+  --text-h3: 20px;
+  --text-h3--line-height: 28px;
+  --text-p1: 18px;
+  --text-p1--line-height: 28px;
+  --text-p2: 18px;
+  --text-p2--line-height: 28px;
+  --text-p3: 14px;
+  --text-p3--line-height: 16px;
 }
 
 body {
@@ -48,6 +62,37 @@ body {
 .border-gradient {
   border-image: linear-gradient(135deg, #00f0ff, #8b5cf6, #f472b6) 1;
 }
+
+/* ── Sistema tipográfico de marca ── */
+/* Tailwind classes pueden sobreescribir estos estilos base */
+h1 {
+  font-size: 60px;
+  line-height: 70px;
+  font-weight: 500;
+  font-family: var(--font-brand);
+}
+
+h2 {
+  font-size: 36px;
+  line-height: 60px;
+  font-weight: 600;
+  font-family: var(--font-brand);
+}
+
+h3 {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 400;
+  font-family: var(--font-brand);
+}
+
+/* Clases utilitarias explícitas */
+.tipo-h1 { font-size: 60px; line-height: 70px; font-weight: 500; }
+.tipo-h2 { font-size: 36px; line-height: 60px; font-weight: 600; }
+.tipo-h3 { font-size: 20px; line-height: 28px; font-weight: 400; }
+.tipo-p1 { font-size: 18px; line-height: 28px; font-weight: 400; }
+.tipo-p2 { font-size: 18px; line-height: 28px; font-weight: 600; }
+.tipo-p3 { font-size: 14px; line-height: 16px; font-weight: 500; }
 
 input, textarea, select {
   background: var(--color-dark-700) !important;
