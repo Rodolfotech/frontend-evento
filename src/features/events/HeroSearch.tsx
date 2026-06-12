@@ -28,14 +28,14 @@ export function HeroSearch() {
           <div className="absolute inset-0 bg-black/70" />
 
           {/* Título y subtítulo */}
-          <div className="relative z-10 flex flex-col items-center justify-end h-full pb-28 text-center px-4">
+          <div className="relative z-10 flex flex-col items-center justify-end h-full pb-28 text-center px-8 w-full">
             <h1
-              className="text-3xl md:text-5xl font-semibold text-white drop-shadow-lg"
+              className="text-5xl md:text-6xl font-semibold text-white drop-shadow-lg w-full"
               style={{ fontFamily: 'var(--font-brand)' }}
             >
               Descubre La Araucanía
             </h1>
-            <p className="text-base md:text-lg text-white/85 mt-3">
+            <p className="text-base md:text-xl text-white/85 mt-3 w-full">
               Explora eventos únicos, naturaleza y cultura en el corazón del sur de Chile
             </p>
           </div>
