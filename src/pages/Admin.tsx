@@ -142,7 +142,7 @@ export default function Admin() {
               >
                 <Shield className="w-7 h-7 text-white" />
               </div>
-              <h1 className="text-xl font-bold" style={{ color: '#1D1D1F' }}>Panel de Administración</h1>
+              <h1 className="text-lg font-bold leading-tight break-words" style={{ color: '#1D1D1F' }}>Panel de Administración</h1>
               <p className="text-sm mt-1" style={{ color: '#1D1D1F99' }}>Inicia sesión como administrador</p>
             </div>
 
