@@ -55,7 +55,7 @@ export function CategoryGrid({
   }
 
   return (
-    <section className="w-full py-12" style={{ backgroundColor: '#FFFFFF' }}>
+    <section className="w-full py-12" style={{ backgroundColor: '#F8FAFC' }}>
       <div className="max-w-7xl mx-auto px-4">
         {/* Encabezado */}
         <div className="text-center mb-10">
