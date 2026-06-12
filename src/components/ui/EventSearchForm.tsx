@@ -149,7 +149,7 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
       </div>
 
       {/* Filtros rápidos */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex items-center gap-2 flex-wrap mt-5">
         {(
           [
             { key: 'gratis', label: 'Gratis' },
