@@ -3,6 +3,8 @@ import { Search, Calendar, ChevronDown } from 'lucide-react';
 import { categoriesApi } from '../../api';
 import { COMUNAS } from '../../constants/comunas';
 import type { Category } from '../../types';
+
+const FIXED_CATEGORIES = ['Música', 'Cultura', 'Gastronomía', 'Turismo', 'Trekking', 'Deportes', 'Ferias', 'Bienestar', 'Fiestas'];
 import { format, nextSaturday, nextSunday, isSaturday, isSunday, addDays } from 'date-fns';
 
 export interface EventSearchParams {
@@ -95,10 +97,10 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
           </div>
         </div>
 
-        {/* Categoría */}
+        {/* Categorías */}
         <div>
           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-            Categoría
+            Categorías
           </label>
           <div className="relative">
             <select
@@ -107,9 +109,12 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
               className="w-full pl-3 pr-8 py-2.5 border rounded-xl text-sm appearance-none focus:outline-none cursor-pointer"
             >
               <option value="">Todas las categorías</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
+              {categories
+                .filter((c) => FIXED_CATEGORIES.includes(c.name))
+                .sort((a, b) => FIXED_CATEGORIES.indexOf(a.name) - FIXED_CATEGORIES.indexOf(b.name))
+                .map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
             </select>
             <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
           </div>
