@@ -80,9 +80,10 @@ export default function CreateEventPage() {
     socialApi.getUserMedia().then(({ data }) => setInstagramPosts(data)).catch(() => undefined);
   }, [tab]);
 
-  const filteredPosts = instagramPosts.filter((p) =>
-    !filter || (p.caption || '').toLowerCase().includes(filter.toLowerCase()),
-  );
+  const filteredPosts = instagramPosts
+    .filter((p) => !!p.media_url)
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .filter((p) => !filter || (p.caption || '').toLowerCase().includes(filter.toLowerCase()));
 
   const tabs: { key: Tab; label: string; icon: typeof Calendar; count?: number }[] = [
     { key: 'myevents', label: 'Mis Eventos', icon: Calendar, count: myEvents.length },
