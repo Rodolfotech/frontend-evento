@@ -37,14 +37,14 @@ function Pagination({ page, totalPages, onPageChange }: {
         onClick={() => onPageChange(page - 1)}
         disabled={page <= 1}
         aria-label="Página anterior"
-        className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed text-gray-400 hover:text-white hover:bg-white/5 cursor-pointer"
+        className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer" style={{ color: '#1D1D1F99' }}
       >
         <ChevronLeft className="w-4 h-4" />
         <span className="hidden sm:inline">Anterior</span>
       </button>
       {start > 1 && (
         <>
-          <button onClick={() => onPageChange(1)} className="w-9 h-9 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-white/5 cursor-pointer">1</button>
+          <button onClick={() => onPageChange(1)} className="w-9 h-9 rounded-xl text-sm cursor-pointer" style={{ color: '#1D1D1F99' }}>1</button>
           {start > 2 && <span className="text-gray-600 text-sm">...</span>}
         </>
       )}
@@ -54,11 +54,11 @@ function Pagination({ page, totalPages, onPageChange }: {
           onClick={() => onPageChange(p)}
           aria-label={`Página ${p}`}
           aria-current={p === page ? 'page' : undefined}
-          className={`w-9 h-9 rounded-xl text-sm font-medium transition-all cursor-pointer ${
-            p === page
-              ? 'bg-gradient-to-r from-neon-cyan to-neon-purple text-white'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
-          }`}
+          className="w-9 h-9 rounded-xl text-sm font-medium transition-all cursor-pointer"
+          style={p === page
+            ? { backgroundColor: '#2563EB', color: '#FFFFFF' }
+            : { color: '#1D1D1F99' }
+          }
         >
           {p}
         </button>
@@ -66,14 +66,14 @@ function Pagination({ page, totalPages, onPageChange }: {
       {end < totalPages && (
         <>
           {end < totalPages - 1 && <span className="text-gray-600 text-sm">...</span>}
-          <button onClick={() => onPageChange(totalPages)} className="w-9 h-9 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-white/5 cursor-pointer">{totalPages}</button>
+          <button onClick={() => onPageChange(totalPages)} className="w-9 h-9 rounded-xl text-sm cursor-pointer" style={{ color: '#1D1D1F99' }}>{totalPages}</button>
         </>
       )}
       <button
         onClick={() => onPageChange(page + 1)}
         disabled={page >= totalPages}
         aria-label="Página siguiente"
-        className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed text-gray-400 hover:text-white hover:bg-white/5 cursor-pointer"
+        className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer" style={{ color: '#1D1D1F99' }}
       >
         <span className="hidden sm:inline">Siguiente</span>
         <ChevronRight className="w-4 h-4" />
@@ -182,11 +182,11 @@ export default function Events() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: "#1D1D1F" }}>
                 {selectedComuna || 'Región de La Araucanía'}
               </h1>
-              <p className="text-gray-400 mt-1 flex items-center gap-1.5">
-                <MapPinned className="w-4 h-4 text-neon-cyan" />
+              <p className="mt-1 flex items-center gap-1.5" style={{ color: '#1D1D1F99' }}>
+                <MapPinned className="w-4 h-4" style={{ color: '#2563EB' }} />
                 {loading
                   ? 'Cargando...'
                   : selectedComuna
@@ -229,26 +229,26 @@ export default function Events() {
 
           {/* Advanced filters */}
           <details className="mb-8 group">
-            <summary className="text-sm text-gray-400 hover:text-white cursor-pointer list-none flex items-center gap-2">
-              <span className="w-4 h-4 rounded border border-gray-600 flex items-center justify-center group-open:bg-neon-cyan/20 group-open:border-neon-cyan transition-colors">
-                <span className="w-2 h-0.5 bg-gray-400 group-open:rotate-90 group-open:bg-neon-cyan transition-all" />
+            <summary className="text-sm cursor-pointer list-none flex items-center gap-2" style={{ color: '#1D1D1F99' }}>
+              <span className="w-4 h-4 rounded border flex items-center justify-center transition-colors" style={{ borderColor: '#E4EBFA' }}>
+                <span className="w-2 h-0.5 transition-all" style={{ backgroundColor: '#2563EB' }} />
               </span>
               Filtros avanzados
-              {hasFilters && <span className="w-2 h-2 rounded-full bg-neon-cyan" />}
+              {hasFilters && <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#2563EB' }} />}
             </summary>
-            <div className="glass rounded-2xl p-6 mt-4 glow-cyan">
+            <div className="rounded-2xl p-6 mt-4 border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-medium text-white">Filtros</h3>
+                <h3 className="text-sm font-medium" style={{ color: '#1D1D1F' }}>Filtros</h3>
                 {hasFilters && (
                   <button onClick={clearFilters}
-                    className="text-xs text-neon-cyan hover:underline cursor-pointer">
+                    className="text-xs hover:underline cursor-pointer" style={{ color: '#2563EB' }}>
                     Limpiar filtros
                   </button>
                 )}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <label htmlFor="dateFrom" className="block text-xs text-gray-400 mb-1">Fecha desde</label>
+                  <label htmlFor="dateFrom" className="block text-xs mb-1" style={{ color: '#1D1D1F99' }}>Fecha desde</label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     <input id="dateFrom" type="date" value={dateFrom}
@@ -257,7 +257,7 @@ export default function Events() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="dateTo" className="block text-xs text-gray-400 mb-1">Fecha hasta</label>
+                  <label htmlFor="dateTo" className="block text-xs mb-1" style={{ color: '#1D1D1F99' }}>Fecha hasta</label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     <input id="dateTo" type="date" value={dateTo}
@@ -266,7 +266,7 @@ export default function Events() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="comuna" className="block text-xs text-gray-400 mb-1">Comuna</label>
+                  <label htmlFor="comuna" className="block text-xs mb-1" style={{ color: '#1D1D1F99' }}>Comuna</label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     <select id="comuna" value={selectedComuna}
@@ -287,24 +287,24 @@ export default function Events() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="glass rounded-2xl p-6 animate-pulse">
-                  <div className="h-4 bg-white/10 rounded w-3/4 mb-4" />
-                  <div className="h-3 bg-white/10 rounded w-full mb-2" />
-                  <div className="h-3 bg-white/10 rounded w-2/3 mb-4" />
-                  <div className="h-3 bg-white/10 rounded w-1/2" />
+                <div key={i} className="rounded-2xl p-6 animate-pulse border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
+                  <div className="h-4 rounded w-3/4 mb-4" style={{ backgroundColor: '#E4EBFA' }} />
+                  <div className="h-3 rounded w-full mb-2" style={{ backgroundColor: '#E4EBFA' }} />
+                  <div className="h-3 rounded w-2/3 mb-4" style={{ backgroundColor: '#E4EBFA' }} />
+                  <div className="h-3 rounded w-1/2" style={{ backgroundColor: '#E4EBFA' }} />
                 </div>
               ))}
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-20">
-              <Calendar className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400">
+              <Calendar className="w-12 h-12 mx-auto mb-4" style={{ color: '#E4EBFA' }} />
+              <p style={{ color: '#1D1D1F99' }}>
                 {selectedComuna
                   ? `No hay eventos publicados en ${selectedComuna} aún`
                   : 'No hay eventos publicados este mes'}
               </p>
               <button onClick={clearFilters}
-                className="mt-4 text-sm text-neon-cyan hover:underline cursor-pointer">
+                className="mt-4 text-sm hover:underline cursor-pointer" style={{ color: '#2563EB' }}>
                 Limpiar filtros
               </button>
             </div>
@@ -316,10 +316,10 @@ export default function Events() {
                 const monthName = format(date, 'MMMM yyyy', { locale: es });
                 return (
                   <section key={monthKey} className="mb-10" aria-labelledby={`month-${monthKey}`}>
-                    <h2 id={`month-${monthKey}`} className="text-lg font-bold text-white mb-4 capitalize flex items-center gap-2">
-                      <Calendar className="w-5 h-5 text-neon-cyan" />
+                    <h2 id={`month-${monthKey}`} className="text-lg font-bold mb-4 capitalize flex items-center gap-2" style={{ color: '#1D1D1F' }}>
+                      <Calendar className="w-5 h-5" style={{ color: '#2563EB' }} />
                       {monthName}
-                      <span className="text-sm font-normal text-gray-500">({monthEvents.length})</span>
+                      <span className="text-sm font-normal" style={{ color: '#1D1D1F66' }}>({monthEvents.length})</span>
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {monthEvents.map((event) => (

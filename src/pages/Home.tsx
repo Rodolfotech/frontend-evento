@@ -19,13 +19,14 @@ export default function Home() {
 
       <section className="max-w-7xl mx-auto px-4 pt-12 pb-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <MapPinned className="w-6 h-6 text-neon-cyan" />
+          <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2" style={{ color: '#1D1D1F' }}>
+            <MapPinned className="w-6 h-6" style={{ color: '#2563EB' }} />
             Explora por comuna
           </h2>
           <Link
             to="/comunas"
-            className="text-sm text-neon-cyan hover:underline flex items-center gap-1"
+            className="text-sm font-medium flex items-center gap-1 hover:underline"
+            style={{ color: '#2563EB' }}
           >
             Ver todas <ArrowRight className="w-3 h-3" />
           </Link>
@@ -36,9 +37,12 @@ export default function Home() {
               key={comuna}
               to={`/categorias?ciudad=${encodeURIComponent(comuna)}`}
               role="listitem"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-sm text-gray-300 hover:text-white hover:glow-purple transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm transition-all"
+              style={{ borderColor: '#E4EBFA', color: '#1D1D1F99' }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#2563EB'; e.currentTarget.style.color = '#2563EB'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#E4EBFA'; e.currentTarget.style.color = '#1D1D1F99'; }}
             >
-              <MapPin className="w-3 h-3 text-neon-cyan" />
+              <MapPin className="w-3 h-3" style={{ color: '#2563EB' }} />
               {comuna}
             </Link>
           ))}
@@ -47,12 +51,13 @@ export default function Home() {
 
       <section className="max-w-7xl mx-auto px-4 pb-20">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold tracking-tight text-white">
+          <h2 className="text-2xl font-bold tracking-tight" style={{ color: '#1D1D1F' }}>
             Próximos Eventos
           </h2>
           <Link
             to="/categorias"
-            className="text-sm text-neon-cyan hover:underline flex items-center gap-1"
+            className="text-sm font-medium flex items-center gap-1 hover:underline"
+            style={{ color: '#2563EB' }}
           >
             Ver todos <ArrowRight className="w-3 h-3" />
           </Link>
