@@ -20,8 +20,7 @@ export function UpcomingEventsCarousel({
   const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    eventsApi.getAll({ limit, dateFrom: today })
+    eventsApi.getAll({ limit })
       .then(({ data: { data } }) => setEvents(data))
       .catch(() => {});
   }, [limit]);
@@ -29,8 +28,6 @@ export function UpcomingEventsCarousel({
   function scrollRight() {
     carouselRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
   }
-
-  if (events.length === 0) return null;
 
   return (
     <section className="w-full py-12" style={{ backgroundColor: '#F8FAFC' }}>
