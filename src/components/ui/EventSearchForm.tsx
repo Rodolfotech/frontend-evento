@@ -74,7 +74,8 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
               onChange={(e) => setQ(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               placeholder="¿Qué buscas?"
-              className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#2563EB] bg-white"
+              className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:border-[#2563EB]"
+              style={{ backgroundColor: '#ffffff', color: '#1f2937' }}
             />
           </div>
         </div>
@@ -90,7 +91,8 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
               type="date"
               value={fecha}
               onChange={(e) => setFecha(e.target.value)}
-              className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-[#2563EB] bg-white"
+              className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#2563EB]"
+              style={{ backgroundColor: '#ffffff', color: '#1f2937' }}
             />
           </div>
         </div>
@@ -104,7 +106,8 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
             <select
               value={categoriaId}
               onChange={(e) => setCategoriaId(e.target.value)}
-              className="w-full pl-3 pr-8 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-800 appearance-none focus:outline-none focus:border-[#2563EB] cursor-pointer bg-white"
+              className="w-full pl-3 pr-8 py-2.5 border border-gray-200 rounded-xl text-sm appearance-none focus:outline-none focus:border-[#2563EB] cursor-pointer"
+              style={{ backgroundColor: '#ffffff', color: '#1f2937' }}
             >
               <option value="">Todas las categorías</option>
               {categories.map((c) => (
@@ -124,7 +127,8 @@ export function EventSearchForm({ onSearch, className = '' }: Props) {
             <select
               value={ciudad}
               onChange={(e) => setCiudad(e.target.value)}
-              className="w-full pl-3 pr-8 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-800 appearance-none focus:outline-none focus:border-[#2563EB] cursor-pointer bg-white"
+              className="w-full pl-3 pr-8 py-2.5 border border-gray-200 rounded-xl text-sm appearance-none focus:outline-none focus:border-[#2563EB] cursor-pointer"
+              style={{ backgroundColor: '#ffffff', color: '#1f2937' }}
             >
               <option value="">Todas las comunas</option>
               {COMUNAS.map((c) => (
