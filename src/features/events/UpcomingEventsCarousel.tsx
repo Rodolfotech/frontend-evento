@@ -1,41 +1,46 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { eventsApi } from '../api';
-import { HeroSearch } from '../features/events/HeroSearch';
-import { FeaturedEventCard } from '../features/events/FeaturedEventCard';
-import { CategoryGrid } from '../features/events/CategoryGrid';
-import { ComunaGrid } from '../features/events/ComunaGrid';
-import { UpcomingEventsCarousel } from '../features/events/UpcomingEventsCarousel';
-import type { Event } from '../types';
 import { ChevronRight } from 'lucide-react';
+import { eventsApi } from '../../api';
+import { FeaturedEventCard } from './FeaturedEventCard';
+import type { Event } from '../../types';
 
-export default function Home() {
+interface Props {
+  title?: string;
+  subtitle?: string;
+  limit?: number;
+}
+
+export function UpcomingEventsCarousel({
+  title = 'Próximos eventos',
+  subtitle = 'Experiencias únicas que no te puedes perder',
+  limit = 8,
+}: Props) {
   const [events, setEvents] = useState<Event[]>([]);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
-    eventsApi.getAll({ limit: 8, dateFrom: today }).then(({ data: { data } }) => setEvents(data));
-  }, []);
+    eventsApi.getAll({ limit, dateFrom: today })
+      .then(({ data: { data } }) => setEvents(data))
+      .catch(() => {});
+  }, [limit]);
 
   function scrollRight() {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
-    }
+    carouselRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
   }
 
-  return (
-    <div className="min-h-screen pt-16" style={{ backgroundColor: '#FFFFFF' }}>
-      <HeroSearch />
+  if (events.length === 0) return null;
 
-      {/* Eventos destacados */}
-      <section className="max-w-7xl mx-auto px-4 pt-12 pb-12">
+  return (
+    <section className="w-full py-12" style={{ backgroundColor: '#F8FAFC' }}>
+      <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold tracking-tight" style={{ color: '#1D1D1F' }}>
-            Eventos destacados
+            {title}
           </h2>
           <p className="mt-2 text-sm" style={{ color: '#1D1D1F99' }}>
-            Experiencias únicas que no te puedes perder
+            {subtitle}
           </p>
         </div>
 
@@ -57,7 +62,7 @@ export default function Home() {
               type="button"
               onClick={scrollRight}
               aria-label="Ver más eventos"
-              className="absolute -right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-colors hover:opacity-90"
+              className="absolute -right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:opacity-90 transition-opacity"
               style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}
             >
               <ChevronRight className="w-5 h-5" style={{ color: '#2563EB' }} />
@@ -74,11 +79,7 @@ export default function Home() {
             Ver todos los eventos →
           </Link>
         </div>
-      </section>
-
-      <CategoryGrid />
-      <ComunaGrid />
-      <UpcomingEventsCarousel />
-    </div>
+      </div>
+    </section>
   );
 }
