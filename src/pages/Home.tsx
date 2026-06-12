@@ -4,6 +4,7 @@ import { eventsApi } from '../api';
 import { HeroSearch } from '../features/events/HeroSearch';
 import { FeaturedEventCard } from '../features/events/FeaturedEventCard';
 import { CategoryGrid } from '../features/events/CategoryGrid';
+import { ComunaGrid } from '../features/events/ComunaGrid';
 import type { Event } from '../types';
 import { ChevronRight } from 'lucide-react';
 
@@ -75,6 +76,7 @@ export default function Home() {
       </section>
 
       <CategoryGrid />
+      <ComunaGrid />
     </div>
   );
 }
