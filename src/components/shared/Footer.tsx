@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2">
             <img src="/Isotipo.svg" alt="HoySesale.cl" className="h-10 w-auto" />
-            <span className="text-sm font-bold text-gradient">HoySesale.cl</span>
+            <span className="text-sm font-semibold text-white" style={{ fontFamily: 'var(--font-brand)' }}>HoySeSale</span>
           </Link>
 
           <div className="flex items-center gap-6">
