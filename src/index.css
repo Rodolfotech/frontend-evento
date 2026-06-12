@@ -117,7 +117,10 @@ input:focus, textarea:focus, select:focus {
 /* Override para formularios sobre fondo claro */
 .light-form input,
 .light-form textarea,
-.light-form select {
+.light-form select,
+input.light-form,
+textarea.light-form,
+select.light-form {
   background: #ffffff !important;
   border: 1px solid #e5e7eb !important;
   color: #1f2937 !important;
@@ -125,7 +128,10 @@ input:focus, textarea:focus, select:focus {
 
 .light-form input:focus,
 .light-form textarea:focus,
-.light-form select:focus {
+.light-form select:focus,
+input.light-form:focus,
+textarea.light-form:focus,
+select.light-form:focus {
   border-color: #2563EB !important;
   box-shadow: none !important;
 }
