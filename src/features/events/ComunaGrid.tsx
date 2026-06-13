@@ -7,23 +7,32 @@ import type { Event } from '../../types';
 
 const PER_PAGE = 8;
 
-const FALLBACK_COLORS: Record<string, string> = {
-  Temuco:           '#1D3461',
-  Villarrica:       '#0F766E',
-  'Pucón':          '#15803D',
-  'Nueva Imperial': '#7C3AED',
-  'Padre Las Casas':'#0369A1',
-  Lautaro:          '#BE185D',
-  Angol:            '#B45309',
-  Carahue:          '#0891B2',
-  'Traiguén':       '#374151',
-  Victoria:         '#1D3461',
+const PRIORITY_COMUNAS = [
+  'Temuco',
+  'Villarrica',
+  'Pucón',
+  'Nueva Imperial',
+  'Puerto Saavedra',
+  'Angol',
+  'Traiguén',
+  'Carahue',
+];
+
+const COMUNA_IMAGE: Record<string, string> = {
+  'Temuco':          '/comunas/temuco.jpg',
+  'Villarrica':      '/comunas/villarrica.jpg',
+  'Pucón':           '/comunas/pucon.jpg',
+  'Nueva Imperial':  '/comunas/nueva-imperial.jpg',
+  'Puerto Saavedra': '/comunas/puerto-saavedra.jpg',
+  'Angol':           '/comunas/angol.jpg',
+  'Traiguén':        '/comunas/traiguen.jpg',
+  'Carahue':         '/comunas/carahue.jpg',
 };
 
+const FALLBACK_COLORS = ['#1D3461','#0F766E','#15803D','#7C3AED','#0369A1','#BE185D','#374151','#0891B2'];
+
 function getFallbackColor(name: string): string {
-  if (FALLBACK_COLORS[name]) return FALLBACK_COLORS[name];
-  const palette = ['#1D3461','#0F766E','#15803D','#7C3AED','#0369A1','#BE185D','#374151','#0891B2'];
-  return palette[name.charCodeAt(0) % palette.length];
+  return FALLBACK_COLORS[name.charCodeAt(0) % FALLBACK_COLORS.length];
 }
 
 interface ComunaData {
@@ -51,14 +60,19 @@ export function ComunaGrid({
         (data as Event[]).forEach((e) => {
           if (e.city) counts[e.city] = (counts[e.city] || 0) + 1;
         });
-        const list: ComunaData[] = COMUNAS.map((name) => ({
-          name,
-          count: counts[name] || 0,
-        })).sort((a, b) => b.count - a.count);
-        setComunas(list);
+        const priority = PRIORITY_COMUNAS.map((name) => ({ name, count: counts[name] || 0 }));
+        const rest = COMUNAS
+          .filter((name) => !PRIORITY_COMUNAS.includes(name))
+          .map((name) => ({ name, count: counts[name] || 0 }))
+          .sort((a, b) => b.count - a.count);
+        setComunas([...priority, ...rest]);
       })
       .catch(() => {
-        setComunas(COMUNAS.map((name) => ({ name, count: 0 })));
+        const priority = PRIORITY_COMUNAS.map((name) => ({ name, count: 0 }));
+        const rest = COMUNAS
+          .filter((name) => !PRIORITY_COMUNAS.includes(name))
+          .map((name) => ({ name, count: 0 }));
+        setComunas([...priority, ...rest]);
       });
   }, []);
 
@@ -79,30 +93,32 @@ export function ComunaGrid({
               key={name}
               type="button"
               onClick={() => navigate(`/categorias?ciudad=${encodeURIComponent(name)}`)}
-              className="relative rounded-2xl overflow-hidden cursor-pointer group"
-              style={{ height: '200px' }}
+              className="relative w-full rounded-2xl overflow-hidden cursor-pointer group"
             >
-              {/* Imagen de fondo */}
-              <img
-                src={`/comunas/${name.toLowerCase().replace(/ /g, '-').replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/[ñ]/g,'n')}.jpg`}
-                alt={name}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-              />
-
-              {/* Fondo de color fallback */}
+              {/* Capa 1: color fallback (fondo base) */}
               <div
                 className="absolute inset-0"
                 style={{ backgroundColor: getFallbackColor(name) }}
               />
 
-              {/* Overlay oscuro */}
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors" />
+              {/* Capa 2: foto — define el alto natural de la card */}
+              {COMUNA_IMAGE[name] ? (
+                <img
+                  src={COMUNA_IMAGE[name]}
+                  alt={name}
+                  className="relative block w-full h-auto transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <div className="w-full" style={{ height: '200px' }} />
+              )}
 
-              {/* Texto */}
-              <div className="absolute bottom-0 left-0 p-4 text-left">
-                <p className="text-white font-semibold text-base leading-tight">{name}</p>
-                <p className="text-white/80 text-sm mt-0.5">{count} Evento{count !== 1 ? 's' : ''}</p>
+              {/* Capa 3: overlay oscuro para legibilidad del texto */}
+              <div className="absolute inset-0 bg-black/35 group-hover:bg-black/50 transition-colors" />
+
+              {/* Capa 4: texto */}
+              <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
+                <p className="text-white font-semibold text-lg leading-tight" style={{ fontFamily: 'var(--font-brand)' }}>{name}</p>
+                <p className="text-white/80 text-sm mt-0.5" style={{ fontFamily: 'var(--font-brand)' }}>{count} Evento{count !== 1 ? 's' : ''}</p>
               </div>
             </button>
           ))}

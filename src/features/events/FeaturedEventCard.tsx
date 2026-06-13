@@ -4,22 +4,8 @@ import type { Event } from '../../types';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
-  Música:       { bg: '#1D3461', text: '#FFFFFF' },
-  Cultura:      { bg: '#0F766E', text: '#FFFFFF' },
-  Deporte:      { bg: '#EA580C', text: '#FFFFFF' },
-  Documental:   { bg: '#374151', text: '#FFFFFF' },
-  Arte:         { bg: '#7C3AED', text: '#FFFFFF' },
-  Gastronomía:  { bg: '#B45309', text: '#FFFFFF' },
-  Educación:    { bg: '#0369A1', text: '#FFFFFF' },
-  Teatro:       { bg: '#BE185D', text: '#FFFFFF' },
-  Tecnología:   { bg: '#0891B2', text: '#FFFFFF' },
-  Naturaleza:   { bg: '#15803D', text: '#FFFFFF' },
-};
-
-function getCategoryStyle(name?: string) {
-  if (!name) return { bg: '#374151', text: '#FFFFFF' };
-  return CATEGORY_COLORS[name] ?? { bg: '#374151', text: '#FFFFFF' };
+function getCategoryStyle() {
+  return { bg: '#FFFFFF', text: '#2563EB' };
 }
 
 interface Props {
@@ -29,7 +15,7 @@ interface Props {
 export function FeaturedEventCard({ event }: Props) {
   const isFree = !event.price || event.price === 0;
   const eventDate = new Date(event.date);
-  const catStyle = getCategoryStyle(event.category?.name);
+  const catStyle = getCategoryStyle();
 
   return (
     <div
@@ -37,7 +23,7 @@ export function FeaturedEventCard({ event }: Props) {
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}
     >
       {/* Imagen */}
-      <div className="relative shrink-0" style={{ height: '210px' }}>
+      <div className="relative w-full aspect-square overflow-hidden">
         {event.imageUrl ? (
           <img
             src={event.imageUrl}
@@ -57,7 +43,7 @@ export function FeaturedEventCard({ event }: Props) {
         {event.category && (
           <span
             className="absolute top-3 left-3 text-xs font-medium px-2.5 py-1 rounded-full"
-            style={{ backgroundColor: catStyle.bg, color: catStyle.text }}
+            style={{ backgroundColor: catStyle.bg, color: catStyle.text, border: '1px solid #E4EBFA' }}
           >
             {event.category.name}
           </span>
@@ -67,7 +53,7 @@ export function FeaturedEventCard({ event }: Props) {
         {isFree && (
           <span
             className="absolute bottom-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full"
-            style={{ backgroundColor: '#2563EB', color: '#FFFFFF' }}
+            style={{ backgroundColor: '#FFFFFF', color: '#2563EB', border: '1px solid #E4EBFA' }}
           >
             Gratis
           </span>
