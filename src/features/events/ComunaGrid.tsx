@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { eventsApi } from '../../api';
 import { COMUNAS } from '../../constants/comunas';
@@ -50,8 +50,18 @@ export function ComunaGrid({
   subtitle = 'Explora eventos y experiencias en las distintas comunas de la región.',
 }: Props) {
   const navigate = useNavigate();
+  const sectionRef = useRef<HTMLElement>(null);
   const [comunas, setComunas] = useState<ComunaData[]>([]);
   const [page, setPage] = useState(1);
+
+  function handlePageChange(newPage: number) {
+    setPage(newPage);
+    requestAnimationFrame(() => {
+      if (sectionRef.current) {
+        window.scrollTo({ top: sectionRef.current.offsetTop - 72, behavior: 'smooth' });
+      }
+    });
+  }
 
   useEffect(() => {
     eventsApi.getAll({ limit: 500 })
@@ -80,11 +90,11 @@ export function ComunaGrid({
   const visible = comunas.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   return (
-    <section className="w-full py-12" style={{ backgroundColor: '#FFFFFF' }}>
+    <section ref={sectionRef} className="w-full py-12" style={{ backgroundColor: '#FFFFFF' }}>
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold" style={{ color: '#1D1D1F' }}>{title}</h2>
-          <p className="mt-2 text-sm max-w-xl mx-auto" style={{ color: '#1D1D1F99' }}>{subtitle}</p>
+          <h2 className="text-3xl font-bold" style={{ color: '#1D1D1F', fontFamily: "'Raleway', sans-serif" }}>{title}</h2>
+          <p className="mt-2 text-base font-medium max-w-xl mx-auto" style={{ color: '#1D1D1F', fontFamily: "'Raleway', sans-serif" }}>{subtitle}</p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -124,7 +134,7 @@ export function ComunaGrid({
           ))}
         </div>
 
-        <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+        <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
     </section>
   );

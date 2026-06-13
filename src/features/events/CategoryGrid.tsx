@@ -59,10 +59,10 @@ export function CategoryGrid({
       <div className="max-w-7xl mx-auto px-4">
         {/* Encabezado */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold" style={{ color: '#1D1D1F', fontFamily: 'var(--font-brand)' }}>
+          <h2 className="text-3xl font-bold" style={{ color: '#1D1D1F', fontFamily: "'Raleway', sans-serif" }}>
             {title}
           </h2>
-          <p className="mt-2 text-sm max-w-xl mx-auto" style={{ color: '#1D1D1F99', fontFamily: 'var(--font-brand)' }}>
+          <p className="mt-2 text-base font-medium max-w-xl mx-auto" style={{ color: '#1D1D1F', fontFamily: "'Raleway', sans-serif" }}>
             {subtitle}
           </p>
         </div>
