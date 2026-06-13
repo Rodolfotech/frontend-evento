@@ -73,14 +73,8 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/Isotipo.svg" alt="HoySeSale" className="h-9 w-auto" />
-            <span
-              className="font-semibold text-base"
-              style={{ fontFamily: 'var(--font-brand)', color: '#1D1D1F' }}
-            >
-              HoySeSale
-            </span>
+          <Link to="/" className="flex items-center">
+            <img src="/Logohoysesale.svg" alt="HoySeSale" className="h-9 w-auto" />
           </Link>
           <p className="text-sm" style={{ color: '#1D1D1F99' }}>
             © {new Date().getFullYear()} hoysesale.cl — La Araucanía, Chile
