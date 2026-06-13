@@ -55,20 +55,20 @@ export function CategoryGrid({
   }
 
   return (
-    <section className="w-full py-12" style={{ backgroundColor: '#F8FAFC' }}>
+    <section className="w-full py-12 pb-16"  style={{ backgroundColor: '#F8FAFC' }}>
       <div className="max-w-7xl mx-auto px-4">
         {/* Encabezado */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold" style={{ color: '#1D1D1F' }}>
+          <h2 className="text-3xl font-bold" style={{ color: '#1D1D1F', fontFamily: 'var(--font-brand)' }}>
             {title}
           </h2>
-          <p className="mt-2 text-sm max-w-xl mx-auto" style={{ color: '#1D1D1F99' }}>
+          <p className="mt-2 text-sm max-w-xl mx-auto" style={{ color: '#1D1D1F99', fontFamily: 'var(--font-brand)' }}>
             {subtitle}
           </p>
         </div>
 
         {/* Grid de categorías */}
-        <div className="flex flex-wrap justify-center gap-6">
+        <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-4">
           {CATEGORY_CONFIG.map(({ name, icon: Icon }) => (
             <button
               key={name}
@@ -82,7 +82,7 @@ export function CategoryGrid({
               >
                 <Icon className="w-7 h-7" style={{ color: '#2563EB' }} />
               </div>
-              <span className="text-xs font-medium" style={{ color: '#1D1D1F' }}>
+              <span className="text-xs font-medium text-center" style={{ color: '#1D1D1F', fontFamily: 'var(--font-brand)' }}>
                 {name}
               </span>
             </button>
