@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { eventsApi } from '../api';
 import { HeroSearch } from '../features/events/HeroSearch';
@@ -8,22 +8,14 @@ import { ComunaGrid } from '../features/events/ComunaGrid';
 import { UpcomingEventsCarousel } from '../features/events/UpcomingEventsCarousel';
 import { OrganizerCTA } from '../features/events/OrganizerCTA';
 import type { Event } from '../types';
-import { ChevronRight } from 'lucide-react';
 
 export default function Home() {
   const [events, setEvents] = useState<Event[]>([]);
-  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
     eventsApi.getAll({ limit: 8, dateFrom: today }).then(({ data: { data } }) => setEvents(data));
   }, []);
-
-  function scrollRight() {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
-    }
-  }
 
   return (
     <div className="min-h-screen pt-16" style={{ backgroundColor: '#FFFFFF' }}>
@@ -40,30 +32,10 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="relative">
-          <div
-            ref={carouselRef}
-            className="flex gap-4 overflow-x-auto pb-2"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {events.map((event) => (
-              <div key={event.id} className="shrink-0 w-64">
-                <FeaturedEventCard event={event} />
-              </div>
-            ))}
-          </div>
-
-          {events.length > 4 && (
-            <button
-              type="button"
-              onClick={scrollRight}
-              aria-label="Ver más eventos"
-              className="absolute -right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-colors hover:opacity-90"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}
-            >
-              <ChevronRight className="w-5 h-5" style={{ color: '#2563EB' }} />
-            </button>
-          )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {events.map((event) => (
+            <FeaturedEventCard key={event.id} event={event} />
+          ))}
         </div>
 
         <div className="text-center mt-8">

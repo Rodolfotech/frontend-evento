@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { Calendar, Clock, Tag, Send, ExternalLink, MapPin } from 'lucide-react';
+import { Calendar, Clock, Tag, Send, ExternalLink, MapPin, Ticket } from 'lucide-react';
 import { SocialPostMedia } from './SocialPostMedia';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { eventsApi } from '../../api';
 import type { SocialPost } from '../../types';
 import { COMUNAS } from '../../constants/comunas';
+
+type EventType = '' | 'gratis' | 'compra' | 'cupo';
 
 interface InstagramPostPublisherProps {
   post: SocialPost;
@@ -16,6 +18,8 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
   const [eventDate, setEventDate] = useState('');
   const [eventTime, setEventTime] = useState('');
   const [comuna, setComuna] = useState('');
+  const [tipo, setTipo] = useState<EventType>('');
+  const [ticketUrl, setTicketUrl] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [category, setCategory] = useState('');
@@ -30,6 +34,7 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
     if (!eventDate) { setError('La fecha del evento es obligatoria'); return; }
     if (!eventTime) { setError('La hora del evento es obligatoria'); return; }
     if (!comuna) { setError('La comuna es obligatoria'); return; }
+    if (!tipo) { setError('El tipo de evento es obligatorio'); return; }
     if (!startDate) { setError('La fecha de inicio de publicación es obligatoria'); return; }
     if (!endDate) { setError('La fecha de término de publicación es obligatoria'); return; }
     if (!category) { setError('La categoría es obligatoria'); return; }
@@ -50,6 +55,7 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
         imageUrl: post.media_url || undefined,
         city: comuna,
         isOnline: false,
+        address: tipo === 'compra' && ticketUrl ? ticketUrl : undefined,
       });
       setSuccess(true);
       onPublished?.();
@@ -136,6 +142,31 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
                 {COMUNAS.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
+            <div className="flex items-center gap-2">
+              <Ticket className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
+              <select
+                value={tipo}
+                onChange={(e) => { setTipo(e.target.value as EventType); setTicketUrl(''); }}
+                className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
+              >
+                <option value="" disabled>Selecciona un tipo</option>
+                <option value="gratis">Gratis</option>
+                <option value="compra">Compra tu entrada</option>
+                <option value="cupo">Asegura tu cupo</option>
+              </select>
+            </div>
+            {tipo === 'compra' && (
+              <div className="flex items-center gap-2">
+                <ExternalLink className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
+                <input
+                  type="url"
+                  value={ticketUrl}
+                  onChange={(e) => setTicketUrl(e.target.value)}
+                  placeholder="URL de compra de entradas"
+                  className="flex-1 px-3 py-1.5 rounded-lg text-xs light-form"
+                />
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <Tag className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
               <select

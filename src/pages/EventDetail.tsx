@@ -212,36 +212,25 @@ export default function EventDetail() {
             )}
 
             {/* Botón Ir a Instagram */}
-            {(() => {
-              const igUrl = event.owner?.instagramUsername
-                ? `https://www.instagram.com/${event.owner.instagramUsername}`
-                : event.socialFeed?.[0]?.permalink || null;
-              const igLabel = event.owner?.instagramUsername
-                ? `@${event.owner.instagramUsername}`
-                : null;
-
-              if (!igUrl && !event.owner?.instagramId) return null;
-
-              return (
-                <div className="pt-4" style={{ borderTop: '1px solid #E4EBFA' }}>
-                  <a
-                    href={igUrl || `https://www.instagram.com/`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => { if (isAuthenticated) adminApi.trackInstagramClick(event?.id).catch(() => {}); }}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity"
-                    style={{ backgroundColor: '#2563EB' }}
-                  >
-                    <Camera className="w-4 h-4" />
-                    Ir a Instagram
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                  {igLabel && (
-                    <p className="mt-1.5 text-xs" style={{ color: '#1D1D1F99' }}>{igLabel}</p>
-                  )}
-                </div>
-              );
-            })()}
+            {event.owner?.instagramUsername && (
+              <div className="pt-4" style={{ borderTop: '1px solid #E4EBFA' }}>
+                <a
+                  href={`https://www.instagram.com/${event.owner.instagramUsername}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => { if (isAuthenticated) adminApi.trackInstagramClick(event?.id).catch(() => {}); }}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                  style={{ backgroundColor: '#2563EB' }}
+                >
+                  <Camera className="w-4 h-4" />
+                  Ver publicaciones en Instagram
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+                <p className="mt-1.5 text-xs" style={{ color: '#1D1D1F99' }}>
+                  @{event.owner.instagramUsername}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
