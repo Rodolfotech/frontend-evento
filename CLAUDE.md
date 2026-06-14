@@ -138,7 +138,28 @@ VITE_ADMIN_API_PREFIX=control-panel-7f3a  # Endpoint prefix for admin API calls
 
 ---
 
-## 7. Git Workflow
+## 7. Infraestructura y Servicios Externos
+
+### Frontend — Vercel
+El frontend se despliega automáticamente en Vercel desde `main`. Variable de entorno requerida: `VITE_API_URL` apuntando al backend en Render.
+
+### Backend — Render (Free Tier)
+El backend NestJS corre en Render. El tier gratuito incluye 750 horas/mes — con un solo servicio nunca se supera el límite.
+
+**Problema conocido**: Render apaga el servidor tras 15 minutos de inactividad (cold start de 10-30 seg).
+
+**Solución activa — Keep-Alive con cron-job.org**: Un cronjob pinga el backend cada 15 minutos para mantenerlo siempre despierto.
+- Panel: https://console.cron-job.org/jobs
+- URL pineada: `https://backend-evento.onrender.com/health`
+- Frecuencia: cada 15 minutos
+- Si el cronjob se desactiva, el cold start vuelve a aparecer en producción.
+
+### Caché de eventos en el frontend
+`src/api/eventsCache.ts` implementa stale-while-revalidate con localStorage (TTL 10 min). Los componentes `Home` y `UpcomingEventsCarousel` muestran datos cacheados al instante y refrescan en background. Si no hay caché, muestran skeleton cards (`EventCardSkeleton`) mientras carga la API.
+
+---
+
+## 8. Git Workflow
 
 **Never commit directly to `main`.** All changes must go through a branch:
 

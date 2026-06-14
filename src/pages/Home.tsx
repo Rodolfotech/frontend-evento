@@ -11,32 +11,40 @@ import { UpcomingEventsCarousel } from '../features/events/UpcomingEventsCarouse
 import { OrganizerCTA } from '../features/events/OrganizerCTA';
 import type { Event } from '../types';
 
-const FEATURED_PARAMS = {
-  limit: 8,
-  dateFrom: new Date().toISOString().split('T')[0],
-};
+const FEATURED_PARAMS = { limit: 8, dateFrom: new Date().toISOString().split('T')[0] };
+const UPCOMING_PARAMS = { limit: 8 };
 
 export default function Home() {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [featured, setFeatured] = useState<Event[]>(() => getCached<Event[]>(FEATURED_PARAMS) ?? []);
+  const [upcoming, setUpcoming] = useState<Event[]>(() => getCached<Event[]>(UPCOMING_PARAMS) ?? []);
+  const [loading, setLoading] = useState(
+    () => getCached<Event[]>(FEATURED_PARAMS) === null || getCached<Event[]>(UPCOMING_PARAMS) === null
+  );
 
   useEffect(() => {
-    const cached = getCached<Event[]>(FEATURED_PARAMS);
-    if (cached) {
-      setEvents(cached);
-      setLoading(false);
-    }
+    const cachedFeatured = getCached<Event[]>(FEATURED_PARAMS);
+    const cachedUpcoming = getCached<Event[]>(UPCOMING_PARAMS);
+    if (cachedFeatured) setFeatured(cachedFeatured);
+    if (cachedUpcoming) setUpcoming(cachedUpcoming);
+    if (cachedFeatured && cachedUpcoming) setLoading(false);
 
-    eventsApi.getAll(FEATURED_PARAMS)
-      .then(({ data: { data } }) => {
-        setEvents(data);
-        setCached(FEATURED_PARAMS, data);
+    Promise.all([
+      eventsApi.getAll(FEATURED_PARAMS),
+      eventsApi.getAll(UPCOMING_PARAMS),
+    ])
+      .then(([featuredRes, upcomingRes]) => {
+        const f = featuredRes.data.data;
+        const u = upcomingRes.data.data;
+        setFeatured(f);
+        setUpcoming(u);
+        setCached(FEATURED_PARAMS, f);
+        setCached(UPCOMING_PARAMS, u);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
-  const showSkeletons = loading && events.length === 0;
+  const showSkeletons = loading && featured.length === 0;
 
   return (
     <div className="min-h-screen pt-16" style={{ backgroundColor: '#FFFFFF' }}>
@@ -56,7 +64,7 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {showSkeletons
             ? Array.from({ length: 8 }).map((_, i) => <EventCardSkeleton key={i} />)
-            : events.map((event) => <FeaturedEventCard key={event.id} event={event} />)
+            : featured.map((event) => <FeaturedEventCard key={event.id} event={event} />)
           }
         </div>
 
@@ -73,7 +81,7 @@ export default function Home() {
 
       <CategoryGrid />
       <ComunaGrid />
-      <UpcomingEventsCarousel />
+      <UpcomingEventsCarousel events={upcoming} loading={loading && upcoming.length === 0} />
       <OrganizerCTA />
     </div>
   );
