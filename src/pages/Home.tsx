@@ -1,21 +1,42 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { eventsApi } from '../api';
+import { getCached, setCached } from '../api/eventsCache';
 import { HeroSearch } from '../features/events/HeroSearch';
 import { FeaturedEventCard } from '../features/events/FeaturedEventCard';
+import { EventCardSkeleton } from '../components/ui/EventCardSkeleton';
 import { CategoryGrid } from '../features/events/CategoryGrid';
 import { ComunaGrid } from '../features/events/ComunaGrid';
 import { UpcomingEventsCarousel } from '../features/events/UpcomingEventsCarousel';
 import { OrganizerCTA } from '../features/events/OrganizerCTA';
 import type { Event } from '../types';
 
+const FEATURED_PARAMS = {
+  limit: 8,
+  dateFrom: new Date().toISOString().split('T')[0],
+};
+
 export default function Home() {
   const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    eventsApi.getAll({ limit: 8, dateFrom: today }).then(({ data: { data } }) => setEvents(data));
+    const cached = getCached<Event[]>(FEATURED_PARAMS);
+    if (cached) {
+      setEvents(cached);
+      setLoading(false);
+    }
+
+    eventsApi.getAll(FEATURED_PARAMS)
+      .then(({ data: { data } }) => {
+        setEvents(data);
+        setCached(FEATURED_PARAMS, data);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
+
+  const showSkeletons = loading && events.length === 0;
 
   return (
     <div className="min-h-screen pt-16" style={{ backgroundColor: '#FFFFFF' }}>
@@ -33,9 +54,10 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {events.map((event) => (
-            <FeaturedEventCard key={event.id} event={event} />
-          ))}
+          {showSkeletons
+            ? Array.from({ length: 8 }).map((_, i) => <EventCardSkeleton key={i} />)
+            : events.map((event) => <FeaturedEventCard key={event.id} event={event} />)
+          }
         </div>
 
         <div className="text-center mt-8">

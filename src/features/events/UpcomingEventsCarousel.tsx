@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { eventsApi } from '../../api';
+import { getCached, setCached } from '../../api/eventsCache';
 import { FeaturedEventCard } from './FeaturedEventCard';
+import { EventCardSkeleton } from '../../components/ui/EventCardSkeleton';
 import type { Event } from '../../types';
 
 interface Props {
@@ -15,13 +17,28 @@ export function UpcomingEventsCarousel({
   subtitle = 'Experiencias únicas que no te puedes perder',
   limit = 8,
 }: Props) {
+  const params = { limit };
   const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    eventsApi.getAll({ limit })
-      .then(({ data: { data } }) => setEvents(data))
-      .catch(() => {});
+    const cached = getCached<Event[]>(params);
+    if (cached) {
+      setEvents(cached);
+      setLoading(false);
+    }
+
+    eventsApi.getAll(params)
+      .then(({ data: { data } }) => {
+        setEvents(data);
+        setCached(params, data);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limit]);
+
+  const showSkeletons = loading && events.length === 0;
 
   return (
     <section className="w-full py-12" style={{ backgroundColor: '#F8FAFC' }}>
@@ -36,9 +53,10 @@ export function UpcomingEventsCarousel({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {events.map((event) => (
-            <FeaturedEventCard key={event.id} event={event} />
-          ))}
+          {showSkeletons
+            ? Array.from({ length: limit }).map((_, i) => <EventCardSkeleton key={i} />)
+            : events.map((event) => <FeaturedEventCard key={event.id} event={event} />)
+          }
         </div>
 
         <div className="text-center mt-8">
