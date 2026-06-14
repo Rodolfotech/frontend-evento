@@ -6,37 +6,41 @@ import { FeaturedEventCard } from './FeaturedEventCard';
 import { EventCardSkeleton } from '../../components/ui/EventCardSkeleton';
 import type { Event } from '../../types';
 
+const UPCOMING_PARAMS = { limit: 8 };
+
 interface Props {
   title?: string;
   subtitle?: string;
-  limit?: number;
+  events?: Event[];
+  loading?: boolean;
 }
 
 export function UpcomingEventsCarousel({
   title = 'Próximos eventos',
   subtitle = 'Experiencias únicas que no te puedes perder',
-  limit = 8,
+  events: eventsProp,
+  loading: loadingProp,
 }: Props) {
-  const params = { limit };
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
+  const selfFetch = eventsProp === undefined;
+  const [events, setEvents] = useState<Event[]>(() =>
+    selfFetch ? (getCached<Event[]>(UPCOMING_PARAMS) ?? []) : eventsProp
+  );
+  const [loading, setLoading] = useState(selfFetch ? events.length === 0 : (loadingProp ?? false));
 
   useEffect(() => {
-    const cached = getCached<Event[]>(params);
-    if (cached) {
-      setEvents(cached);
-      setLoading(false);
+    if (!selfFetch) {
+      setEvents(eventsProp);
+      setLoading(loadingProp ?? false);
+      return;
     }
+    const cached = getCached<Event[]>(UPCOMING_PARAMS);
+    if (cached) { setEvents(cached); setLoading(false); }
 
-    eventsApi.getAll(params)
-      .then(({ data: { data } }) => {
-        setEvents(data);
-        setCached(params, data);
-      })
+    eventsApi.getAll(UPCOMING_PARAMS)
+      .then(({ data: { data } }) => { setEvents(data); setCached(UPCOMING_PARAMS, data); })
       .catch(() => {})
       .finally(() => setLoading(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [limit]);
+  }, [selfFetch, eventsProp, loadingProp]);
 
   const showSkeletons = loading && events.length === 0;
 
@@ -54,7 +58,7 @@ export function UpcomingEventsCarousel({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {showSkeletons
-            ? Array.from({ length: limit }).map((_, i) => <EventCardSkeleton key={i} />)
+            ? Array.from({ length: 8 }).map((_, i) => <EventCardSkeleton key={i} />)
             : events.map((event) => <FeaturedEventCard key={event.id} event={event} />)
           }
         </div>
