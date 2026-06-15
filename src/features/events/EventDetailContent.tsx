@@ -186,12 +186,12 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
 
           {/* Descripción */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: '#1D1D1F66' }}>Descripción</p>
+            <p className="text-xs tracking-wide mb-2" style={{ color: '#1D1D1F66', fontFamily: 'var(--font-brand)' }}>Descripción</p>
             {descTitle && (
-              <p className="text-sm font-semibold mb-1" style={{ color: '#1D1D1F' }}>{descTitle}</p>
+              <p className="text-sm mb-1" style={{ color: '#1D1D1F66', fontFamily: 'var(--font-brand)' }}>{descTitle}</p>
             )}
             {descBody && (
-              <p className="text-sm leading-relaxed" style={{ color: '#1D1D1F99' }}>{descBody}</p>
+              <p className="text-sm leading-relaxed" style={{ color: '#1D1D1F99', fontFamily: 'var(--font-brand)' }}>{descBody}</p>
             )}
           </div>
         </div>
