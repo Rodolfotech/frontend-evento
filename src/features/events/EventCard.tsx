@@ -12,11 +12,11 @@ interface Props {
 export default function EventCard({ event, featured }: Props) {
   if (event.imageUrl) {
     return (
-      <Link to={`/categorias/${event.slug}`} className="block aspect-square rounded-xl overflow-hidden">
+      <Link to={`/categorias/${event.slug}`} className="block rounded-xl overflow-hidden">
         <img
           src={event.imageUrl}
           alt={event.title}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          className="w-full h-auto block hover:scale-105 transition-transform duration-300"
         />
       </Link>
     );
