@@ -38,19 +38,21 @@ export function Modal({ isOpen, onClose, children, maxWidth = '4xl' }: ModalProp
       onClick={onClose}
     >
       <div
-        className={`relative w-full ${maxWidthMap[maxWidth]} rounded-2xl shadow-2xl my-4`}
-        style={{ backgroundColor: '#FFFFFF' }}
+        className={`relative w-full ${maxWidthMap[maxWidth]} my-4`}
         onClick={e => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
-          style={{ backgroundColor: '#F1F5F9' }}
+          aria-label="Cerrar"
+          className="absolute -top-3 -right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity shadow-md"
+          style={{ backgroundColor: '#FFFFFF' }}
         >
           <X className="w-4 h-4" style={{ color: '#1D1D1F' }} />
         </button>
-        {children}
+        <div className="rounded-2xl shadow-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF' }}>
+          {children}
+        </div>
       </div>
     </div>
   );
