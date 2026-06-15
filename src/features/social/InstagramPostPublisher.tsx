@@ -62,8 +62,10 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
       });
       setSuccess(true);
       onPublished?.();
-    } catch {
-      setError('Error al publicar el evento');
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { message?: string | string[] } } };
+      const msg = axiosErr?.response?.data?.message;
+      setError(Array.isArray(msg) ? msg.join(', ') : (msg || 'Error al publicar el evento'));
     } finally {
       setLoading(false);
     }

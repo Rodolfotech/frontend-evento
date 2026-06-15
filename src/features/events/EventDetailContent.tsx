@@ -17,6 +17,21 @@ import { SocialPostMedia } from '../social/SocialPostMedia';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
+// Paleta cromática del proyecto
+const C = {
+  dark:    '#1D1D1F',
+  blue:    '#2563EB',
+  neutral2: '#E4EBFA',
+} as const;
+
+// Estilos tipográficos reutilizables
+const T = {
+  label: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 600, color: C.dark } as React.CSSProperties,
+  value: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 400, color: '#1D1D1F99' } as React.CSSProperties,
+  title: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '20px', fontWeight: 600, color: C.dark } as React.CSSProperties,
+  descBody: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 400, color: '#1D1D1F99', lineHeight: '1.6' } as React.CSSProperties,
+} as const;
+
 function InstagramIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
     <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -30,11 +45,12 @@ function InstagramIcon({ className, style }: { className?: string; style?: React
 function parseDescription(description: string) {
   const fullDesc = description.trim();
   const newlineIdx = fullDesc.indexOf('\n');
-  const splitAt = newlineIdx >= 0 && newlineIdx <= 40 ? newlineIdx : 40;
-  const title = fullDesc.slice(0, splitAt).trim();
-  const rest = fullDesc.slice(splitAt).trim();
-  const body = rest.length > 75 ? rest.slice(0, 75) + '...' : rest;
-  return { title, body };
+  const splitAt = newlineIdx >= 0 && newlineIdx <= 40 ? newlineIdx : -1;
+  if (splitAt === -1) return { title: '', body: fullDesc };
+  return {
+    title: fullDesc.slice(0, splitAt).trim(),
+    body: fullDesc.slice(splitAt).trim(),
+  };
 }
 
 interface Props {
@@ -77,7 +93,7 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-20">
-        <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: '#2563EB', borderTopColor: 'transparent' }} />
+        <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: C.blue, borderTopColor: 'transparent' }} />
       </div>
     );
   }
@@ -105,7 +121,7 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
           {/* Badges */}
           <div className="flex flex-wrap gap-2">
             {event.category && (
-              <span className="text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: '#EFF6FF', color: '#2563EB' }}>
+              <span className="text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: '#EFF6FF', color: C.blue }}>
                 {event.category.name}
               </span>
             )}
@@ -122,28 +138,24 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
           </div>
 
           {/* Título */}
-          <h1 className="text-lg font-semibold leading-snug" style={{ color: '#1D1D1F', fontFamily: 'var(--font-brand)' }}>
-            {event.title}
-          </h1>
+          <p style={T.title}>{event.title}</p>
 
           {/* Fecha + Hora en 2 columnas */}
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-start gap-2.5">
-              <Calendar className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#2563EB' }} />
+              <Calendar className="w-4 h-4 shrink-0 mt-0.5" style={{ color: C.blue }} />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1D1D1F66' }}>Fecha</p>
-                <p className="text-sm font-medium capitalize mt-0.5" style={{ color: '#1D1D1F' }}>
+                <p style={T.label}>Fecha</p>
+                <p className="mt-0.5 capitalize" style={T.value}>
                   {format(new Date(event.date), "EEEE d 'De' MMMM, yyyy", { locale: es })}
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-2.5">
-              <Clock className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#2563EB' }} />
+              <Clock className="w-4 h-4 shrink-0 mt-0.5" style={{ color: C.blue }} />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1D1D1F66' }}>Hora</p>
-                <p className="text-sm font-medium mt-0.5" style={{ color: '#1D1D1F' }}>
-                  {format(new Date(event.date), 'HH:mm')} hrs
-                </p>
+                <p style={T.label}>Hora</p>
+                <p className="mt-0.5" style={T.value}>{format(new Date(event.date), 'HH:mm')} hrs</p>
               </div>
             </div>
           </div>
@@ -151,10 +163,10 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
           {/* Organizador */}
           {event.owner?.name && (
             <div className="flex items-start gap-2.5">
-              <User className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#2563EB' }} />
+              <User className="w-4 h-4 shrink-0 mt-0.5" style={{ color: C.blue }} />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1D1D1F66' }}>Organizador</p>
-                <p className="text-sm font-medium mt-0.5" style={{ color: '#1D1D1F' }}>
+                <p style={T.label}>Organizador</p>
+                <p className="mt-0.5" style={T.value}>
                   {event.owner.name}{event.city ? `, ${event.city}` : ''}
                 </p>
               </div>
@@ -162,51 +174,49 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
           )}
 
           {/* Instagram */}
-          {event.owner?.instagramUsername && (
-            <div className="flex items-start gap-2.5">
-              <InstagramIcon className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#2563EB' }} />
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1D1D1F66' }}>Instagram</p>
+          <div className="flex items-start gap-2.5">
+            <InstagramIcon className="w-4 h-4 shrink-0 mt-0.5" style={{ color: C.blue }} />
+            <div>
+              <p style={T.label}>Instagram</p>
+              {event.owner?.instagramUsername ? (
                 <a
                   href={`https://www.instagram.com/${event.owner.instagramUsername}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => { if (isAuthenticated) adminApi.trackInstagramClick(event?.id).catch(() => {}); }}
-                  className="inline text-sm font-medium mt-0.5 hover:underline"
-                  style={{ color: '#2563EB' }}
+                  className="mt-0.5 hover:underline inline-block"
+                  style={{ ...T.value, color: C.blue }}
                 >
                   @{event.owner.instagramUsername}
                 </a>
-              </div>
+              ) : (
+                <p className="mt-0.5" style={T.value}>No disponible</p>
+              )}
             </div>
-          )}
+          </div>
 
           {/* Divisor */}
-          <div style={{ borderTop: '1px solid #E4EBFA' }} />
+          <div style={{ borderTop: `1px solid ${C.neutral2}` }} />
 
           {/* Descripción */}
-          <div>
-            <p className="text-xs tracking-wide mb-2" style={{ color: '#1D1D1F66', fontFamily: 'var(--font-brand)' }}>Descripción</p>
-            {descTitle && (
-              <p className="text-sm mb-1" style={{ color: '#1D1D1F66', fontFamily: 'var(--font-brand)' }}>{descTitle}</p>
-            )}
-            {descBody && (
-              <p className="text-sm leading-relaxed" style={{ color: '#1D1D1F99', fontFamily: 'var(--font-brand)' }}>{descBody}</p>
-            )}
+          <div className="flex flex-col gap-1">
+            <p style={T.label}>Descripción</p>
+            {descTitle && <p style={T.value}>{descTitle}</p>}
+            {descBody && <p style={T.descBody}>{descBody}</p>}
           </div>
+
         </div>
 
         {/* Columna derecha — imagen / carousel */}
         {slides.length > 0 && (
           <div className="md:w-72 lg:w-80 shrink-0">
-            <div className="relative rounded-xl overflow-hidden select-none" style={{ border: '1px solid #E4EBFA' }}>
+            <div className="relative rounded-xl overflow-hidden select-none" style={{ border: `1px solid ${C.neutral2}` }}>
               {currentSlide?.type === 'image' && currentSlide.url && (
                 <img src={currentSlide.url} alt={event.title} className="w-full h-auto block" draggable={false} />
               )}
               {currentSlide?.type === 'post' && currentSlide.post && (
                 <SocialPostMedia post={currentSlide.post} className="w-full h-auto block" />
               )}
-
               {slides.length > 1 && (
                 <>
                   <button
@@ -216,7 +226,7 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
                     className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer shadow-md"
                     style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}
                   >
-                    <ChevronLeft className="w-5 h-5" style={{ color: '#1D1D1F' }} />
+                    <ChevronLeft className="w-5 h-5" style={{ color: C.dark }} />
                   </button>
                   <button
                     type="button"
@@ -225,9 +235,8 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
                     className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer shadow-md"
                     style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}
                   >
-                    <ChevronRight className="w-5 h-5" style={{ color: '#1D1D1F' }} />
+                    <ChevronRight className="w-5 h-5" style={{ color: C.dark }} />
                   </button>
-
                   <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
                     {slides.map((_, i) => (
                       <button
@@ -247,19 +256,20 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
         )}
       </div>
 
-      {/* ── Fila full-width: Ubicación + Compartir ── */}
-      <div className="flex items-center justify-between gap-4" style={{ borderTop: '1px solid #E4EBFA', paddingTop: '16px' }}>
-        <div className="flex items-center gap-2 min-w-0">
-          <MapPin className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
-          <span className="text-sm truncate" style={{ color: '#1D1D1F99' }}>
-            {location || 'Ubicación no especificada'}
-          </span>
+      {/* ── Ubicación + Compartir ── */}
+      <div className="flex items-center justify-between gap-4 pt-4" style={{ borderTop: `1px solid ${C.neutral2}` }}>
+        <div className="flex items-start gap-2.5 min-w-0">
+          <MapPin className="w-4 h-4 shrink-0 mt-0.5" style={{ color: C.blue }} />
+          <div className="min-w-0">
+            <p style={T.label}>Ubicación</p>
+            <p className="mt-0.5 truncate" style={T.value}>{location || 'No especificada'}</p>
+          </div>
         </div>
         <button
           type="button"
           onClick={handleShare}
           className="flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer shrink-0"
-          style={{ backgroundColor: '#2563EB' }}
+          style={{ backgroundColor: C.blue }}
         >
           {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
           {copied ? '¡Copiado!' : 'Compartir'}
@@ -267,13 +277,13 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
       </div>
 
       {/* ── Mapa placeholder full-width ── */}
-      <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E4EBFA', backgroundColor: '#F1F5F9' }}>
+      <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.neutral2}`, backgroundColor: '#F1F5F9' }}>
         <div className="rounded-xl m-3 py-10 text-center" style={{ border: '1.5px dashed #CBD5E1', backgroundColor: '#FFFFFF' }}>
           <div className="w-10 h-10 mx-auto mb-2 rounded-full flex items-center justify-center" style={{ backgroundColor: '#EFF6FF' }}>
-            <MapPin className="w-5 h-5" style={{ color: '#2563EB' }} />
+            <MapPin className="w-5 h-5" style={{ color: C.blue }} />
           </div>
-          <p className="text-sm font-medium" style={{ color: '#1D1D1F' }}>Mapa de ubicación</p>
-          <p className="text-xs mt-1" style={{ color: '#1D1D1F66' }}>
+          <p className="text-sm font-medium" style={{ color: C.dark }}>Mapa de ubicación</p>
+          <p className="text-xs mt-1" style={{ color: '#1D1D1F99' }}>
             {event.locationName ? `Agregar aquí mapa del ${event.locationName}` : 'Mapa no disponible'}
           </p>
         </div>
