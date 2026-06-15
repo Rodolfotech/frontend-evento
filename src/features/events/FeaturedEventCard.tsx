@@ -19,7 +19,7 @@ export function FeaturedEventCard({ event }: Props) {
 
   return (
     <div
-      className="rounded-2xl overflow-hidden border flex flex-col h-full"
+      className="rounded-2xl overflow-hidden border flex flex-col"
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}
     >
       {/* Imagen */}

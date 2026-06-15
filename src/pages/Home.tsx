@@ -61,7 +61,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
           {showSkeletons
             ? Array.from({ length: 8 }).map((_, i) => <EventCardSkeleton key={i} />)
             : featured.map((event) => <FeaturedEventCard key={event.id} event={event} />)
