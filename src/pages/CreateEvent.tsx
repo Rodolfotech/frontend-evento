@@ -107,7 +107,7 @@ export default function CreateEventPage() {
 
       {/* Subnav sticky — justo debajo del navbar principal */}
       <div className="sticky top-16 z-40 border-b" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+        <div className="max-w-7xl mx-auto px-4 flex items-center h-14">
           {/* Tabs */}
           <div className="flex gap-1">
             {tabs.map(({ key, label, icon: Icon, count }) => (
@@ -140,16 +140,6 @@ export default function CreateEventPage() {
             ))}
           </div>
 
-          {/* Botón publicar */}
-          <button
-            type="button"
-            onClick={() => setCreateModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
-            style={{ backgroundColor: '#2563EB' }}
-          >
-            <Sparkles className="w-4 h-4" />
-            Publicar nuevo evento
-          </button>
         </div>
       </div>
 
@@ -247,6 +237,19 @@ export default function CreateEventPage() {
       {/* Tab: Mis Eventos — max-w-7xl */}
       {tab === 'myevents' && (
         <div className="max-w-7xl mx-auto px-4 pt-6 pb-20">
+          {/* Botón publicar — derecha, justo debajo del subnav */}
+          <div className="flex justify-end mb-6">
+            <button
+              type="button"
+              onClick={() => setCreateModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+              style={{ backgroundColor: '#2563EB' }}
+            >
+              <Sparkles className="w-4 h-4" />
+              Publicar nuevo evento
+            </button>
+          </div>
+
           {myEvents.length === 0 ? (
             <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
               <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
