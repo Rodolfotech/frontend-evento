@@ -86,6 +86,7 @@ export interface CreateEventPayload {
   city?: string;
   isOnline: boolean;
   imageUrl?: string;
+  instagramMediaId?: string;
   categoryId?: string;
   categoryName?: string;
 }

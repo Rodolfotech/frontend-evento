@@ -30,8 +30,7 @@ export function FeaturedEventCard({ event }: Props) {
             alt={event.title}
             loading="lazy"
             decoding="async"
-            className="w-full block object-cover"
-            style={{ aspectRatio: '4/5' }}
+            className="w-full h-auto block"
           />
         ) : (
           <div className="w-full flex items-center justify-center" style={{ aspectRatio: '4/5', backgroundColor: '#E4EBFA' }}>

@@ -53,6 +53,7 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
         publicationEndDate: new Date(endDate).toISOString(),
         categoryName: category || undefined,
         imageUrl: post.media_url || undefined,
+        instagramMediaId: post.id || undefined,
         city: comuna,
         isOnline: false,
         address: tipo === 'compra' && ticketUrl ? ticketUrl : undefined,
