@@ -41,6 +41,7 @@ export default function CreateEventPage() {
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [filter, setFilter] = useState('');
   const [postPage, setPostPage] = useState(1);
+  const [myEventsPage, setMyEventsPage] = useState(1);
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const updateInstagramStatus = useCallback(({ data }: { data: { instagram: boolean; instagramUsername: string | null; instagramAvatar: string | null } }) => {
@@ -82,6 +83,7 @@ export default function CreateEventPage() {
   }, [tab]);
 
   const POST_PAGE_SIZE = 3;
+  const MY_EVENTS_PAGE_SIZE = 6;
 
   const filteredPosts = instagramPosts
     .filter((p) => !!p.media_url)
@@ -91,16 +93,16 @@ export default function CreateEventPage() {
   const postTotalPages = Math.ceil(filteredPosts.length / POST_PAGE_SIZE);
   const visiblePosts = filteredPosts.slice((postPage - 1) * POST_PAGE_SIZE, postPage * POST_PAGE_SIZE);
 
+  const myEventsTotalPages = Math.ceil(myEvents.length / MY_EVENTS_PAGE_SIZE);
+  const visibleMyEvents = myEvents.slice((myEventsPage - 1) * MY_EVENTS_PAGE_SIZE, myEventsPage * MY_EVENTS_PAGE_SIZE);
 
   const activePublications = myEvents.filter(e => e.imageUrl);
 
   const tabs: { key: Tab; label: string; icon: typeof Calendar; count?: number }[] = [
     { key: 'myevents', label: 'Mis Eventos', icon: Calendar, count: myEvents.length },
     { key: 'registered', label: 'Publicaciones activas', icon: PlayCircle, count: activePublications.length },
-    { key: 'instagram', label: 'Instagram', icon: Camera, count: instagramPosts.length },
+    { key: 'instagram', label: 'Instagram', icon: Camera, count: instagramPosts.filter(p => !!p.media_url).length },
   ];
-
-  const displayEvents = myEvents;
 
   return (
     <div className="min-h-screen pt-16" style={{ backgroundColor: '#F8FAFC' }}>
@@ -253,31 +255,28 @@ export default function CreateEventPage() {
         </div>
       )}
 
-      {/* Mis Eventos + Publicaciones activas — max-w-4xl */}
-      {tab !== 'instagram' && (
-        <div className="max-w-4xl mx-auto px-4 pb-20">
-
-        {/* Tab: Mis Eventos */}
-        {tab === 'myevents' && (
-          <>
-            {displayEvents.length === 0 ? (
-              <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
-                  <Sparkles className="w-8 h-8" style={{ color: '#2563EB' }} />
-                </div>
-                <p className="text-sm mb-4" style={{ color: '#1D1D1F99' }}>No has publicado eventos aún</p>
-                <button
-                  type="button"
-                  onClick={() => setCreateModalOpen(true)}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
-                  style={{ backgroundColor: '#2563EB' }}
-                >
-                  Publicar mi primer evento
-                </button>
+      {/* Tab: Mis Eventos — max-w-7xl (igual que Instagram) */}
+      {tab === 'myevents' && (
+        <div className="max-w-7xl mx-auto px-4 pb-20">
+          {myEvents.length === 0 ? (
+            <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
+                <Sparkles className="w-8 h-8" style={{ color: '#2563EB' }} />
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {displayEvents.map((event) => (
+              <p className="text-sm mb-4" style={{ color: '#1D1D1F99' }}>No has publicado eventos aún</p>
+              <button
+                type="button"
+                onClick={() => setCreateModalOpen(true)}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                style={{ backgroundColor: '#2563EB' }}
+              >
+                Publicar mi primer evento
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+                {visibleMyEvents.map((event) => (
                   <div key={event.id} className="relative group">
                     <EventCard event={event} />
                     {instagramConnected && (
@@ -300,49 +299,49 @@ export default function CreateEventPage() {
                   </div>
                 ))}
               </div>
-            )}
-          </>
-        )}
-
-        {/* Tab: Publicaciones activas */}
-        {tab === 'registered' && (
-          <>
-            {activePublications.length === 0 ? (
-              <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
-                  <PlayCircle className="w-8 h-8" style={{ color: '#2563EB' }} />
-                </div>
-                <p className="text-sm" style={{ color: '#1D1D1F99' }}>No hay publicaciones activas</p>
+              <Pagination
+                currentPage={myEventsPage}
+                totalPages={myEventsTotalPages}
+                onPageChange={setMyEventsPage}
+              />
+              <div className="mt-6 text-center">
+                <button
+                  type="button"
+                  onClick={() => setCreateModalOpen(true)}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                  style={{ backgroundColor: '#2563EB' }}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  Publicar nuevo evento
+                </button>
               </div>
-            ) : (
-              <div className="space-y-3">
-                {activePublications.map((event) => {
-                  const now = new Date();
-                  const endDate = event.publicationEndDate ? new Date(event.publicationEndDate) : null;
-                  const isActive = !endDate || endDate >= now;
-                  return (
-                    <PublishedEventCard key={event.id} event={event} isActive={isActive} onUpdate={loadUser} />
-                  );
-                })}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Tab: Publicaciones activas — max-w-4xl */}
+      {tab === 'registered' && (
+        <div className="max-w-4xl mx-auto px-4 pb-20">
+          {activePublications.length === 0 ? (
+            <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
+                <PlayCircle className="w-8 h-8" style={{ color: '#2563EB' }} />
               </div>
-            )}
-          </>
-        )}
-
-        {tab === 'myevents' && myEvents.length > 0 && (
-          <div className="mt-8 text-center">
-            <button
-              type="button"
-              onClick={() => setCreateModalOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
-              style={{ backgroundColor: '#2563EB' }}
-            >
-              <Sparkles className="w-4 h-4" />
-              Publicar nuevo evento
-            </button>
-          </div>
-        )}
-
+              <p className="text-sm" style={{ color: '#1D1D1F99' }}>No hay publicaciones activas</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {activePublications.map((event) => {
+                const now = new Date();
+                const endDate = event.publicationEndDate ? new Date(event.publicationEndDate) : null;
+                const isActive = !endDate || endDate >= now;
+                return (
+                  <PublishedEventCard key={event.id} event={event} isActive={isActive} onUpdate={loadUser} />
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
