@@ -12,7 +12,6 @@ import {
   Sparkles,
   RefreshCw,
   Search,
-  ArrowLeft,
   X,
   Clock,
   PauseCircle,
@@ -22,7 +21,6 @@ import {
   Check,
 } from 'lucide-react';
 import { Pagination } from '../components/ui/Pagination';
-import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -41,6 +39,7 @@ export default function CreateEventPage() {
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [filter, setFilter] = useState('');
   const [postPage, setPostPage] = useState(1);
+  const [myEventsPage, setMyEventsPage] = useState(1);
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const updateInstagramStatus = useCallback(({ data }: { data: { instagram: boolean; instagramUsername: string | null; instagramAvatar: string | null } }) => {
@@ -82,6 +81,7 @@ export default function CreateEventPage() {
   }, [tab]);
 
   const POST_PAGE_SIZE = 3;
+  const MY_EVENTS_PAGE_SIZE = 3;
 
   const filteredPosts = instagramPosts
     .filter((p) => !!p.media_url)
@@ -91,78 +91,63 @@ export default function CreateEventPage() {
   const postTotalPages = Math.ceil(filteredPosts.length / POST_PAGE_SIZE);
   const visiblePosts = filteredPosts.slice((postPage - 1) * POST_PAGE_SIZE, postPage * POST_PAGE_SIZE);
 
+  const myEventsTotalPages = Math.ceil(myEvents.length / MY_EVENTS_PAGE_SIZE);
+  const visibleMyEvents = myEvents.slice((myEventsPage - 1) * MY_EVENTS_PAGE_SIZE, myEventsPage * MY_EVENTS_PAGE_SIZE);
 
   const activePublications = myEvents.filter(e => e.imageUrl);
 
   const tabs: { key: Tab; label: string; icon: typeof Calendar; count?: number }[] = [
     { key: 'myevents', label: 'Mis Eventos', icon: Calendar, count: myEvents.length },
     { key: 'registered', label: 'Publicaciones activas', icon: PlayCircle, count: activePublications.length },
-    { key: 'instagram', label: 'Instagram', icon: Camera, count: instagramPosts.length },
+    { key: 'instagram', label: 'Instagram', icon: Camera, count: instagramPosts.filter(p => !!p.media_url).length },
   ];
-
-  const displayEvents = myEvents;
 
   return (
     <div className="min-h-screen pt-16" style={{ backgroundColor: '#F8FAFC' }}>
-      <div className="max-w-4xl mx-auto px-4 pt-12 pb-20">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-sm mb-8 transition-colors"
-          style={{ color: '#1D1D1F99' }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = '#2563EB'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = '#1D1D1F99'; }}
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Volver
-        </Link>
 
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold tracking-tight" style={{ color: '#1D1D1F' }}>
-            Mis Eventos
-          </h1>
-          <p className="mt-2 text-sm" style={{ color: '#1D1D1F99' }}>
-            Administra tus publicaciones y contenido
-          </p>
+      {/* Subnav sticky — justo debajo del navbar principal */}
+      <div className="sticky top-16 z-40 border-b" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
+        <div className="max-w-7xl mx-auto px-4 flex items-center h-14">
+          {/* Tabs */}
+          <div className="flex gap-1">
+            {tabs.map(({ key, label, icon: Icon, count }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setTab(key)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer"
+                style={
+                  tab === key
+                    ? { backgroundColor: '#EFF6FF', color: '#2563EB' }
+                    : { color: '#1D1D1F99', backgroundColor: 'transparent' }
+                }
+              >
+                <Icon className="w-4 h-4" />
+                {label}
+                {count !== undefined && count > 0 && (
+                  <span
+                    className="text-xs px-1.5 py-0.5 rounded-full"
+                    style={
+                      tab === key
+                        ? { backgroundColor: '#DBEAFE', color: '#2563EB' }
+                        : { backgroundColor: '#E4EBFA', color: '#1D1D1F66' }
+                    }
+                  >
+                    {count}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+
         </div>
+      </div>
 
-        {/* Tabs */}
-        <div
-          className="flex gap-1 mb-8 rounded-xl p-1"
-          style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}
-        >
-          {tabs.map(({ key, label, icon: Icon, count }) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setTab(key)}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer"
-              style={
-                tab === key
-                  ? { backgroundColor: '#2563EB', color: '#FFFFFF' }
-                  : { color: '#1D1D1F99', backgroundColor: 'transparent' }
-              }
-            >
-              <Icon className="w-4 h-4" />
-              {label}
-              {count !== undefined && (
-                <span
-                  className="text-xs px-1.5 py-0.5 rounded-full"
-                  style={
-                    tab === key
-                      ? { backgroundColor: 'rgba(255,255,255,0.25)', color: '#FFFFFF' }
-                      : { backgroundColor: '#E4EBFA', color: '#2563EB' }
-                  }
-                >
-                  {count}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* Instagram Tab */}
-        {tab === 'instagram' && (
-          <div>
+      {/* Tab: Instagram */}
+      {tab === 'instagram' && (
+        <>
+          {/* Buscador */}
+          <div className="max-w-4xl mx-auto px-4 pt-6">
             {instagramUsername && (
               <div className="flex items-center gap-2 mb-4">
                 {instagramAvatar && (
@@ -199,7 +184,10 @@ export default function CreateEventPage() {
                 Actualizar
               </button>
             </div>
+          </div>
 
+          {/* Grid de cards — max-w-7xl */}
+          <div className="max-w-7xl mx-auto px-4 pb-20">
             {loadingPosts ? (
               <div className="flex items-center justify-center py-20">
                 <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#2563EB', borderTopColor: 'transparent' }} />
@@ -223,7 +211,7 @@ export default function CreateEventPage() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                   {visiblePosts.map((post) => (
                     <InstagramPostPublisher
                       key={post.id}
@@ -242,31 +230,45 @@ export default function CreateEventPage() {
                 />
               </>
             )}
-
           </div>
-        )}
+        </>
+      )}
 
-        {/* Tab: Mis Eventos */}
-        {tab === 'myevents' && (
-          <>
-            {displayEvents.length === 0 ? (
-              <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
-                  <Sparkles className="w-8 h-8" style={{ color: '#2563EB' }} />
-                </div>
-                <p className="text-sm mb-4" style={{ color: '#1D1D1F99' }}>No has publicado eventos aún</p>
-                <button
-                  type="button"
-                  onClick={() => setCreateModalOpen(true)}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
-                  style={{ backgroundColor: '#2563EB' }}
-                >
-                  Publicar mi primer evento
-                </button>
+      {/* Tab: Mis Eventos — max-w-7xl */}
+      {tab === 'myevents' && (
+        <div className="max-w-7xl mx-auto px-4 pt-6 pb-20">
+          {/* Botón publicar — derecha, justo debajo del subnav */}
+          <div className="flex justify-end mb-6">
+            <button
+              type="button"
+              onClick={() => setCreateModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+              style={{ backgroundColor: '#2563EB' }}
+            >
+              <Sparkles className="w-4 h-4" />
+              Publicar nuevo evento
+            </button>
+          </div>
+
+          {myEvents.length === 0 ? (
+            <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
+                <Sparkles className="w-8 h-8" style={{ color: '#2563EB' }} />
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {displayEvents.map((event) => (
+              <p className="text-sm mb-4" style={{ color: '#1D1D1F99' }}>No has publicado eventos aún</p>
+              <button
+                type="button"
+                onClick={() => setCreateModalOpen(true)}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                style={{ backgroundColor: '#2563EB' }}
+              >
+                Publicar mi primer evento
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+                {visibleMyEvents.map((event) => (
                   <div key={event.id} className="relative group">
                     <EventCard event={event} />
                     {instagramConnected && (
@@ -289,51 +291,42 @@ export default function CreateEventPage() {
                   </div>
                 ))}
               </div>
-            )}
-          </>
-        )}
+              <Pagination
+                currentPage={myEventsPage}
+                totalPages={myEventsTotalPages}
+                onPageChange={setMyEventsPage}
+              />
+            </>
+          )}
+        </div>
+      )}
 
-        {/* Tab: Publicaciones activas */}
-        {tab === 'registered' && (
-          <>
-            {activePublications.length === 0 ? (
-              <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
-                  <PlayCircle className="w-8 h-8" style={{ color: '#2563EB' }} />
-                </div>
-                <p className="text-sm" style={{ color: '#1D1D1F99' }}>No hay publicaciones activas</p>
+      {/* Tab: Publicaciones activas — max-w-4xl */}
+      {tab === 'registered' && (
+        <div className="max-w-4xl mx-auto px-4 pt-6 pb-20">
+          {activePublications.length === 0 ? (
+            <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
+                <PlayCircle className="w-8 h-8" style={{ color: '#2563EB' }} />
               </div>
-            ) : (
-              <div className="space-y-3">
-                {activePublications.map((event) => {
-                  const now = new Date();
-                  const endDate = event.publicationEndDate ? new Date(event.publicationEndDate) : null;
-                  const isActive = !endDate || endDate >= now;
-                  return (
-                    <PublishedEventCard key={event.id} event={event} isActive={isActive} onUpdate={loadUser} />
-                  );
-                })}
-              </div>
-            )}
-          </>
-        )}
+              <p className="text-sm" style={{ color: '#1D1D1F99' }}>No hay publicaciones activas</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {activePublications.map((event) => {
+                const now = new Date();
+                const endDate = event.publicationEndDate ? new Date(event.publicationEndDate) : null;
+                const isActive = !endDate || endDate >= now;
+                return (
+                  <PublishedEventCard key={event.id} event={event} isActive={isActive} onUpdate={loadUser} />
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
 
-        {tab === 'myevents' && myEvents.length > 0 && (
-          <div className="mt-8 text-center">
-            <button
-              type="button"
-              onClick={() => setCreateModalOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
-              style={{ backgroundColor: '#2563EB' }}
-            >
-              <Sparkles className="w-4 h-4" />
-              Publicar nuevo evento
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Create Event Modal */}
+      {/* Modal crear evento */}
       {createModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
