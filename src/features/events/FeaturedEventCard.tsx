@@ -19,24 +19,21 @@ export function FeaturedEventCard({ event }: Props) {
 
   return (
     <div
-      className="rounded-2xl border"
+      className="rounded-2xl border overflow-hidden"
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}
     >
       {/* Imagen */}
-      <div className="relative rounded-t-2xl overflow-hidden">
+      <div className="relative aspect-square overflow-hidden">
         {event.imageUrl ? (
           <img
             src={event.imageUrl}
             alt={event.title}
             loading="lazy"
             decoding="async"
-            style={{ display: 'block', width: '100%', height: 'auto' }}
+            className="w-full h-full object-cover"
           />
         ) : (
-          <div
-            className="w-full flex items-center justify-center"
-            style={{ aspectRatio: '4/5', backgroundColor: '#E4EBFA' }}
-          >
+          <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
             <span style={{ color: '#1D1D1F33', fontSize: '13px' }}>Sin imagen</span>
           </div>
         )}
