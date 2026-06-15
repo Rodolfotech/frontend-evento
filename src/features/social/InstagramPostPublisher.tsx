@@ -80,13 +80,11 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
   return (
     <div className="rounded-xl overflow-hidden border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
       {post.media_url && (
-        <div className="aspect-2/3 overflow-hidden">
-          <SocialPostMedia
-            post={post}
-            className="w-full h-full object-cover"
-            onImageError={() => setImageError(true)}
-          />
-        </div>
+        <SocialPostMedia
+          post={post}
+          className="w-full h-auto block"
+          onImageError={() => setImageError(true)}
+        />
       )}
       <div className="p-4 space-y-3">
         {post.caption && (
