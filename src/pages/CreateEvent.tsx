@@ -104,7 +104,9 @@ export default function CreateEventPage() {
 
   return (
     <div className="min-h-screen pt-16" style={{ backgroundColor: '#F8FAFC' }}>
-      <div className="max-w-4xl mx-auto px-4 pt-12 pb-20">
+
+      {/* Header + Tabs + controles Instagram — siempre max-w-4xl */}
+      <div className="max-w-4xl mx-auto px-4 pt-12">
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-sm mb-8 transition-colors"
@@ -160,7 +162,7 @@ export default function CreateEventPage() {
           ))}
         </div>
 
-        {/* Instagram Tab */}
+        {/* Buscador + botón Actualizar (Instagram) */}
         {tab === 'instagram' && (
           <div>
             {instagramUsername && (
@@ -199,52 +201,61 @@ export default function CreateEventPage() {
                 Actualizar
               </button>
             </div>
-
-            {loadingPosts ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#2563EB', borderTopColor: 'transparent' }} />
-              </div>
-            ) : filteredPosts.length === 0 ? (
-              <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
-                <Camera className="w-12 h-12 mx-auto mb-4" style={{ color: '#1D1D1F33' }} />
-                <p className="text-sm" style={{ color: '#1D1D1F99' }}>
-                  {filter ? 'No hay publicaciones que coincidan con tu búsqueda' : 'Aún no hay publicaciones en Instagram'}
-                </p>
-                {!instagramConnected && (
-                  <button
-                    type="button"
-                    onClick={handleInstagramLink}
-                    className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl text-white text-sm font-medium cursor-pointer hover:opacity-90 transition-opacity"
-                    style={{ backgroundColor: '#2563EB' }}
-                  >
-                    Vincular Instagram
-                  </button>
-                )}
-              </div>
-            ) : (
-              <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
-                  {visiblePosts.map((post) => (
-                    <InstagramPostPublisher
-                      key={post.id}
-                      post={post}
-                      onPublished={() => {
-                        socialApi.getUserMedia().then(({ data }) => setInstagramPosts(data)).catch(() => {});
-                        loadUser();
-                      }}
-                    />
-                  ))}
-                </div>
-                <Pagination
-                  currentPage={postPage}
-                  totalPages={postTotalPages}
-                  onPageChange={setPostPage}
-                />
-              </>
-            )}
-
           </div>
         )}
+      </div>
+
+      {/* Grid de cards Instagram — max-w-7xl para igualar ancho de Eventos destacados */}
+      {tab === 'instagram' && (
+        <div className="max-w-7xl mx-auto px-4 pb-20">
+          {loadingPosts ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#2563EB', borderTopColor: 'transparent' }} />
+            </div>
+          ) : filteredPosts.length === 0 ? (
+            <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
+              <Camera className="w-12 h-12 mx-auto mb-4" style={{ color: '#1D1D1F33' }} />
+              <p className="text-sm" style={{ color: '#1D1D1F99' }}>
+                {filter ? 'No hay publicaciones que coincidan con tu búsqueda' : 'Aún no hay publicaciones en Instagram'}
+              </p>
+              {!instagramConnected && (
+                <button
+                  type="button"
+                  onClick={handleInstagramLink}
+                  className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl text-white text-sm font-medium cursor-pointer hover:opacity-90 transition-opacity"
+                  style={{ backgroundColor: '#2563EB' }}
+                >
+                  Vincular Instagram
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+                {visiblePosts.map((post) => (
+                  <InstagramPostPublisher
+                    key={post.id}
+                    post={post}
+                    onPublished={() => {
+                      socialApi.getUserMedia().then(({ data }) => setInstagramPosts(data)).catch(() => {});
+                      loadUser();
+                    }}
+                  />
+                ))}
+              </div>
+              <Pagination
+                currentPage={postPage}
+                totalPages={postTotalPages}
+                onPageChange={setPostPage}
+              />
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Mis Eventos + Publicaciones activas — max-w-4xl */}
+      {tab !== 'instagram' && (
+        <div className="max-w-4xl mx-auto px-4 pb-20">
 
         {/* Tab: Mis Eventos */}
         {tab === 'myevents' && (
@@ -331,7 +342,9 @@ export default function CreateEventPage() {
             </button>
           </div>
         )}
-      </div>
+
+        </div>
+      )}
 
       {/* Create Event Modal */}
       {createModalOpen && (
