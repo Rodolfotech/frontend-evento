@@ -23,7 +23,7 @@ export function FeaturedEventCard({ event }: Props) {
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}
     >
       {/* Imagen */}
-      <div className="relative w-full overflow-hidden">
+      <div className="relative">
         {event.imageUrl ? (
           <img
             src={event.imageUrl}
@@ -34,8 +34,8 @@ export function FeaturedEventCard({ event }: Props) {
           />
         ) : (
           <div
-            className="w-full h-full flex items-center justify-center"
-            style={{ backgroundColor: '#E4EBFA' }}
+            className="w-full flex items-center justify-center"
+            style={{ aspectRatio: '4/5', backgroundColor: '#E4EBFA' }}
           >
             <span style={{ color: '#1D1D1F33', fontSize: '13px' }}>Sin imagen</span>
           </div>
