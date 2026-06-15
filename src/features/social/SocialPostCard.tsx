@@ -21,11 +21,11 @@ export function SocialPostCard({ post }: SocialPostCardProps) {
   return (
     <div className="glass rounded-xl overflow-hidden group">
       {post.media_url && (
-        <div>
+        <div className="aspect-2/3 overflow-hidden">
           <img
             src={post.media_url}
             alt=""
-            className="w-full h-auto block group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </div>
       )}
