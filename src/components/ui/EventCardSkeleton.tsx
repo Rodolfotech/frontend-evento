@@ -4,7 +4,7 @@ export function EventCardSkeleton() {
       className="rounded-2xl overflow-hidden border flex flex-col h-full"
       style={{ borderColor: '#E4EBFA' }}
     >
-      <div className="w-full aspect-3/4 bg-gray-100 animate-pulse" />
+      <div className="w-full aspect-2/3 bg-gray-100 animate-pulse" />
       <div className="flex flex-col flex-1 p-4 gap-3">
         <div className="h-4 rounded bg-gray-100 animate-pulse w-3/4" />
         <div className="h-3 rounded bg-gray-100 animate-pulse w-1/2" />

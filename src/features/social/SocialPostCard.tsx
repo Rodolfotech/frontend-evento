@@ -21,7 +21,7 @@ export function SocialPostCard({ post }: SocialPostCardProps) {
   return (
     <div className="glass rounded-xl overflow-hidden group">
       {post.media_url && (
-        <div className="aspect-3/4 overflow-hidden">
+        <div className="aspect-2/3 overflow-hidden">
           <img
             src={post.media_url}
             alt=""
