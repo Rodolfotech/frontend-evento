@@ -23,7 +23,7 @@ export function FeaturedEventCard({ event }: Props) {
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}
     >
       {/* Imagen */}
-      <div className="relative aspect-4/5 overflow-hidden">
+      <div className="relative aspect-3/4 overflow-hidden">
         {event.imageUrl ? (
           <img
             src={event.imageUrl}

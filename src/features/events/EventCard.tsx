@@ -12,7 +12,7 @@ interface Props {
 export default function EventCard({ event, featured }: Props) {
   if (event.imageUrl) {
     return (
-      <Link to={`/categorias/${event.slug}`} className="block aspect-4/5 rounded-xl overflow-hidden">
+      <Link to={`/categorias/${event.slug}`} className="block aspect-3/4 rounded-xl overflow-hidden">
         <img
           src={event.imageUrl}
           alt={event.title}
