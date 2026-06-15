@@ -122,7 +122,7 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
           </div>
 
           {/* Título */}
-          <h1 className="text-xl font-bold leading-snug" style={{ color: '#1D1D1F' }}>
+          <h1 className="text-lg font-semibold leading-snug" style={{ color: '#1D1D1F', fontFamily: 'var(--font-brand)' }}>
             {event.title}
           </h1>
 
