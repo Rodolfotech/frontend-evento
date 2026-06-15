@@ -10,21 +10,19 @@ import {
   Globe,
   ArrowLeft,
   Share2,
-  Copy,
   Check,
   ChevronLeft,
   ChevronRight,
   User,
-  ExternalLink,
   Sparkles,
 } from 'lucide-react';
 import { SocialPostMedia } from '../features/social/SocialPostMedia';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-function InstagramIcon({ className }: { className?: string }) {
+function InstagramIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
       <circle cx="12" cy="12" r="4" />
       <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
@@ -86,8 +84,8 @@ export default function EventDetail() {
 
   const isFree = !event.price || event.price === 0;
   const slides = [
-    ...(event.imageUrl ? [{ type: 'image', url: event.imageUrl }] : []),
-    ...((event.socialFeed || []).filter(p => p.media_url).map(p => ({ type: 'post', post: p }))),
+    ...(event.imageUrl ? [{ type: 'image' as const, url: event.imageUrl }] : []),
+    ...((event.socialFeed || []).filter(p => p.media_url).map(p => ({ type: 'post' as const, post: p }))),
   ];
   const currentSlide = slides[slideIndex] ?? null;
 

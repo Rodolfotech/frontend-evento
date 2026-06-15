@@ -1,0 +1,284 @@
+import { useState, useEffect } from 'react';
+import { eventsApi, adminApi } from '../../api';
+import { useAuth } from '../../context/AuthContext';
+import type { Event } from '../../types';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Globe,
+  Share2,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  User,
+} from 'lucide-react';
+import { SocialPostMedia } from '../social/SocialPostMedia';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
+function InstagramIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function parseDescription(description: string) {
+  const fullDesc = description.trim();
+  const newlineIdx = fullDesc.indexOf('\n');
+  const splitAt = newlineIdx >= 0 && newlineIdx <= 40 ? newlineIdx : 40;
+  const title = fullDesc.slice(0, splitAt).trim();
+  const rest = fullDesc.slice(splitAt).trim();
+  const body = rest.length > 75 ? rest.slice(0, 75) + '...' : rest;
+  return { title, body };
+}
+
+interface Props {
+  slug: string;
+  initialEvent?: Event;
+}
+
+export function EventDetailContent({ slug, initialEvent }: Props) {
+  const { isAuthenticated } = useAuth();
+  const [event, setEvent] = useState<Event | null>(initialEvent ?? null);
+  const [loading, setLoading] = useState(!initialEvent);
+  const [copied, setCopied] = useState(false);
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  useEffect(() => {
+    if (!initialEvent) {
+      eventsApi.getBySlug(slug).then(({ data }) => {
+        setEvent(data);
+        setLoading(false);
+      });
+    }
+  }, [slug, initialEvent]);
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}/categorias/${slug}`;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const input = document.createElement('input');
+      input.value = url;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-20">
+        <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: '#2563EB', borderTopColor: 'transparent' }} />
+      </div>
+    );
+  }
+
+  if (!event) return null;
+
+  const isFree = !event.price || event.price === 0;
+  const slides = [
+    ...(event.imageUrl ? [{ type: 'image' as const, url: event.imageUrl }] : []),
+    ...((event.socialFeed || []).filter(p => p.media_url).map(p => ({ type: 'post' as const, post: p }))),
+  ];
+  const currentSlide = slides[slideIndex] ?? null;
+  const { title: descTitle, body: descBody } = parseDescription(event.description || '');
+  const location = [event.locationName, event.address, event.city].filter(Boolean).join(', ');
+
+  return (
+    <div className="p-6 md:p-8 flex flex-col gap-6">
+
+      {/* ── Sección superior: 2 columnas ── */}
+      <div className="flex flex-col md:flex-row gap-8">
+
+        {/* Columna izquierda — info */}
+        <div className="flex-1 min-w-0 flex flex-col gap-5">
+
+          {/* Badges */}
+          <div className="flex flex-wrap gap-2">
+            {event.category && (
+              <span className="text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: '#EFF6FF', color: '#2563EB' }}>
+                {event.category.name}
+              </span>
+            )}
+            {isFree && (
+              <span className="text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: '#DCFCE7', color: '#16A34A' }}>
+                Gratis
+              </span>
+            )}
+            {event.isOnline && (
+              <span className="flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ backgroundColor: '#FEF9C3', color: '#CA8A04' }}>
+                <Globe className="w-3 h-3" /> Online
+              </span>
+            )}
+          </div>
+
+          {/* Título */}
+          <h1 className="text-xl font-bold leading-snug" style={{ color: '#1D1D1F' }}>
+            {event.title}
+          </h1>
+
+          {/* Fecha + Hora en 2 columnas */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex items-start gap-2.5">
+              <Calendar className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#2563EB' }} />
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1D1D1F66' }}>Fecha</p>
+                <p className="text-sm font-medium capitalize mt-0.5" style={{ color: '#1D1D1F' }}>
+                  {format(new Date(event.date), "EEEE d 'De' MMMM, yyyy", { locale: es })}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <Clock className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#2563EB' }} />
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1D1D1F66' }}>Hora</p>
+                <p className="text-sm font-medium mt-0.5" style={{ color: '#1D1D1F' }}>
+                  {format(new Date(event.date), 'HH:mm')} hrs
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Organizador */}
+          {event.owner?.name && (
+            <div className="flex items-start gap-2.5">
+              <User className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#2563EB' }} />
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1D1D1F66' }}>Organizador</p>
+                <p className="text-sm font-medium mt-0.5" style={{ color: '#1D1D1F' }}>
+                  {event.owner.name}{event.city ? `, ${event.city}` : ''}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Instagram */}
+          {event.owner?.instagramUsername && (
+            <div className="flex items-start gap-2.5">
+              <InstagramIcon className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#2563EB' }} />
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1D1D1F66' }}>Instagram</p>
+                <a
+                  href={`https://www.instagram.com/${event.owner.instagramUsername}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => { if (isAuthenticated) adminApi.trackInstagramClick(event?.id).catch(() => {}); }}
+                  className="inline text-sm font-medium mt-0.5 hover:underline"
+                  style={{ color: '#2563EB' }}
+                >
+                  @{event.owner.instagramUsername}
+                </a>
+              </div>
+            </div>
+          )}
+
+          {/* Divisor */}
+          <div style={{ borderTop: '1px solid #E4EBFA' }} />
+
+          {/* Descripción */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: '#1D1D1F66' }}>Descripción</p>
+            {descTitle && (
+              <p className="text-sm font-semibold mb-1" style={{ color: '#1D1D1F' }}>{descTitle}</p>
+            )}
+            {descBody && (
+              <p className="text-sm leading-relaxed" style={{ color: '#1D1D1F99' }}>{descBody}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Columna derecha — imagen / carousel */}
+        {slides.length > 0 && (
+          <div className="md:w-72 lg:w-80 shrink-0">
+            <div className="relative rounded-xl overflow-hidden select-none" style={{ border: '1px solid #E4EBFA' }}>
+              {currentSlide?.type === 'image' && currentSlide.url && (
+                <img src={currentSlide.url} alt={event.title} className="w-full h-auto block" draggable={false} />
+              )}
+              {currentSlide?.type === 'post' && currentSlide.post && (
+                <SocialPostMedia post={currentSlide.post} className="w-full h-auto block" />
+              )}
+
+              {slides.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    aria-label="Anterior"
+                    onClick={() => setSlideIndex(i => (i - 1 + slides.length) % slides.length)}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer shadow-md"
+                    style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}
+                  >
+                    <ChevronLeft className="w-5 h-5" style={{ color: '#1D1D1F' }} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Siguiente"
+                    onClick={() => setSlideIndex(i => (i + 1) % slides.length)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer shadow-md"
+                    style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}
+                  >
+                    <ChevronRight className="w-5 h-5" style={{ color: '#1D1D1F' }} />
+                  </button>
+
+                  <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
+                    {slides.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        aria-label={`Imagen ${i + 1}`}
+                        onClick={() => setSlideIndex(i)}
+                        className="w-1.5 h-1.5 rounded-full cursor-pointer transition-opacity"
+                        style={{ backgroundColor: '#FFFFFF', opacity: i === slideIndex ? 1 : 0.5 }}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── Fila full-width: Ubicación + Compartir ── */}
+      <div className="flex items-center justify-between gap-4" style={{ borderTop: '1px solid #E4EBFA', paddingTop: '16px' }}>
+        <div className="flex items-center gap-2 min-w-0">
+          <MapPin className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
+          <span className="text-sm truncate" style={{ color: '#1D1D1F99' }}>
+            {location || 'Ubicación no especificada'}
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={handleShare}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer shrink-0"
+          style={{ backgroundColor: '#2563EB' }}
+        >
+          {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+          {copied ? '¡Copiado!' : 'Compartir'}
+        </button>
+      </div>
+
+      {/* ── Mapa placeholder full-width ── */}
+      <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E4EBFA', backgroundColor: '#F1F5F9' }}>
+        <div className="rounded-xl m-3 py-10 text-center" style={{ border: '1.5px dashed #CBD5E1', backgroundColor: '#FFFFFF' }}>
+          <div className="w-10 h-10 mx-auto mb-2 rounded-full flex items-center justify-center" style={{ backgroundColor: '#EFF6FF' }}>
+            <MapPin className="w-5 h-5" style={{ color: '#2563EB' }} />
+          </div>
+          <p className="text-sm font-medium" style={{ color: '#1D1D1F' }}>Mapa de ubicación</p>
+          <p className="text-xs mt-1" style={{ color: '#1D1D1F66' }}>
+            {event.locationName ? `Agregar aquí mapa del ${event.locationName}` : 'Mapa no disponible'}
+          </p>
+        </div>
+      </div>
+
+    </div>
+  );
+}
