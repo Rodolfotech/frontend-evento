@@ -23,14 +23,14 @@ export function FeaturedEventCard({ event }: Props) {
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}
     >
       {/* Imagen */}
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4/5' }}>
+      <div className="relative w-full overflow-hidden">
         {event.imageUrl ? (
           <img
             src={event.imageUrl}
             alt={event.title}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-contain"
+            className="w-full h-auto block"
           />
         ) : (
           <div
