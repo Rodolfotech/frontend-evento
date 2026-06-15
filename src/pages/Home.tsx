@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { eventsApi } from '../api';
 import { getCached, setCached } from '../api/eventsCache';
 import { HeroSearch } from '../features/events/HeroSearch';
-import { FeaturedEventCard } from '../features/events/FeaturedEventCard';
-import { EventCardSkeleton } from '../components/ui/EventCardSkeleton';
+import { EventsCarouselGrid } from '../features/events/EventsCarouselGrid';
 import { CategoryGrid } from '../features/events/CategoryGrid';
 import { ComunaGrid } from '../features/events/ComunaGrid';
 import { UpcomingEventsCarousel } from '../features/events/UpcomingEventsCarousel';
@@ -52,22 +51,12 @@ export default function Home() {
 
       {/* Eventos destacados */}
       <section className="max-w-7xl mx-auto px-4 pt-12 pb-12">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold tracking-tight" style={{ color: '#1D1D1F', fontFamily: "'Raleway', sans-serif" }}>
-            Eventos destacados
-          </h2>
-          <p className="mt-2 text-base font-medium" style={{ color: '#1D1D1F', fontFamily: "'Raleway', sans-serif" }}>
-            Experiencias únicas que no te puedes perder
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
-          {showSkeletons
-            ? Array.from({ length: 8 }).map((_, i) => <EventCardSkeleton key={i} />)
-            : featured.map((event) => <FeaturedEventCard key={event.id} event={event} />)
-          }
-        </div>
-
+        <EventsCarouselGrid
+          events={featured}
+          loading={showSkeletons}
+          title="Eventos destacados"
+          subtitle="Experiencias únicas que no te puedes perder"
+        />
         <div className="text-center mt-8">
           <Link
             to="/categorias"
