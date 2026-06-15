@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, Clock, Tag, Send, ExternalLink, MapPin, Ticket } from 'lucide-react';
+import { Calendar, Clock, Tag, Send, ExternalLink, MapPin, Ticket, Type, AlignLeft } from 'lucide-react';
 import { SocialPostMedia } from './SocialPostMedia';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -23,6 +23,9 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [category, setCategory] = useState('');
+  const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
+  const [descriptionText, setDescriptionText] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -31,6 +34,7 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
   if (imageError) return null;
 
   const handlePublish = async () => {
+    if (!title.trim()) { setError('El título es obligatorio'); return; }
     if (!eventDate) { setError('La fecha del evento es obligatoria'); return; }
     if (!eventTime) { setError('La hora del evento es obligatoria'); return; }
     if (!comuna) { setError('La comuna es obligatoria'); return; }
@@ -40,14 +44,12 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
     if (!category) { setError('La categoría es obligatoria'); return; }
     setLoading(true);
     setError('');
+    const description = [subtitle.trim(), descriptionText.trim()].filter(Boolean).join('\n') || post.caption || title;
     try {
-      const title = post.caption
-        ? post.caption.split('\n')[0].slice(0, 80)
-        : 'Publicación de Instagram';
       const eventDateTime = new Date(`${eventDate}T${eventTime}`).toISOString();
       await eventsApi.create({
-        title,
-        description: post.caption || title,
+        title: title.trim(),
+        description,
         date: eventDateTime,
         publicationStartDate: new Date(startDate).toISOString(),
         publicationEndDate: new Date(endDate).toISOString(),
@@ -105,6 +107,63 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
               Instagram
             </a>
           )}
+        </div>
+
+        {/* Título */}
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: '#1D1D1F99' }}>Título</p>
+          <div className="flex items-start gap-2">
+            <Type className="w-4 h-4 shrink-0 mt-1.5" style={{ color: '#2563EB' }} />
+            <div className="flex-1">
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value.slice(0, 45))}
+                placeholder="Título del evento"
+                className="w-full px-3 py-1.5 rounded-lg text-xs light-form"
+              />
+              <p className="text-right text-[10px] mt-0.5" style={{ color: title.length >= 45 ? '#DC2626' : '#1D1D1F66' }}>
+                {title.length}/45
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Descripción */}
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: '#1D1D1F99' }}>Descripción</p>
+          <div className="space-y-2">
+            <div className="flex items-start gap-2">
+              <AlignLeft className="w-4 h-4 shrink-0 mt-1.5" style={{ color: '#2563EB' }} />
+              <div className="flex-1">
+                <input
+                  type="text"
+                  value={subtitle}
+                  onChange={(e) => setSubtitle(e.target.value.slice(0, 45))}
+                  placeholder="Subtítulo"
+                  className="w-full px-3 py-1.5 rounded-lg text-xs light-form"
+                />
+                <p className="text-right text-[10px] mt-0.5" style={{ color: subtitle.length >= 45 ? '#DC2626' : '#1D1D1F66' }}>
+                  {subtitle.length}/45
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-2">
+              <AlignLeft className="w-4 h-4 shrink-0 mt-1.5" style={{ color: '#2563EB' }} />
+              <div className="flex-1">
+                <textarea
+                  value={descriptionText}
+                  onChange={(e) => setDescriptionText(e.target.value.slice(0, 75))}
+                  placeholder="Texto de descripción"
+                  rows={2}
+                  className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none"
+                />
+                <p className="text-right text-[10px] mt-0.5" style={{ color: descriptionText.length >= 75 ? '#DC2626' : '#1D1D1F66' }}>
+                  {descriptionText.length}/75
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Datos del evento */}
