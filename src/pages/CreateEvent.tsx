@@ -11,7 +11,6 @@ import {
   Calendar,
   Sparkles,
   RefreshCw,
-  CalendarCheck,
   Search,
   ArrowLeft,
   X,
@@ -22,6 +21,7 @@ import {
   Edit3,
   Check,
 } from 'lucide-react';
+import { Pagination } from '../components/ui/Pagination';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -33,13 +33,14 @@ export default function CreateEventPage() {
   const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>('myevents');
   const [myEvents, setMyEvents] = useState<Event[]>([]);
-  const [registeredEvents, setRegisteredEvents] = useState<Event[]>([]);
+  const [, setRegisteredEvents] = useState<Event[]>([]);
   const [instagramPosts, setInstagramPosts] = useState<SocialPost[]>([]);
   const [instagramConnected, setInstagramConnected] = useState(false);
   const [instagramUsername, setInstagramUsername] = useState<string | null>(null);
   const [instagramAvatar, setInstagramAvatar] = useState<string | null>(null);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [filter, setFilter] = useState('');
+  const [postPage, setPostPage] = useState(1);
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const updateInstagramStatus = useCallback(({ data }: { data: { instagram: boolean; instagramUsername: string | null; instagramAvatar: string | null } }) => {
@@ -80,18 +81,26 @@ export default function CreateEventPage() {
     socialApi.getUserMedia().then(({ data }) => setInstagramPosts(data)).catch(() => undefined);
   }, [tab]);
 
+  const POST_PAGE_SIZE = 3;
+
   const filteredPosts = instagramPosts
     .filter((p) => !!p.media_url)
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .filter((p) => !filter || (p.caption || '').toLowerCase().includes(filter.toLowerCase()));
 
+  const postTotalPages = Math.ceil(filteredPosts.length / POST_PAGE_SIZE);
+  const visiblePosts = filteredPosts.slice((postPage - 1) * POST_PAGE_SIZE, postPage * POST_PAGE_SIZE);
+
+
+  const activePublications = myEvents.filter(e => e.imageUrl);
+
   const tabs: { key: Tab; label: string; icon: typeof Calendar; count?: number }[] = [
     { key: 'myevents', label: 'Mis Eventos', icon: Calendar, count: myEvents.length },
-    { key: 'registered', label: 'Inscripciones', icon: CalendarCheck, count: registeredEvents.length },
+    { key: 'registered', label: 'Publicaciones activas', icon: PlayCircle, count: activePublications.length },
     { key: 'instagram', label: 'Instagram', icon: Camera, count: instagramPosts.length },
   ];
 
-  const displayEvents = tab === 'myevents' ? myEvents : registeredEvents;
+  const displayEvents = myEvents;
 
   return (
     <div className="min-h-screen pt-16" style={{ backgroundColor: '#F8FAFC' }}>
@@ -168,7 +177,7 @@ export default function CreateEventPage() {
                 <input
                   type="text"
                   value={filter}
-                  onChange={(e) => setFilter(e.target.value)}
+                  onChange={(e) => { setFilter(e.target.value); setPostPage(1); }}
                   placeholder="Buscar en captions..."
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm light-form"
                 />
@@ -213,83 +222,54 @@ export default function CreateEventPage() {
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-                {filteredPosts.map((post) => (
-                  <InstagramPostPublisher
-                    key={post.id}
-                    post={post}
-                    onPublished={() => {
-                      socialApi.getUserMedia().then(({ data }) => setInstagramPosts(data)).catch(() => {});
-                      loadUser();
-                    }}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
+                  {visiblePosts.map((post) => (
+                    <InstagramPostPublisher
+                      key={post.id}
+                      post={post}
+                      onPublished={() => {
+                        socialApi.getUserMedia().then(({ data }) => setInstagramPosts(data)).catch(() => {});
+                        loadUser();
+                      }}
+                    />
+                  ))}
+                </div>
+                <Pagination
+                  currentPage={postPage}
+                  totalPages={postTotalPages}
+                  onPageChange={setPostPage}
+                />
+              </>
             )}
 
-            {myEvents.filter(e => e.imageUrl).length > 0 && (
-              <div className="mt-10">
-                <h3 className="text-lg font-semibold mb-4" style={{ color: '#1D1D1F' }}>
-                  Publicaciones activas
-                </h3>
-                <div className="space-y-3">
-                  {myEvents.filter(e => e.imageUrl).map((event) => {
-                    const now = new Date();
-                    const endDate = event.publicationEndDate ? new Date(event.publicationEndDate) : null;
-                    const isActive = !endDate || endDate >= now;
-                    return (
-                      <PublishedEventCard key={event.id} event={event} isActive={isActive} onUpdate={loadUser} />
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
         )}
 
-        {/* Events tabs */}
-        {(tab === 'myevents' || tab === 'registered') && (
+        {/* Tab: Mis Eventos */}
+        {tab === 'myevents' && (
           <>
             {displayEvents.length === 0 ? (
               <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
-                <div
-                  className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center"
-                  style={{ backgroundColor: '#E4EBFA' }}
-                >
-                  {tab === 'myevents' ? (
-                    <Sparkles className="w-8 h-8" style={{ color: '#2563EB' }} />
-                  ) : (
-                    <CalendarCheck className="w-8 h-8" style={{ color: '#2563EB' }} />
-                  )}
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
+                  <Sparkles className="w-8 h-8" style={{ color: '#2563EB' }} />
                 </div>
-                <p className="text-sm mb-4" style={{ color: '#1D1D1F99' }}>
-                  {tab === 'myevents' ? 'No has publicado eventos aún' : 'No te has inscrito a ningún evento'}
-                </p>
-                {tab === 'myevents' ? (
-                  <button
-                    type="button"
-                    onClick={() => setCreateModalOpen(true)}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
-                    style={{ backgroundColor: '#2563EB' }}
-                  >
-                    Publicar mi primer evento
-                  </button>
-                ) : (
-                  <Link
-                    to="/categorias"
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity"
-                    style={{ backgroundColor: '#2563EB' }}
-                  >
-                    Explorar eventos
-                  </Link>
-                )}
+                <p className="text-sm mb-4" style={{ color: '#1D1D1F99' }}>No has publicado eventos aún</p>
+                <button
+                  type="button"
+                  onClick={() => setCreateModalOpen(true)}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                  style={{ backgroundColor: '#2563EB' }}
+                >
+                  Publicar mi primer evento
+                </button>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {displayEvents.map((event) => (
                   <div key={event.id} className="relative group">
                     <EventCard event={event} />
-                    {tab === 'myevents' && instagramConnected && (
+                    {instagramConnected && (
                       <button
                         type="button"
                         onClick={async () => {
@@ -308,6 +288,31 @@ export default function CreateEventPage() {
                     )}
                   </div>
                 ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Tab: Publicaciones activas */}
+        {tab === 'registered' && (
+          <>
+            {activePublications.length === 0 ? (
+              <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
+                  <PlayCircle className="w-8 h-8" style={{ color: '#2563EB' }} />
+                </div>
+                <p className="text-sm" style={{ color: '#1D1D1F99' }}>No hay publicaciones activas</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {activePublications.map((event) => {
+                  const now = new Date();
+                  const endDate = event.publicationEndDate ? new Date(event.publicationEndDate) : null;
+                  const isActive = !endDate || endDate >= now;
+                  return (
+                    <PublishedEventCard key={event.id} event={event} isActive={isActive} onUpdate={loadUser} />
+                  );
+                })}
               </div>
             )}
           </>
