@@ -33,7 +33,7 @@ export function FeaturedEventCard({ event }: Props) {
             className="w-full h-auto block"
           />
         ) : (
-          <div className="w-full flex items-center justify-center" style={{ aspectRatio: '4/5', backgroundColor: '#E4EBFA' }}>
+          <div className="w-full aspect-4/5 flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
             <span style={{ color: '#1D1D1F33', fontSize: '13px' }}>Sin imagen</span>
           </div>
         )}
