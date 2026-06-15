@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import type { Event } from '../../types';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { EventDetailModal } from './EventDetailModal';
 
 function getCategoryStyle() {
   return { bg: '#FFFFFF', text: '#1D1D1F' };
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function FeaturedEventCard({ event }: Props) {
+  const [modalOpen, setModalOpen] = useState(false);
   const isFree = !event.price || event.price === 0;
   const eventDate = new Date(event.date);
   const catStyle = getCategoryStyle();
@@ -91,14 +93,19 @@ export function FeaturedEventCard({ event }: Props) {
           )}
         </div>
 
-        <Link
-          to={`/categorias/${event.slug}`}
-          className="inline-flex items-center gap-1 px-5 py-2 rounded-xl text-sm font-medium transition-opacity hover:opacity-90 self-start"
+        <button
+          type="button"
+          onClick={() => setModalOpen(true)}
+          className="inline-flex items-center gap-1 px-5 py-2 rounded-xl text-sm font-medium transition-opacity hover:opacity-90 self-start cursor-pointer"
           style={{ backgroundColor: '#2563EB', color: '#FFFFFF', fontFamily: 'var(--font-brand)' }}
         >
           Ver más →
-        </Link>
+        </button>
       </div>
+
+      {modalOpen && (
+        <EventDetailModal slug={event.slug} initialEvent={event} onClose={() => setModalOpen(false)} />
+      )}
     </div>
   );
 }
