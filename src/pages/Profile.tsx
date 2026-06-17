@@ -185,7 +185,7 @@ export default function Profile() {
             Datos de empresa
           </p>
           {editing && (
-            <p style={{ fontSize: '13px', fontWeight: 400, color: '#9CA3AF', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '16px' }}>
+            <p style={{ fontSize: '13px', fontWeight: 400, color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '16px' }}>
               Completa los datos de la empresa organizadora, que utilizaremos para el registro de publicaciones y la emisión de documentos tributarios.
             </p>
           )}
@@ -209,7 +209,7 @@ export default function Profile() {
             Datos personales Administrador
           </p>
           {editing && (
-            <p style={{ fontSize: '13px', fontWeight: 400, color: '#9CA3AF', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '16px' }}>
+            <p style={{ fontSize: '13px', fontWeight: 400, color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '16px' }}>
               Completa la información de la persona que administrará las publicaciones de eventos en la plataforma.
             </p>
           )}
