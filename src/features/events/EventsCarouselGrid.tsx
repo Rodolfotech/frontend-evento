@@ -4,7 +4,7 @@ import { FeaturedEventCard } from './FeaturedEventCard';
 import { EventCardSkeleton } from '../../components/ui/EventCardSkeleton';
 import type { Event } from '../../types';
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 3;
 
 interface Props {
   events: Event[];
@@ -53,7 +53,7 @@ export function EventsCarouselGrid({ events, loading, title, subtitle }: Props) 
         )}
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
           {showSkeletons
             ? Array.from({ length: PAGE_SIZE }).map((_, i) => <EventCardSkeleton key={i} />)
             : visible.map(event => <FeaturedEventCard key={event.id} event={event} />)
