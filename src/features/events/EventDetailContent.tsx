@@ -29,7 +29,7 @@ const T = {
   label: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 600, color: C.dark } as React.CSSProperties,
   value: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 400, color: '#1D1D1F99' } as React.CSSProperties,
   title: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '20px', fontWeight: 600, color: C.dark } as React.CSSProperties,
-  descBody: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 400, color: '#1D1D1F99', lineHeight: '1.6' } as React.CSSProperties,
+  descBody: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 400, color: '#1D1D1F99', lineHeight: '1.6', wordBreak: 'break-word', overflowWrap: 'break-word' } as React.CSSProperties,
 } as const;
 
 function InstagramIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
@@ -204,7 +204,7 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
           {/* Descripción */}
           <div>
             <p style={{ ...T.label, marginBottom: '8px' }}>Descripción</p>
-            {descTitle && <p style={{ ...T.value, display: 'block', marginBottom: '4px' }}>{descTitle}</p>}
+            {descTitle && <p style={{ ...T.value, display: 'block', marginBottom: '4px', wordBreak: 'break-word' }}>{descTitle}</p>}
             {descBody && <p style={{ ...T.descBody, display: 'block' }}>{descBody}</p>}
           </div>
 
