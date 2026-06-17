@@ -136,6 +136,27 @@ select.light-form:focus {
   box-shadow: none !important;
 }
 
+/* Override para inputs del perfil (fondo blanco, texto gris) */
+input.profile-input,
+textarea.profile-input,
+select.profile-input {
+  background: #FFFFFF !important;
+  border: 1px solid #E4EBFA !important;
+  color: #1D1D1F99 !important;
+}
+
+input.profile-input:focus,
+textarea.profile-input:focus,
+select.profile-input:focus {
+  border-color: #2563EB !important;
+  box-shadow: none !important;
+}
+
+input.profile-input::placeholder,
+textarea.profile-input::placeholder {
+  color: #1D1D1F66 !important;
+}
+
 ::selection {
   background: rgba(0, 240, 255, 0.3);
 }

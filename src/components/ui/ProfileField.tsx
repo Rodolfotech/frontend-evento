@@ -11,11 +11,9 @@ interface ProfileFieldProps {
 }
 
 export function ProfileField({ label, value, editing, onChange, placeholder, type = 'text', required, disabled, options }: ProfileFieldProps) {
-  const labelColor = '#1D1D1F';
-
   return (
     <div>
-      <p className="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: labelColor, fontFamily: "'Raleway', system-ui, sans-serif" }}>
+      <p style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px', color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
         {label}{required && <span style={{ color: '#DC2626' }}> *</span>}
       </p>
       {editing ? (
@@ -24,8 +22,7 @@ export function ProfileField({ label, value, editing, onChange, placeholder, typ
             value={value}
             onChange={(e) => onChange?.(e.target.value)}
             disabled={disabled}
-            className="light-form w-full text-sm px-3 py-2.5 rounded-xl"
-            style={{ backgroundColor: disabled ? '#F8FAFC' : undefined }}
+            className="profile-input w-full text-sm px-3 py-2.5 rounded-xl"
           >
             <option value="" disabled>{placeholder || `Seleccione ${label.toLowerCase()}`}</option>
             {options.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
@@ -37,13 +34,12 @@ export function ProfileField({ label, value, editing, onChange, placeholder, typ
             onChange={(e) => onChange?.(e.target.value)}
             placeholder={placeholder}
             disabled={disabled}
-            className="light-form w-full text-sm px-3 py-2.5 rounded-xl"
-            style={{ backgroundColor: disabled ? '#F8FAFC' : undefined }}
+            className="profile-input w-full text-sm px-3 py-2.5 rounded-xl"
           />
         )
       ) : (
         <div className="rounded-xl px-3 py-2.5" style={{ border: '1px solid #E4EBFA', backgroundColor: '#FFFFFF' }}>
-          <p className="text-sm" style={{ color: value ? '#1D1D1F' : '#9CA3AF', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+          <p style={{ fontSize: '14px', fontWeight: 400, color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
             {value || '—'}
           </p>
         </div>
