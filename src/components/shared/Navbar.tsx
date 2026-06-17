@@ -77,14 +77,19 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={logout}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer hover:opacity-80"
-                  style={{ color: '#1D1D1F', border: '1px solid #E4EBFA', backgroundColor: '#FFFFFF' }}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:opacity-80"
+                  style={{ color: '#1D1D1F', border: '1px solid #E4EBFA' }}
                 >
                   <LogOut className="w-4 h-4" />
                   Cerrar sesión
                 </button>
-                <Link to="/profile" className="flex items-center">
-                  <img src="/Logohoysesale.svg" alt="HoySeSale" className="h-8 w-auto" />
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-1.5 text-sm font-medium hover:opacity-80"
+                  style={{ color: '#2563EB' }}
+                >
+                  <User className="w-4 h-4" />
+                  hoysesale.cl
                 </Link>
               </>
             ) : (
