@@ -2,7 +2,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ADMIN_ROUTE } from '../../constants/admin';
 import {
-  PlusCircle,
   LogIn,
   User,
   LogOut,
