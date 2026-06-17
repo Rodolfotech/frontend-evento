@@ -252,34 +252,21 @@ export default function Profile() {
             </div>
 
             {instagramConnected ? (
-              <div className="flex items-center gap-2">
-                <span
-                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
-                  style={{ backgroundColor: '#DCFCE7', color: '#16A34A' }}
-                >
-                  <CheckCircle className="w-3.5 h-3.5" />
-                  Vinculado
-                </span>
-                {editing && (
-                  <button
-                    type="button"
-                    onClick={handleDisconnect}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full cursor-pointer transition-all"
-                    style={{ color: '#2563EB', border: '1px solid #2563EB', backgroundColor: '#FFFFFF' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#2563EB'; e.currentTarget.style.color = '#FFFFFF'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FFFFFF'; e.currentTarget.style.color = '#2563EB'; }}
-                  >
-                    <Unlink className="w-3.5 h-3.5" />
-                    Desvincular
-                  </button>
-                )}
-              </div>
+              <span
+                className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
+                style={{ backgroundColor: '#DCFCE7', color: '#16A34A' }}
+              >
+                <CheckCircle className="w-3.5 h-3.5" />
+                Vinculado
+              </span>
             ) : (
               <button
                 type="button"
                 onClick={() => setShowModal(true)}
-                className="inline-flex items-center gap-1.5 text-xs font-medium px-4 py-1.5 rounded-full cursor-pointer transition-opacity hover:opacity-80"
-                style={{ backgroundColor: '#FFFFFF', color: '#2563EB', border: '1px solid #2563EB' }}
+                className="inline-flex items-center gap-1.5 text-xs font-medium px-4 py-1.5 rounded-full cursor-pointer transition-all"
+                style={{ color: '#DC2626', border: '1px solid #DC2626', backgroundColor: '#FFFFFF' }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#DC2626'; e.currentTarget.style.color = '#FFFFFF'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FFFFFF'; e.currentTarget.style.color = '#DC2626'; }}
               >
                 <Link className="w-3.5 h-3.5" />
                 Vincular
