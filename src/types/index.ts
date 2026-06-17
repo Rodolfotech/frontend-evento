@@ -17,6 +17,15 @@ export interface User {
   instagramClickCount?: number;
   ownedEvents?: Array<{ id: string; title: string; slug: string; date: string; city?: string }>;
   registrations?: Array<{ id: string; event: { id: string; title: string; slug: string; date: string }; createdAt: string }>;
+  companyInstagram?: string;
+  website?: string;
+  companyRut?: string;
+  companyGiro?: string;
+  companyPhone?: string;
+  companyAddress?: string;
+  city?: string;
+  organizerRut?: string;
+  organizerPhone?: string;
 }
 
 export interface Event {
