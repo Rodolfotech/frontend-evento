@@ -155,13 +155,13 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
               <div className="flex-1">
                 <textarea
                   value={descriptionText}
-                  onChange={(e) => setDescriptionText(e.target.value.slice(0, 75))}
+                  onChange={(e) => setDescriptionText(e.target.value.slice(0, 200))}
                   placeholder="Texto de descripción"
                   rows={2}
                   className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none"
                 />
-                <p className="text-right text-[10px] mt-0.5" style={{ color: descriptionText.length >= 75 ? '#DC2626' : '#1D1D1F66' }}>
-                  {descriptionText.length}/75
+                <p className="text-right text-[10px] mt-0.5" style={{ color: descriptionText.length >= 200 ? '#DC2626' : '#1D1D1F66' }}>
+                  {descriptionText.length}/200
                 </p>
               </div>
             </div>
