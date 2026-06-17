@@ -170,11 +170,11 @@ export default function Profile() {
 
         {/* ── Datos de empresa ── */}
         <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: '#F8FAFC', border: '1px solid #E4EBFA' }}>
-          <h2 className="text-base font-semibold mb-1" style={{ color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+          <p style={{ fontSize: '18px', fontWeight: 600, color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '4px' }}>
             Datos de empresa
-          </h2>
+          </p>
           {editing && (
-            <p className="text-xs mb-5" style={{ color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+            <p style={{ fontSize: '13px', fontWeight: 400, color: '#9CA3AF', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '16px' }}>
               Completa los datos de la empresa organizadora, que utilizaremos para el registro de publicaciones y la emisión de documentos tributarios.
             </p>
           )}
@@ -194,11 +194,11 @@ export default function Profile() {
 
         {/* ── Datos personales Administrador ── */}
         <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: '#F8FAFC', border: '1px solid #E4EBFA' }}>
-          <h2 className="text-base font-semibold mb-1" style={{ color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+          <p style={{ fontSize: '18px', fontWeight: 600, color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '4px' }}>
             Datos personales Administrador
-          </h2>
+          </p>
           {editing && (
-            <p className="text-xs mb-5" style={{ color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+            <p style={{ fontSize: '13px', fontWeight: 400, color: '#9CA3AF', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '16px' }}>
               Completa la información de la persona que administrará las publicaciones de eventos en la plataforma.
             </p>
           )}
@@ -224,9 +224,9 @@ export default function Profile() {
 
         {/* ── Redes sociales ── */}
         <div className="mb-6">
-          <h2 className="text-base font-semibold mb-3" style={{ color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+          <p style={{ fontSize: '18px', fontWeight: 600, color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '12px' }}>
             Redes sociales
-          </h2>
+          </p>
           <div
             className="flex items-center justify-between px-5 py-4 rounded-2xl"
             style={{ backgroundColor: '#F8FAFC', border: '1px solid #E4EBFA' }}
