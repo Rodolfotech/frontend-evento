@@ -64,7 +64,7 @@ export function FeaturedEventCard({ event }: Props) {
       {/* Contenido */}
       <div className="p-4 flex flex-col gap-3">
         <h3
-          className="font-semibold text-sm leading-snug line-clamp-2"
+          className="font-semibold text-sm leading-snug truncate"
           style={{ color: '#1D1D1F', fontFamily: 'var(--font-brand)' }}
         >
           {event.title}
