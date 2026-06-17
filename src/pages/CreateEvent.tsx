@@ -454,7 +454,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Texto descriptivo</p>
-            <textarea value={descText} onChange={(e) => setDescText(e.target.value.slice(0, 300))} rows={2} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none" />
+            <textarea value={descText} onChange={(e) => setDescText(e.target.value.slice(0, 318))} rows={2} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none" />
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Fecha evento</p>
