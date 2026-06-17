@@ -45,11 +45,10 @@ function InstagramIcon({ className, style }: { className?: string; style?: React
 function parseDescription(description: string) {
   const fullDesc = description.trim();
   const newlineIdx = fullDesc.indexOf('\n');
-  const splitAt = newlineIdx >= 0 && newlineIdx <= 40 ? newlineIdx : -1;
-  if (splitAt === -1) return { title: '', body: fullDesc };
+  if (newlineIdx === -1) return { title: '', body: fullDesc };
   return {
-    title: fullDesc.slice(0, splitAt).trim(),
-    body: fullDesc.slice(splitAt).trim(),
+    title: fullDesc.slice(0, newlineIdx).trim(),
+    body: fullDesc.slice(newlineIdx + 1).trim(),
   };
 }
 
