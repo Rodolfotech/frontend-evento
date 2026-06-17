@@ -84,7 +84,8 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await usersApi.updateProfile(form);
+      const { email: _email, ...data } = form;
+      await usersApi.updateProfile(data);
       setEditing(false);
       setToast({ message: 'Datos actualizados correctamente', type: 'success' });
     } catch {
