@@ -10,6 +10,8 @@ interface ProfileFieldProps {
   options?: readonly string[] | string[];
 }
 
+const inputBase = 'w-full text-sm px-3 py-2.5 rounded-xl outline-none bg-white';
+
 export function ProfileField({ label, value, editing, onChange, placeholder, type = 'text', required, disabled, options }: ProfileFieldProps) {
   const labelColor = editing ? '#1D1D1F' : '#2563EB';
 
@@ -24,9 +26,9 @@ export function ProfileField({ label, value, editing, onChange, placeholder, typ
             value={value}
             onChange={(e) => onChange?.(e.target.value)}
             disabled={disabled}
-            className="w-full text-sm px-3 py-2.5 rounded-xl outline-none transition-colors"
+            className={inputBase}
             style={{
-              color: value ? '#1D1D1F' : '#1D1D1F66',
+              color: value ? '#1D1D1F' : '#9CA3AF',
               fontFamily: "'Raleway', system-ui, sans-serif",
               border: '1px solid #E4EBFA',
               backgroundColor: disabled ? '#F8FAFC' : '#FFFFFF',
@@ -42,7 +44,7 @@ export function ProfileField({ label, value, editing, onChange, placeholder, typ
             onChange={(e) => onChange?.(e.target.value)}
             placeholder={placeholder}
             disabled={disabled}
-            className="w-full text-sm px-3 py-2.5 rounded-xl outline-none transition-colors"
+            className={`${inputBase} placeholder:text-gray-400`}
             style={{
               color: '#1D1D1F',
               fontFamily: "'Raleway', system-ui, sans-serif",
@@ -52,8 +54,8 @@ export function ProfileField({ label, value, editing, onChange, placeholder, typ
           />
         )
       ) : (
-        <div className="rounded-xl px-3 py-2.5" style={{ border: '1px solid #E4EBFA', backgroundColor: '#FFFFFF' }}>
-          <p className="text-sm" style={{ color: value ? '#1D1D1F' : '#1D1D1F66', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+        <div className="rounded-xl px-3 py-2.5 bg-white" style={{ border: '1px solid #E4EBFA' }}>
+          <p className="text-sm" style={{ color: value ? '#1D1D1F' : '#9CA3AF', fontFamily: "'Raleway', system-ui, sans-serif" }}>
             {value || '—'}
           </p>
         </div>
