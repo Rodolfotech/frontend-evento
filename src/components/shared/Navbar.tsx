@@ -59,8 +59,7 @@ export default function Navbar() {
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-opacity hover:opacity-90"
                   style={{ backgroundColor: '#2563EB' }}
                 >
-                  <PlusCircle className="w-4 h-4" />
-                  Publicar Evento
+                  Publicar evento
                 </Link>
                 {user?.role === 'ADMIN' && (
                   <Link
@@ -75,25 +74,18 @@ export default function Navbar() {
                     Panel
                   </Link>
                 )}
-                <Link
-                  to="/profile"
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    location.pathname === '/profile'
-                      ? 'text-[#2563EB]'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <User className="w-4 h-4" />
-                  {user?.name}
-                </Link>
                 <button
                   type="button"
                   onClick={logout}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-red-500 transition-colors cursor-pointer"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer hover:opacity-80"
+                  style={{ color: '#1D1D1F', border: '1px solid #E4EBFA', backgroundColor: '#FFFFFF' }}
                 >
                   <LogOut className="w-4 h-4" />
-                  Salir
+                  Cerrar sesión
                 </button>
+                <Link to="/profile" className="flex items-center">
+                  <img src="/Logohoysesale.svg" alt="HoySeSale" className="h-8 w-auto" />
+                </Link>
               </>
             ) : (
               <>
@@ -154,8 +146,7 @@ export default function Navbar() {
                   className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-white"
                   style={{ backgroundColor: '#2563EB' }}
                 >
-                  <PlusCircle className="w-4 h-4" />
-                  Publicar Evento
+                  Publicar evento
                 </Link>
                 {user?.role === 'ADMIN' && (
                   <Link
@@ -173,15 +164,16 @@ export default function Navbar() {
                   className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-600"
                 >
                   <User className="w-4 h-4" />
-                  {user?.name}
+                  Mi perfil
                 </Link>
                 <button
                   type="button"
                   onClick={() => { logout(); setMobileOpen(false); }}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-red-500 w-full cursor-pointer"
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm w-full cursor-pointer"
+                  style={{ color: '#1D1D1F' }}
                 >
                   <LogOut className="w-4 h-4" />
-                  Salir
+                  Cerrar sesión
                 </button>
               </>
             ) : (
