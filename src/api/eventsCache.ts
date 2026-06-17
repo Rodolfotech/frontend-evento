@@ -29,3 +29,10 @@ export function setCached(params: object, data: unknown): void {
     localStorage.setItem(makeKey(params), JSON.stringify({ data, ts: Date.now() }));
   } catch {}
 }
+
+export function clearCache(): void {
+  try {
+    const keys = Object.keys(localStorage).filter(k => k.startsWith('hss_ev_'));
+    keys.forEach(k => localStorage.removeItem(k));
+  } catch {}
+}

@@ -29,7 +29,7 @@ const T = {
   label: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 600, color: C.dark } as React.CSSProperties,
   value: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 400, color: '#1D1D1F99' } as React.CSSProperties,
   title: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '20px', fontWeight: 600, color: C.dark } as React.CSSProperties,
-  descBody: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 400, color: '#1D1D1F99', lineHeight: '1.6' } as React.CSSProperties,
+  descBody: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 400, color: '#1D1D1F99', lineHeight: '1.6', wordBreak: 'break-word', overflowWrap: 'break-word' } as React.CSSProperties,
 } as const;
 
 function InstagramIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
@@ -45,11 +45,10 @@ function InstagramIcon({ className, style }: { className?: string; style?: React
 function parseDescription(description: string) {
   const fullDesc = description.trim();
   const newlineIdx = fullDesc.indexOf('\n');
-  const splitAt = newlineIdx >= 0 && newlineIdx <= 40 ? newlineIdx : -1;
-  if (splitAt === -1) return { title: '', body: fullDesc };
+  if (newlineIdx === -1) return { title: '', body: fullDesc };
   return {
-    title: fullDesc.slice(0, splitAt).trim(),
-    body: fullDesc.slice(splitAt).trim(),
+    title: fullDesc.slice(0, newlineIdx).trim(),
+    body: fullDesc.slice(newlineIdx + 1).trim(),
   };
 }
 
@@ -203,10 +202,10 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
           <div style={{ borderTop: `1px solid ${C.neutral2}` }} />
 
           {/* Descripción */}
-          <div className="flex flex-col gap-1">
-            <p style={T.label}>Descripción</p>
-            {descTitle && <p style={T.value}>{descTitle}</p>}
-            {descBody && <p style={T.descBody}>{descBody}</p>}
+          <div>
+            <p style={{ ...T.label, marginBottom: '8px' }}>Descripción</p>
+            {descTitle && <p style={{ ...T.value, display: 'block', marginBottom: '4px', wordBreak: 'break-word' }}>{descTitle}</p>}
+            {descBody && <p style={{ ...T.descBody, display: 'block' }}>{descBody}</p>}
           </div>
 
         </div>

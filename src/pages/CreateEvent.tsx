@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { eventsApi, socialApi, attendeesApi } from '../api';
+import { clearCache } from '../api/eventsCache';
 import EventCard from '../features/events/EventCard';
 import CreateEventForm from '../features/events/CreateEventForm';
 import { InstagramPostPublisher } from '../features/social/InstagramPostPublisher';
@@ -18,11 +19,11 @@ import {
   PlayCircle,
   Trash2,
   Edit3,
-  Check,
 } from 'lucide-react';
 import { Pagination } from '../components/ui/Pagination';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { COMUNAS } from '../constants/comunas';
 
 type Tab = 'myevents' | 'registered' | 'instagram';
 
@@ -318,7 +319,7 @@ export default function CreateEventPage() {
                 const endDate = event.publicationEndDate ? new Date(event.publicationEndDate) : null;
                 const isActive = !endDate || endDate >= now;
                 return (
-                  <PublishedEventCard key={event.id} event={event} isActive={isActive} onUpdate={loadUser} />
+                  <PublishedEventCard key={`${event.id}-${event.title}-${event.description}`} event={event} isActive={isActive} onUpdate={loadUser} />
                 );
               })}
             </div>
@@ -366,25 +367,54 @@ export default function CreateEventPage() {
   );
 }
 
+const CATEGORIES = ['Música', 'Cultura', 'Gastronomía', 'Turismo', 'Trekking', 'Deportes', 'Ferias', 'Bienestar', 'Fiestas', 'Documental'];
+const EVENT_TYPES = [
+  { value: 'gratis', label: 'Gratis' },
+  { value: 'compra', label: 'Compra tu entrada' },
+  { value: 'cupo', label: 'Asegura tu cupo' },
+];
+
+function parseDescParts(desc: string) {
+  const idx = desc.indexOf('\n');
+  if (idx === -1) return { subtitle: '', descText: desc };
+  return { subtitle: desc.slice(0, idx).trim(), descText: desc.slice(idx + 1).trim() };
+}
+
 function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isActive: boolean; onUpdate: () => void }) {
   const [editing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const parts = parseDescParts(event.description || '');
+  const [title, setTitle] = useState(event.title);
+  const [subtitle, setSubtitle] = useState(parts.subtitle);
+  const [descText, setDescText] = useState(parts.descText);
+  const [eventDate, setEventDate] = useState(format(new Date(event.date), 'yyyy-MM-dd'));
+  const [eventTime, setEventTime] = useState(format(new Date(event.date), 'HH:mm'));
+  const [comuna, setComuna] = useState(event.city || '');
+  const [tipo, setTipo] = useState(event.address && event.address.startsWith('http') ? 'compra' : 'gratis');
+  const [category, setCategory] = useState(event.category?.name || '');
   const [startDate, setStartDate] = useState(
     event.publicationStartDate ? format(new Date(event.publicationStartDate), "yyyy-MM-dd'T'HH:mm") : ''
   );
   const [endDate, setEndDate] = useState(
     event.publicationEndDate ? format(new Date(event.publicationEndDate), "yyyy-MM-dd'T'HH:mm") : ''
   );
-  const [loading, setLoading] = useState(false);
 
-  const handleUpdateDates = async () => {
-    if (!startDate || !endDate) return;
+  const handleUpdate = async () => {
     setLoading(true);
     try {
+      const description = [subtitle.trim(), descText.trim()].filter(Boolean).join('\n') || event.description;
       await eventsApi.update(event.id, {
-        publicationStartDate: new Date(startDate).toISOString(),
-        publicationEndDate: new Date(endDate).toISOString(),
+        title: title.trim(),
+        description,
+        date: new Date(`${eventDate}T${eventTime}`).toISOString(),
+        city: comuna,
+        categoryName: category || undefined,
+        publicationStartDate: startDate ? new Date(startDate).toISOString() : undefined,
+        publicationEndDate: endDate ? new Date(endDate).toISOString() : undefined,
       });
       setEditing(false);
+      clearCache();
       onUpdate();
     } catch { /* noop */ } finally { setLoading(false); }
   };
@@ -393,6 +423,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
     setLoading(true);
     try {
       await eventsApi.update(event.id, { publicationEndDate: new Date().toISOString() });
+      clearCache();
       onUpdate();
     } catch { /* noop */ } finally { setLoading(false); }
   };
@@ -402,14 +433,86 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
     setLoading(true);
     try {
       await eventsApi.delete(event.id);
+      clearCache();
       onUpdate();
     } catch { /* noop */ } finally { setLoading(false); }
   };
 
+  if (editing) {
+    return (
+      <div className="rounded-xl p-4 border space-y-3" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold" style={{ color: '#1D1D1F' }}>Editar publicación</p>
+          <button type="button" onClick={() => setEditing(false)} className="p-1 cursor-pointer" style={{ color: '#1D1D1F99' }}>
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="sm:col-span-2">
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Título</p>
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value.slice(0, 45))} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Subtítulo</p>
+            <textarea value={subtitle} onChange={(e) => setSubtitle(e.target.value.slice(0, 90))} rows={4} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none overflow-hidden" />
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Texto descriptivo</p>
+            <textarea value={descText} onChange={(e) => setDescText(e.target.value.slice(0, 300))} rows={10} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none overflow-hidden" />
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Fecha evento</p>
+            <input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Hora</p>
+            <input type="time" value={eventTime} onChange={(e) => setEventTime(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Comuna</p>
+            <select value={comuna} onChange={(e) => setComuna(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form">
+              <option value="" disabled>Selecciona comuna</option>
+              {COMUNAS.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Tipo</p>
+            <select value={tipo} onChange={(e) => setTipo(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form">
+              {EVENT_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+            </select>
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Categoría</p>
+            <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form">
+              <option value="" disabled>Selecciona categoría</option>
+              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Inicio publicación</p>
+            <input type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Fin publicación</p>
+            <input type="datetime-local" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
+          </div>
+        </div>
+        <div className="flex justify-end gap-2 pt-2">
+          <button type="button" onClick={() => setEditing(false)} className="px-4 py-1.5 rounded-lg text-xs border cursor-pointer" style={{ borderColor: '#E4EBFA', color: '#1D1D1F99' }}>
+            Cancelar
+          </button>
+          <button type="button" onClick={handleUpdate} disabled={loading} className="px-4 py-1.5 rounded-lg text-xs text-white cursor-pointer disabled:opacity-50" style={{ backgroundColor: '#2563EB' }}>
+            {loading ? 'Guardando...' : 'Guardar'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-xl p-3 flex items-center gap-3 border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
       <div className="w-14 h-14 shrink-0 rounded-lg overflow-hidden">
-        <img src={event.imageUrl!} alt="" className="w-full h-full object-cover" />
+        {event.imageUrl && <img src={event.imageUrl} alt="" className="w-full h-full object-cover" />}
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate" style={{ color: '#1D1D1F' }}>{event.title}</p>
@@ -417,94 +520,28 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
           <Clock className="w-3 h-3" />
           {isActive ? 'Publicado' : 'Detenido'}
         </div>
-        {editing ? (
-          <div className="flex items-center gap-2 mt-2">
-            <input
-              type="datetime-local"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="flex-1 px-2 py-1 rounded text-[11px] light-form"
-            />
-            <span className="text-[11px]" style={{ color: '#1D1D1F66' }}>→</span>
-            <input
-              type="datetime-local"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="flex-1 px-2 py-1 rounded text-[11px] light-form"
-            />
-            <button
-              type="button"
-              onClick={handleUpdateDates}
-              disabled={loading}
-              className="p-1.5 rounded-lg cursor-pointer"
-              style={{ backgroundColor: '#DCFCE7', color: '#16A34A' }}
-            >
-              <Check className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        ) : (
-          <p className="text-[11px] mt-0.5" style={{ color: '#1D1D1F66' }}>
-            {event.publicationStartDate ? format(new Date(event.publicationStartDate), "d MMM HH:mm", { locale: es }) : '—'}
-            {' → '}
-            {event.publicationEndDate ? format(new Date(event.publicationEndDate), "d MMM HH:mm", { locale: es }) : '—'}
-          </p>
-        )}
+        <p className="text-[11px] mt-0.5" style={{ color: '#1D1D1F66' }}>
+          {event.publicationStartDate ? format(new Date(event.publicationStartDate), "d MMM HH:mm", { locale: es }) : '—'}
+          {' → '}
+          {event.publicationEndDate ? format(new Date(event.publicationEndDate), "d MMM HH:mm", { locale: es }) : '—'}
+        </p>
       </div>
       <div className="flex items-center gap-1 shrink-0">
-        {editing ? (
-          <button
-            type="button"
-            onClick={() => setEditing(false)}
-            className="p-1.5 rounded-lg border cursor-pointer"
-            style={{ borderColor: '#E4EBFA', color: '#1D1D1F99' }}
-          >
-            <X className="w-3.5 h-3.5" />
+        <button type="button" onClick={() => setEditing(true)} className="p-1.5 rounded-lg border cursor-pointer" style={{ borderColor: '#E4EBFA', color: '#2563EB' }} title="Editar">
+          <Edit3 className="w-3.5 h-3.5" />
+        </button>
+        {isActive ? (
+          <button type="button" onClick={handleStop} disabled={loading} className="p-1.5 rounded-lg border cursor-pointer" style={{ borderColor: '#E4EBFA', color: '#DC2626' }} title="Detener">
+            <PauseCircle className="w-3.5 h-3.5" />
           </button>
         ) : (
-          <>
-            <button
-              type="button"
-              onClick={() => setEditing(true)}
-              className="p-1.5 rounded-lg border cursor-pointer"
-              style={{ borderColor: '#E4EBFA', color: '#2563EB' }}
-              title="Editar fechas"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-            </button>
-            {isActive ? (
-              <button
-                type="button"
-                onClick={handleStop}
-                disabled={loading}
-                className="p-1.5 rounded-lg border cursor-pointer"
-                style={{ borderColor: '#E4EBFA', color: '#DC2626' }}
-                title="Detener publicación"
-              >
-                <PauseCircle className="w-3.5 h-3.5" />
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setEditing(true)}
-                className="p-1.5 rounded-lg border cursor-pointer"
-                style={{ borderColor: '#E4EBFA', color: '#16A34A' }}
-                title="Reanudar publicación"
-              >
-                <PlayCircle className="w-3.5 h-3.5" />
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={handleDelete}
-              disabled={loading}
-              className="p-1.5 rounded-lg border cursor-pointer"
-              style={{ borderColor: '#E4EBFA', color: '#DC2626' }}
-              title="Eliminar"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </button>
-          </>
+          <button type="button" onClick={() => setEditing(true)} className="p-1.5 rounded-lg border cursor-pointer" style={{ borderColor: '#E4EBFA', color: '#16A34A' }} title="Reanudar">
+            <PlayCircle className="w-3.5 h-3.5" />
+          </button>
         )}
+        <button type="button" onClick={handleDelete} disabled={loading} className="p-1.5 rounded-lg border cursor-pointer" style={{ borderColor: '#E4EBFA', color: '#DC2626' }} title="Eliminar">
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
       </div>
     </div>
   );

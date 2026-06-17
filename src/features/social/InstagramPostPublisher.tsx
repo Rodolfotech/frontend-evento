@@ -4,6 +4,7 @@ import { SocialPostMedia } from './SocialPostMedia';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { eventsApi } from '../../api';
+import { clearCache } from '../../api/eventsCache';
 import type { SocialPost } from '../../types';
 import { COMUNAS } from '../../constants/comunas';
 
@@ -61,6 +62,7 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
         address: tipo === 'compra' && ticketUrl ? ticketUrl : undefined,
       });
       setSuccess(true);
+      clearCache();
       onPublished?.();
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { message?: string | string[] } } };
@@ -138,15 +140,15 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
             <div className="flex items-start gap-2">
               <AlignLeft className="w-4 h-4 shrink-0 mt-1.5" style={{ color: '#2563EB' }} />
               <div className="flex-1">
-                <input
-                  type="text"
+                <textarea
                   value={subtitle}
-                  onChange={(e) => setSubtitle(e.target.value.slice(0, 45))}
+                  onChange={(e) => setSubtitle(e.target.value.slice(0, 90))}
                   placeholder="Subtítulo"
-                  className="w-full px-3 py-1.5 rounded-lg text-xs light-form"
+                  rows={4}
+                  className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none overflow-hidden"
                 />
-                <p className="text-right text-[10px] mt-0.5" style={{ color: subtitle.length >= 45 ? '#DC2626' : '#1D1D1F66' }}>
-                  {subtitle.length}/45
+                <p className="text-right text-[10px] mt-0.5" style={{ color: subtitle.length >= 90 ? '#DC2626' : '#1D1D1F66' }}>
+                  {subtitle.length}/90
                 </p>
               </div>
             </div>
@@ -155,13 +157,13 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
               <div className="flex-1">
                 <textarea
                   value={descriptionText}
-                  onChange={(e) => setDescriptionText(e.target.value.slice(0, 75))}
+                  onChange={(e) => setDescriptionText(e.target.value.slice(0, 300))}
                   placeholder="Texto de descripción"
-                  rows={2}
-                  className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none"
+                  rows={10}
+                  className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none overflow-hidden"
                 />
-                <p className="text-right text-[10px] mt-0.5" style={{ color: descriptionText.length >= 75 ? '#DC2626' : '#1D1D1F66' }}>
-                  {descriptionText.length}/75
+                <p className="text-right text-[10px] mt-0.5" style={{ color: descriptionText.length >= 300 ? '#DC2626' : '#1D1D1F66' }}>
+                  {descriptionText.length}/300
                 </p>
               </div>
             </div>
