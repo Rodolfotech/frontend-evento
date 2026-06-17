@@ -10,8 +10,6 @@ interface ProfileFieldProps {
   options?: readonly string[] | string[];
 }
 
-const inputBase = 'w-full text-sm px-3 py-2.5 rounded-xl outline-none bg-white';
-
 export function ProfileField({ label, value, editing, onChange, placeholder, type = 'text', required, disabled, options }: ProfileFieldProps) {
   const labelColor = editing ? '#1D1D1F' : '#2563EB';
 
@@ -26,13 +24,8 @@ export function ProfileField({ label, value, editing, onChange, placeholder, typ
             value={value}
             onChange={(e) => onChange?.(e.target.value)}
             disabled={disabled}
-            className={inputBase}
-            style={{
-              color: value ? '#1D1D1F' : '#9CA3AF',
-              fontFamily: "'Raleway', system-ui, sans-serif",
-              border: '1px solid #E4EBFA',
-              backgroundColor: disabled ? '#F8FAFC' : '#FFFFFF',
-            }}
+            className="light-form w-full text-sm px-3 py-2.5 rounded-xl"
+            style={{ backgroundColor: disabled ? '#F8FAFC' : undefined }}
           >
             <option value="" disabled>{placeholder || `Seleccione ${label.toLowerCase()}`}</option>
             {options.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
@@ -44,17 +37,12 @@ export function ProfileField({ label, value, editing, onChange, placeholder, typ
             onChange={(e) => onChange?.(e.target.value)}
             placeholder={placeholder}
             disabled={disabled}
-            className={`${inputBase} placeholder:text-gray-400`}
-            style={{
-              color: '#1D1D1F',
-              fontFamily: "'Raleway', system-ui, sans-serif",
-              border: '1px solid #E4EBFA',
-              backgroundColor: disabled ? '#F8FAFC' : '#FFFFFF',
-            }}
+            className="light-form w-full text-sm px-3 py-2.5 rounded-xl"
+            style={{ backgroundColor: disabled ? '#F8FAFC' : undefined }}
           />
         )
       ) : (
-        <div className="rounded-xl px-3 py-2.5 bg-white" style={{ border: '1px solid #E4EBFA' }}>
+        <div className="rounded-xl px-3 py-2.5" style={{ border: '1px solid #E4EBFA', backgroundColor: '#FFFFFF' }}>
           <p className="text-sm" style={{ color: value ? '#1D1D1F' : '#9CA3AF', fontFamily: "'Raleway', system-ui, sans-serif" }}>
             {value || '—'}
           </p>
