@@ -71,16 +71,16 @@ export default function Login() {
           className="absolute inset-0 w-full h-full object-cover"
           style={{ borderRadius: '24px' }}
         />
-        <img src="/login/Logohoysesale-blanco.svg" alt="HoySeSale" className="w-auto self-start relative z-10" style={{ height: '40px' }} />
+        <img src="/login/Logohoysesale-blanco.svg" alt="HoySeSale" className="w-auto self-start relative z-10" style={{ height: '48px' }} />
         <div className="relative z-10">
-          <p style={{ fontSize: '36px', fontWeight: 700, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '1.2' }}>
+          <p style={{ fontSize: '42px', fontWeight: 500, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '52px' }}>
             La Araucanía,<br />en un solo lugar
           </p>
-          <p className="mt-4" style={{ fontSize: '15px', fontWeight: 400, color: 'rgba(255,255,255,0.8)', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '1.6' }}>
+          <p className="mt-5" style={{ fontSize: '18px', fontWeight: 400, color: 'rgba(255,255,255,0.85)', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '28px' }}>
             Descubre eventos, y vive experiencias únicas en la región.
           </p>
         </div>
-        <p className="relative z-10" style={{ fontSize: '18px', fontWeight: 600, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+        <p className="relative z-10" style={{ fontSize: '20px', fontWeight: 600, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '28px' }}>
           Hoysesale.cl
         </p>
       </div>
