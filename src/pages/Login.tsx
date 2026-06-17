@@ -57,12 +57,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center gap-12 px-8" style={{ backgroundColor: '#F8FAFC' }}>
+    <div className="min-h-screen flex items-center justify-center px-6 py-8" style={{ backgroundColor: '#F8FAFC' }}>
+      <div className="flex items-center gap-12 w-full" style={{ maxWidth: '1100px' }}>
 
       {/* Panel izquierdo — branding */}
       <div
-        className="hidden lg:flex flex-col justify-between relative overflow-hidden"
-        style={{ width: '460px', height: '580px', borderRadius: '24px', padding: '48px' }}
+        className="hidden lg:flex flex-col justify-between relative overflow-hidden shrink-0"
+        style={{ width: '520px', height: '620px', borderRadius: '24px', padding: '48px' }}
       >
         <img
           src="/login/fondo_iniciar_sesion.png"
@@ -85,8 +86,8 @@ export default function Login() {
       </div>
 
       {/* Panel derecho — formulario */}
-      <div className="flex flex-col items-start justify-center">
-        <div className="w-full" style={{ maxWidth: '420px' }}>
+      <div className="flex-1 flex flex-col justify-center">
+        <div className="w-full max-w-md mx-auto">
 
           {/* Regresar */}
           <Link
@@ -160,6 +161,7 @@ export default function Login() {
         </div>
       </div>
 
+      </div>
     </div>
   );
 }
