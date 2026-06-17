@@ -11,7 +11,7 @@ interface ProfileFieldProps {
 }
 
 export function ProfileField({ label, value, editing, onChange, placeholder, type = 'text', required, disabled, options }: ProfileFieldProps) {
-  const labelColor = editing ? '#1D1D1F' : '#2563EB';
+  const labelColor = '#1D1D1F';
 
   return (
     <div>
