@@ -11,6 +11,7 @@ import {
   AlertTriangle,
   CheckCircle,
   Link,
+  Unlink,
 } from 'lucide-react';
 import { COMUNAS } from '../constants/comunas';
 
@@ -76,6 +77,16 @@ export default function Profile() {
   const handleLinkError = useCallback((msg: string) => {
     setToast({ message: msg, type: 'error' });
   }, []);
+
+  const handleDisconnect = async () => {
+    try {
+      await socialApi.disconnect('instagram');
+      setInstagramConnected(false);
+      setToast({ message: 'Instagram desvinculado correctamente', type: 'success' });
+    } catch {
+      setToast({ message: 'Error al desvincular Instagram', type: 'error' });
+    }
+  };
 
   useEffect(() => {
     socialApi.getStatus().then(updateInstagramStatus).catch(() => undefined);
@@ -241,13 +252,26 @@ export default function Profile() {
             </div>
 
             {instagramConnected ? (
-              <span
-                className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
-                style={{ backgroundColor: '#DCFCE7', color: '#16A34A' }}
-              >
-                <CheckCircle className="w-3.5 h-3.5" />
-                Vinculado
-              </span>
+              <div className="flex items-center gap-2">
+                <span
+                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
+                  style={{ backgroundColor: '#DCFCE7', color: '#16A34A' }}
+                >
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  Vinculado
+                </span>
+                {editing && (
+                  <button
+                    type="button"
+                    onClick={handleDisconnect}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full cursor-pointer transition-opacity hover:opacity-80"
+                    style={{ color: '#2563EB', border: '1px solid #2563EB', backgroundColor: '#FFFFFF' }}
+                  >
+                    <Unlink className="w-3.5 h-3.5" />
+                    Desvincular
+                  </button>
+                )}
+              </div>
             ) : (
               <button
                 type="button"
