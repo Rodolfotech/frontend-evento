@@ -62,13 +62,11 @@ export default function Login() {
       {/* Panel izquierdo — branding */}
       <div
         className="hidden lg:flex lg:w-5/12 flex-col justify-between p-12 rounded-3xl m-6 relative overflow-hidden"
-        style={{ background: 'linear-gradient(180deg, #2563EB 0%, #1E40AF 100%)' }}
       >
         <img
           src="/login/fondo_iniciar_sesion.png"
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ mixBlendMode: 'overlay', opacity: 0.4 }}
         />
         <img src="/login/Logohoysesale-blanco.svg" alt="HoySeSale" className="h-10 w-auto self-start relative z-10" />
         <div className="relative z-10">
