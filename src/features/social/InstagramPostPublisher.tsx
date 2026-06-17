@@ -142,8 +142,8 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
                   value={subtitle}
                   onChange={(e) => setSubtitle(e.target.value.slice(0, 90))}
                   placeholder="Subtítulo"
-                  rows={3}
-                  className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none"
+                  rows={4}
+                  className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none overflow-hidden"
                 />
                 <p className="text-right text-[10px] mt-0.5" style={{ color: subtitle.length >= 90 ? '#DC2626' : '#1D1D1F66' }}>
                   {subtitle.length}/90
@@ -157,8 +157,8 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
                   value={descriptionText}
                   onChange={(e) => setDescriptionText(e.target.value.slice(0, 318))}
                   placeholder="Texto de descripción"
-                  rows={5}
-                  className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none"
+                  rows={10}
+                  className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none overflow-hidden"
                 />
                 <p className="text-right text-[10px] mt-0.5" style={{ color: descriptionText.length >= 318 ? '#DC2626' : '#1D1D1F66' }}>
                   {descriptionText.length}/318
