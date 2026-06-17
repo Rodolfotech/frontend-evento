@@ -17,8 +17,6 @@ import {
 export default function Profile() {
   const { user, logout } = useAuth();
   const [instagramConnected, setInstagramConnected] = useState(false);
-  const [instagramUsername, setInstagramUsername] = useState<string | null>(null);
-  const [instagramAvatar, setInstagramAvatar] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -65,10 +63,8 @@ export default function Profile() {
     attendeesApi.findByUser().catch(() => undefined);
   }, []);
 
-  const updateInstagramStatus = useCallback(({ data }: { data: { instagram: boolean; instagramUsername: string | null; instagramAvatar: string | null } }) => {
+  const updateInstagramStatus = useCallback(({ data }: { data: { instagram: boolean } }) => {
     setInstagramConnected(data.instagram);
-    setInstagramUsername(data.instagramUsername);
-    setInstagramAvatar(data.instagramAvatar);
   }, []);
 
   const handleLinkSuccess = useCallback(() => {
