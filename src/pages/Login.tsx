@@ -61,11 +61,17 @@ export default function Login() {
 
       {/* Panel izquierdo — branding */}
       <div
-        className="hidden lg:flex lg:w-5/12 flex-col justify-between p-12 rounded-3xl m-6"
+        className="hidden lg:flex lg:w-5/12 flex-col justify-between p-12 rounded-3xl m-6 relative overflow-hidden"
         style={{ background: 'linear-gradient(180deg, #2563EB 0%, #1E40AF 100%)' }}
       >
-        <img src="/login/Logohoysesale-blanco.svg" alt="HoySeSale" className="h-10 w-auto self-start" />
-        <div>
+        <img
+          src="/login/fondo_iniciar_sesion.png"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ mixBlendMode: 'overlay', opacity: 0.4 }}
+        />
+        <img src="/login/Logohoysesale-blanco.svg" alt="HoySeSale" className="h-10 w-auto self-start relative z-10" />
+        <div className="relative z-10">
           <p style={{ fontSize: '40px', fontWeight: 700, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '1.15' }}>
             La Araucanía,<br />en un solo lugar
           </p>
@@ -73,7 +79,7 @@ export default function Login() {
             Descubre eventos, y vive experiencias únicas en la región.
           </p>
         </div>
-        <p style={{ fontSize: '16px', fontWeight: 600, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+        <p className="relative z-10" style={{ fontSize: '16px', fontWeight: 600, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif" }}>
           Hoysesale.cl
         </p>
       </div>
