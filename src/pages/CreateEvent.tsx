@@ -319,7 +319,7 @@ export default function CreateEventPage() {
                 const endDate = event.publicationEndDate ? new Date(event.publicationEndDate) : null;
                 const isActive = !endDate || endDate >= now;
                 return (
-                  <PublishedEventCard key={`${event.id}-${event.updatedAt || event.title}`} event={event} isActive={isActive} onUpdate={loadUser} />
+                  <PublishedEventCard key={`${event.id}-${event.title}-${event.description}`} event={event} isActive={isActive} onUpdate={loadUser} />
                 );
               })}
             </div>
