@@ -450,11 +450,11 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Subtítulo</p>
-            <input type="text" value={subtitle} onChange={(e) => setSubtitle(e.target.value.slice(0, 90))} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
+            <textarea value={subtitle} onChange={(e) => setSubtitle(e.target.value.slice(0, 90))} rows={3} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none" />
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Texto descriptivo</p>
-            <textarea value={descText} onChange={(e) => setDescText(e.target.value.slice(0, 318))} rows={2} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none" />
+            <textarea value={descText} onChange={(e) => setDescText(e.target.value.slice(0, 318))} rows={5} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none" />
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Fecha evento</p>
