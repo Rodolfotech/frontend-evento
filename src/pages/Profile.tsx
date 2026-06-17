@@ -264,8 +264,10 @@ export default function Profile() {
                   <button
                     type="button"
                     onClick={handleDisconnect}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full cursor-pointer transition-opacity hover:opacity-80"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full cursor-pointer transition-all"
                     style={{ color: '#2563EB', border: '1px solid #2563EB', backgroundColor: '#FFFFFF' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#2563EB'; e.currentTarget.style.color = '#FFFFFF'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FFFFFF'; e.currentTarget.style.color = '#2563EB'; }}
                   >
                     <Unlink className="w-3.5 h-3.5" />
                     Desvincular
