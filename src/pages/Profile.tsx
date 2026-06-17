@@ -112,7 +112,7 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen pt-16" style={{ backgroundColor: '#F8FAFC' }}>
-      <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
+      <div className="max-w-7xl mx-auto px-4 pt-10 pb-20">
 
         {/* ── Header ── */}
         <div className="flex items-start justify-between mb-8">
