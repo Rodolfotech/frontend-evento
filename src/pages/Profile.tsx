@@ -111,7 +111,7 @@ export default function Profile() {
   const set = (key: keyof typeof form) => (val: string) => setForm(prev => ({ ...prev, [key]: val }));
 
   return (
-    <div className="min-h-screen pt-16" style={{ backgroundColor: '#F8FAFC' }}>
+    <div className="min-h-screen pt-16" style={{ backgroundColor: '#FFFFFF' }}>
       <div className="max-w-7xl mx-auto px-4 pt-10 pb-20">
 
         {/* ── Header ── */}
@@ -169,7 +169,7 @@ export default function Profile() {
         </div>
 
         {/* ── Datos de empresa ── */}
-        <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
+        <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: '#F8FAFC', border: '1px solid #E4EBFA' }}>
           <h2 className="text-base font-semibold mb-1" style={{ color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
             Datos de empresa
           </h2>
@@ -193,7 +193,7 @@ export default function Profile() {
         </div>
 
         {/* ── Datos personales Administrador ── */}
-        <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
+        <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: '#F8FAFC', border: '1px solid #E4EBFA' }}>
           <h2 className="text-base font-semibold mb-1" style={{ color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
             Datos personales Administrador
           </h2>
@@ -229,7 +229,7 @@ export default function Profile() {
           </h2>
           <div
             className="flex items-center justify-between px-5 py-4 rounded-2xl"
-            style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}
+            style={{ backgroundColor: '#F8FAFC', border: '1px solid #E4EBFA' }}
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)' }}>
