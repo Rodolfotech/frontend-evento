@@ -4,6 +4,7 @@ import { SocialPostMedia } from './SocialPostMedia';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { eventsApi } from '../../api';
+import { clearCache } from '../../api/eventsCache';
 import type { SocialPost } from '../../types';
 import { COMUNAS } from '../../constants/comunas';
 
@@ -61,6 +62,7 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
         address: tipo === 'compra' && ticketUrl ? ticketUrl : undefined,
       });
       setSuccess(true);
+      clearCache();
       onPublished?.();
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { message?: string | string[] } } };

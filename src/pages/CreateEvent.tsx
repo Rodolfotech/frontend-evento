@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { eventsApi, socialApi, attendeesApi } from '../api';
+import { clearCache } from '../api/eventsCache';
 import EventCard from '../features/events/EventCard';
 import CreateEventForm from '../features/events/CreateEventForm';
 import { InstagramPostPublisher } from '../features/social/InstagramPostPublisher';
@@ -413,6 +414,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
         publicationEndDate: endDate ? new Date(endDate).toISOString() : undefined,
       });
       setEditing(false);
+      clearCache();
       onUpdate();
     } catch { /* noop */ } finally { setLoading(false); }
   };
@@ -421,6 +423,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
     setLoading(true);
     try {
       await eventsApi.update(event.id, { publicationEndDate: new Date().toISOString() });
+      clearCache();
       onUpdate();
     } catch { /* noop */ } finally { setLoading(false); }
   };
@@ -430,6 +433,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
     setLoading(true);
     try {
       await eventsApi.delete(event.id);
+      clearCache();
       onUpdate();
     } catch { /* noop */ } finally { setLoading(false); }
   };
