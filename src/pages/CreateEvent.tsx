@@ -450,7 +450,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Subtítulo</p>
-            <input type="text" value={subtitle} onChange={(e) => setSubtitle(e.target.value.slice(0, 45))} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
+            <input type="text" value={subtitle} onChange={(e) => setSubtitle(e.target.value.slice(0, 90))} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Texto descriptivo</p>

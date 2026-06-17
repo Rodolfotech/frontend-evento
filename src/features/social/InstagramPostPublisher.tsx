@@ -141,12 +141,12 @@ export function InstagramPostPublisher({ post, onPublished }: InstagramPostPubli
                 <input
                   type="text"
                   value={subtitle}
-                  onChange={(e) => setSubtitle(e.target.value.slice(0, 45))}
+                  onChange={(e) => setSubtitle(e.target.value.slice(0, 90))}
                   placeholder="Subtítulo"
                   className="w-full px-3 py-1.5 rounded-lg text-xs light-form"
                 />
-                <p className="text-right text-[10px] mt-0.5" style={{ color: subtitle.length >= 45 ? '#DC2626' : '#1D1D1F66' }}>
-                  {subtitle.length}/45
+                <p className="text-right text-[10px] mt-0.5" style={{ color: subtitle.length >= 90 ? '#DC2626' : '#1D1D1F66' }}>
+                  {subtitle.length}/90
                 </p>
               </div>
             </div>
