@@ -167,7 +167,7 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
               <div>
                 <p style={T.label}>Organizador</p>
                 <p className="mt-0.5" style={T.value}>
-                  {event.owner.name}{event.city ? `, ${event.city}` : ''}
+                  {event.owner.name}
                 </p>
               </div>
             </div>
@@ -178,20 +178,24 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
             <InstagramIcon className="w-4 h-4 shrink-0 mt-0.5" style={{ color: C.blue }} />
             <div>
               <p style={T.label}>Instagram</p>
-              {event.owner?.instagramUsername ? (
-                <a
-                  href={`https://www.instagram.com/${event.owner.instagramUsername}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => { if (isAuthenticated) adminApi.trackInstagramClick(event?.id).catch(() => {}); }}
-                  className="mt-0.5 hover:underline inline-block"
-                  style={{ ...T.value, color: C.blue }}
-                >
-                  @{event.owner.instagramUsername}
-                </a>
-              ) : (
-                <p className="mt-0.5" style={T.value}>No disponible</p>
-              )}
+              {(() => {
+                const ig = event.owner?.companyInstagram || event.owner?.instagramUsername;
+                const handle = ig?.replace(/^@/, '');
+                return handle ? (
+                  <a
+                    href={`https://www.instagram.com/${handle}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => { if (isAuthenticated) adminApi.trackInstagramClick(event?.id).catch(() => {}); }}
+                    className="mt-0.5 hover:underline inline-block"
+                    style={{ ...T.value, color: C.blue }}
+                  >
+                    @{handle}
+                  </a>
+                ) : (
+                  <p className="mt-0.5" style={T.value}>No disponible</p>
+                );
+              })()}
             </div>
           </div>
 
