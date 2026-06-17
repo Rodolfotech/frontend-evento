@@ -167,7 +167,7 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
               <div>
                 <p style={T.label}>Organizador</p>
                 <p className="mt-0.5" style={T.value}>
-                  {event.owner.name}{event.city ? `, ${event.city}` : ''}
+                  {event.owner.name}
                 </p>
               </div>
             </div>
