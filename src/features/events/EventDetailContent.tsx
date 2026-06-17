@@ -203,10 +203,10 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
           <div style={{ borderTop: `1px solid ${C.neutral2}` }} />
 
           {/* Descripción */}
-          <div className="flex flex-col gap-1">
-            <p style={T.label}>Descripción</p>
-            {descTitle && <p style={T.value}>{descTitle}</p>}
-            {descBody && <p style={T.descBody}>{descBody}</p>}
+          <div>
+            <p style={{ ...T.label, marginBottom: '8px' }}>Descripción</p>
+            {descTitle && <p style={{ ...T.value, display: 'block', marginBottom: '4px' }}>{descTitle}</p>}
+            {descBody && <p style={{ ...T.descBody, display: 'block' }}>{descBody}</p>}
           </div>
 
         </div>
