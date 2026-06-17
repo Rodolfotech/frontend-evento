@@ -136,20 +136,25 @@ select.light-form:focus {
   box-shadow: none !important;
 }
 
-/* Override para inputs grises en perfil (modo edición) */
-input.light-form-gray,
-textarea.light-form-gray,
-select.light-form-gray {
-  background: #F3F4F6 !important;
+/* Override para inputs del perfil (fondo blanco, texto gris) */
+input.profile-input,
+textarea.profile-input,
+select.profile-input {
+  background: #FFFFFF !important;
   border: 1px solid #E4EBFA !important;
-  color: #1D1D1F !important;
+  color: #1D1D1F99 !important;
 }
 
-input.light-form-gray:focus,
-textarea.light-form-gray:focus,
-select.light-form-gray:focus {
+input.profile-input:focus,
+textarea.profile-input:focus,
+select.profile-input:focus {
   border-color: #2563EB !important;
   box-shadow: none !important;
+}
+
+input.profile-input::placeholder,
+textarea.profile-input::placeholder {
+  color: #1D1D1F66 !important;
 }
 
 ::selection {

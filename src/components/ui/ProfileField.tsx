@@ -22,7 +22,7 @@ export function ProfileField({ label, value, editing, onChange, placeholder, typ
             value={value}
             onChange={(e) => onChange?.(e.target.value)}
             disabled={disabled}
-            className="light-form-gray w-full text-sm px-3 py-2.5 rounded-xl"
+            className="profile-input w-full text-sm px-3 py-2.5 rounded-xl"
           >
             <option value="" disabled>{placeholder || `Seleccione ${label.toLowerCase()}`}</option>
             {options.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
@@ -34,7 +34,7 @@ export function ProfileField({ label, value, editing, onChange, placeholder, typ
             onChange={(e) => onChange?.(e.target.value)}
             placeholder={placeholder}
             disabled={disabled}
-            className="light-form-gray w-full text-sm px-3 py-2.5 rounded-xl"
+            className="profile-input w-full text-sm px-3 py-2.5 rounded-xl"
           />
         )
       ) : (
