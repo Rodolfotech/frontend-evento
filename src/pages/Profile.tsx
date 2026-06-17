@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { eventsApi, socialApi, attendeesApi, usersApi } from '../api';
+import { socialApi, usersApi } from '../api';
 import { InstagramLinkModal } from '../features/social/InstagramLinkModal';
 import { Toast } from '../components/ui/Toast';
 import { ProfileField } from '../components/ui/ProfileField';
@@ -10,9 +10,11 @@ import {
   Trash2,
   AlertTriangle,
   CheckCircle,
-  Save,
-  X,
+  Link,
 } from 'lucide-react';
+import { COMUNAS } from '../constants/comunas';
+
+const CIUDADES = ['Villarrica', 'Pucón', 'Temuco', 'Loncoche', 'Freire', 'Cunco', 'Curarrehue', 'Lautaro', 'Pitrufquén', 'Gorbea'] as const;
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -35,8 +37,10 @@ export default function Profile() {
     companyAddress: '',
     city: '',
     comuna: '',
-    organizerRut: '',
-    organizerPhone: '',
+    adminFirstName: '',
+    adminLastName: '',
+    adminRut: '',
+    adminPhone: '',
   });
 
   useEffect(() => {
@@ -52,16 +56,13 @@ export default function Profile() {
         companyAddress: user.companyAddress || '',
         city: user.city || '',
         comuna: user.comuna || '',
-        organizerRut: user.organizerRut || '',
-        organizerPhone: user.organizerPhone || '',
+        adminFirstName: user.adminFirstName || '',
+        adminLastName: user.adminLastName || '',
+        adminRut: user.adminRut || '',
+        adminPhone: user.adminPhone || '',
       });
     }
   }, [user]);
-
-  const loadUser = useCallback(() => {
-    eventsApi.getByOwner().catch(() => undefined);
-    attendeesApi.findByUser().catch(() => undefined);
-  }, []);
 
   const updateInstagramStatus = useCallback(({ data }: { data: { instagram: boolean } }) => {
     setInstagramConnected(data.instagram);
@@ -70,14 +71,11 @@ export default function Profile() {
   const handleLinkSuccess = useCallback(() => {
     setToast({ message: 'Vinculación con Instagram correcta', type: 'success' });
     socialApi.getStatus().then(updateInstagramStatus).catch(() => undefined);
-    loadUser();
-  }, [updateInstagramStatus, loadUser]);
+  }, [updateInstagramStatus]);
 
   const handleLinkError = useCallback((msg: string) => {
     setToast({ message: msg, type: 'error' });
   }, []);
-
-  useEffect(() => { loadUser(); }, [loadUser]);
 
   useEffect(() => {
     socialApi.getStatus().then(updateInstagramStatus).catch(() => undefined);
@@ -125,54 +123,38 @@ export default function Profile() {
               >
                 {(form.name || '?').charAt(0).toUpperCase()}
               </div>
-              {instagramConnected && (
-                <div
-                  className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: '#FFFFFF', border: '2px solid #F8FAFC' }}
-                >
-                  <Camera className="w-3.5 h-3.5" style={{ color: '#1D1D1F' }} />
-                </div>
-              )}
+              <div
+                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: '#FFFFFF', border: '2px solid #F8FAFC' }}
+              >
+                <Camera className="w-3.5 h-3.5" style={{ color: '#1D1D1F' }} />
+              </div>
             </div>
             <div>
               <p className="text-lg font-semibold" style={{ color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
-                {form.name || 'Sin nombre'}
+                {form.name || 'Nombre empresa organizadora'}
               </p>
-              {instagramConnected && (
+              {instagramConnected ? (
                 <span
                   className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full mt-1"
-                  style={{ backgroundColor: '#EFF6FF', color: '#2563EB', border: '1px solid #DBEAFE' }}
+                  style={{ backgroundColor: '#DCFCE7', color: '#16A34A' }}
                 >
                   <Camera className="w-3 h-3" />
-                  Instagram conectado
+                  Instagram vinculado
+                </span>
+              ) : (
+                <span
+                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full mt-1"
+                  style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}
+                >
+                  <Camera className="w-3 h-3" />
+                  Instagram no vinculado
                 </span>
               )}
             </div>
           </div>
 
-          {editing ? (
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setEditing(false)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium cursor-pointer transition-opacity hover:opacity-80"
-                style={{ color: '#1D1D1F99', border: '1px solid #E4EBFA', backgroundColor: '#FFFFFF' }}
-              >
-                <X className="w-4 h-4" />
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
-                disabled={saving}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white cursor-pointer transition-opacity hover:opacity-90 disabled:opacity-50"
-                style={{ backgroundColor: '#2563EB' }}
-              >
-                <Save className="w-4 h-4" />
-                {saving ? 'Guardando...' : 'Guardar'}
-              </button>
-            </div>
-          ) : (
+          {!editing && (
             <button
               type="button"
               onClick={() => setEditing(true)}
@@ -187,31 +169,55 @@ export default function Profile() {
 
         {/* ── Datos de empresa ── */}
         <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
-          <h2 className="text-base font-semibold mb-4" style={{ color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+          <h2 className="text-base font-semibold mb-1" style={{ color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
             Datos de empresa
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <ProfileField label="Nombre de empresa" value={form.name} editing={editing} onChange={set('name')} />
-            <ProfileField label="Instagram empresa" value={form.companyInstagram} editing={editing} onChange={set('companyInstagram')} placeholder="@empresa" />
-            <ProfileField label="Sitio web" value={form.website} editing={editing} onChange={set('website')} placeholder="www.empresa.cl" />
-            <ProfileField label="Rut de empresa" value={form.companyRut} editing={editing} onChange={set('companyRut')} placeholder="12345678-9" />
-            <ProfileField label="Giro empresa" value={form.companyGiro} editing={editing} onChange={set('companyGiro')} placeholder="Turismo" />
-            <ProfileField label="Teléfono empresa" value={form.companyPhone} editing={editing} onChange={set('companyPhone')} placeholder="+569 12345678" type="tel" />
-            <ProfileField label="Correo electrónico empresa" value={form.email} editing={editing} onChange={set('email')} type="email" />
-            <ProfileField label="Dirección de empresa" value={form.companyAddress} editing={editing} onChange={set('companyAddress')} placeholder="Calle 123" />
-            <ProfileField label="Ciudad" value={form.city} editing={editing} onChange={set('city')} placeholder="Villarrica" />
-            <ProfileField label="Comuna" value={form.comuna} editing={editing} onChange={set('comuna')} placeholder="Villarrica" />
+          {editing && (
+            <p className="text-xs mb-5" style={{ color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+              Completa los datos de la empresa organizadora, que utilizaremos para el registro de publicaciones y la emisión de documentos tributarios.
+            </p>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            <ProfileField label="Nombre de empresa organizadora" value={form.name} editing={editing} onChange={set('name')} placeholder="Ingrese nombre de empresa" required />
+            <ProfileField label="Instagram empresa organizadora" value={form.companyInstagram} editing={editing} onChange={set('companyInstagram')} placeholder="Ingrese cuenta de instagram" required />
+            <ProfileField label="Sitio web" value={form.website} editing={editing} onChange={set('website')} placeholder="Ingrese sitio web" />
+            <ProfileField label="Rut de empresa" value={form.companyRut} editing={editing} onChange={set('companyRut')} placeholder="Ingrese RUT de empresa" />
+            <ProfileField label="Giro de empresa" value={form.companyGiro} editing={editing} onChange={set('companyGiro')} placeholder="Ingrese giro comercial de empresa" />
+            <ProfileField label="Teléfono empresa" value={form.companyPhone} editing={editing} onChange={set('companyPhone')} placeholder="Ingrese RUT de empresa" type="tel" required />
+            <ProfileField label="Correo electrónico empresa" value={form.email} editing={editing} onChange={set('email')} placeholder="Ingrese correo electrónico de empresa" type="email" required disabled />
+            <ProfileField label="Dirección de empresa" value={form.companyAddress} editing={editing} onChange={set('companyAddress')} placeholder="Ingrese dirección de empresa" />
+            <ProfileField label="Ciudad" value={form.city} editing={editing} onChange={set('city')} placeholder="Seleccione Ciudad" type="select" options={CIUDADES} required />
+            <ProfileField label="Comuna" value={form.comuna} editing={editing} onChange={set('comuna')} placeholder="Seleccione Comuna" type="select" options={COMUNAS} required />
           </div>
         </div>
 
-        {/* ── Datos personales Organizador ── */}
+        {/* ── Datos personales Administrador ── */}
         <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
-          <h2 className="text-base font-semibold mb-4" style={{ color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
-            Datos personales Organizador
+          <h2 className="text-base font-semibold mb-1" style={{ color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+            Datos personales Administrador
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <ProfileField label="Rut organizador" value={form.organizerRut} editing={editing} onChange={set('organizerRut')} placeholder="12345678-9" />
-            <ProfileField label="Teléfono organizador" value={form.organizerPhone} editing={editing} onChange={set('organizerPhone')} placeholder="+569 12345678" type="tel" />
+          {editing && (
+            <p className="text-xs mb-5" style={{ color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+              Completa la información de la persona que administrará las publicaciones de eventos en la plataforma.
+            </p>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            <ProfileField label="Nombre de administrador" value={form.adminFirstName} editing={editing} onChange={set('adminFirstName')} placeholder="Ingrese nombre" required />
+            <ProfileField label="Apellidos de administrador" value={form.adminLastName} editing={editing} onChange={set('adminLastName')} placeholder="Ingrese apellidos" required />
+            <ProfileField label="Rut administrador" value={form.adminRut} editing={editing} onChange={set('adminRut')} placeholder="Ingrese rut de organizador" />
+            <ProfileField label="Teléfono administrador" value={form.adminPhone} editing={editing} onChange={set('adminPhone')} placeholder="Ingrese número de teléfono" type="tel" required />
+            <ProfileField label="Correo electrónico administrador" value={form.email} editing={editing} onChange={set('email')} placeholder="Ingrese correo electrónico" type="email" required disabled />
+            {editing && (
+              <div className="flex items-end">
+                <button
+                  type="button"
+                  className="w-full px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-opacity hover:opacity-80"
+                  style={{ color: '#2563EB', border: '1px solid #2563EB', backgroundColor: '#FFFFFF' }}
+                >
+                  Configurar contraseña
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -245,35 +251,39 @@ export default function Profile() {
               <button
                 type="button"
                 onClick={() => setShowModal(true)}
-                className="text-xs font-medium px-4 py-1.5 rounded-full cursor-pointer transition-opacity hover:opacity-80"
-                style={{ backgroundColor: '#EFF6FF', color: '#2563EB', border: '1px solid #DBEAFE' }}
+                className="inline-flex items-center gap-1.5 text-xs font-medium px-4 py-1.5 rounded-full cursor-pointer transition-opacity hover:opacity-80"
+                style={{ backgroundColor: '#FFFFFF', color: '#2563EB', border: '1px solid #2563EB' }}
               >
+                <Link className="w-3.5 h-3.5" />
                 Vincular
               </button>
             )}
           </div>
         </div>
 
-        {/* ── Acciones de cuenta ── */}
-        <div className="flex items-center justify-between pt-4" style={{ borderTop: '1px solid #E4EBFA' }}>
+        {/* ── Guardar datos ── */}
+        {editing && (
           <button
             type="button"
-            onClick={() => { logout(); window.location.href = '/'; }}
-            className="text-sm font-medium cursor-pointer transition-opacity hover:opacity-70"
-            style={{ color: '#1D1D1F99' }}
+            onClick={handleSave}
+            disabled={saving}
+            className="w-full py-3 rounded-xl text-sm font-semibold text-white cursor-pointer transition-opacity hover:opacity-90 disabled:opacity-50 mb-3"
+            style={{ backgroundColor: '#2563EB' }}
           >
-            Cerrar sesión
+            {saving ? 'Guardando...' : 'Guardar datos'}
           </button>
-          <button
-            type="button"
-            onClick={() => setShowDeleteModal(true)}
-            className="flex items-center gap-1.5 text-sm font-medium cursor-pointer transition-opacity hover:opacity-70"
-            style={{ color: '#DC2626' }}
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            Eliminar cuenta
-          </button>
-        </div>
+        )}
+
+        {/* ── Eliminar cuenta ── */}
+        <button
+          type="button"
+          onClick={() => setShowDeleteModal(true)}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium cursor-pointer transition-opacity hover:opacity-70"
+          style={{ color: '#1D1D1F99', border: '1px solid #E4EBFA', backgroundColor: '#FFFFFF' }}
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+          Eliminar cuenta
+        </button>
 
       </div>
 

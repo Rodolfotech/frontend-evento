@@ -24,8 +24,10 @@ export interface User {
   companyPhone?: string;
   companyAddress?: string;
   city?: string;
-  organizerRut?: string;
-  organizerPhone?: string;
+  adminFirstName?: string;
+  adminLastName?: string;
+  adminRut?: string;
+  adminPhone?: string;
 }
 
 export interface Event {
