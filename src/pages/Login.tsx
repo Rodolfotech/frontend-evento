@@ -57,34 +57,36 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: '#F8FAFC' }}>
+    <div className="min-h-screen flex items-center justify-center gap-12 px-8" style={{ backgroundColor: '#F8FAFC' }}>
 
       {/* Panel izquierdo — branding */}
       <div
-        className="hidden lg:flex lg:w-5/12 flex-col justify-between p-12 rounded-3xl m-6 relative overflow-hidden"
+        className="hidden lg:flex flex-col justify-between relative overflow-hidden"
+        style={{ width: '460px', height: '580px', borderRadius: '24px', padding: '48px' }}
       >
         <img
           src="/login/fondo_iniciar_sesion.png"
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ borderRadius: '24px' }}
         />
-        <img src="/login/Logohoysesale-blanco.svg" alt="HoySeSale" className="h-10 w-auto self-start relative z-10" />
+        <img src="/login/Logohoysesale-blanco.svg" alt="HoySeSale" className="w-auto self-start relative z-10" style={{ height: '40px' }} />
         <div className="relative z-10">
-          <p style={{ fontSize: '40px', fontWeight: 700, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '1.15' }}>
+          <p style={{ fontSize: '36px', fontWeight: 700, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '1.2' }}>
             La Araucanía,<br />en un solo lugar
           </p>
-          <p className="mt-4" style={{ fontSize: '16px', fontWeight: 400, color: 'rgba(255,255,255,0.8)', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '1.6' }}>
+          <p className="mt-4" style={{ fontSize: '15px', fontWeight: 400, color: 'rgba(255,255,255,0.8)', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '1.6' }}>
             Descubre eventos, y vive experiencias únicas en la región.
           </p>
         </div>
-        <p className="relative z-10" style={{ fontSize: '16px', fontWeight: 600, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+        <p className="relative z-10" style={{ fontSize: '18px', fontWeight: 600, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif" }}>
           Hoysesale.cl
         </p>
       </div>
 
       {/* Panel derecho — formulario */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
-        <div className="w-full max-w-md">
+      <div className="flex flex-col items-start justify-center">
+        <div className="w-full" style={{ maxWidth: '420px' }}>
 
           {/* Regresar */}
           <Link
