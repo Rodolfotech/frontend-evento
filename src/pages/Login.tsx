@@ -73,7 +73,7 @@ export default function Login() {
         />
         <img src="/login/Logohoysesale-blanco.svg" alt="HoySeSale" className="w-auto self-start relative z-10" style={{ height: '48px' }} />
         <div className="relative z-10">
-          <p style={{ fontSize: '42px', fontWeight: 500, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '52px' }}>
+          <p style={{ fontSize: '42px', fontWeight: 700, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '52px' }}>
             La Araucanía,<br />en un solo lugar
           </p>
           <p className="mt-5" style={{ fontSize: '18px', fontWeight: 400, color: 'rgba(255,255,255,0.85)', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '28px' }}>
