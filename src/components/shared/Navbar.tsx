@@ -78,7 +78,7 @@ export default function Navbar() {
                   type="button"
                   onClick={logout}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:opacity-80"
-                  style={{ color: '#1D1D1F', border: '1px solid #E4EBFA' }}
+                  style={{ color: '#2563EB', border: '1px solid #2563EB' }}
                 >
                   <LogOut className="w-4 h-4" />
                   Cerrar sesión
