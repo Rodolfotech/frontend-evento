@@ -87,7 +87,7 @@ export default function Login() {
 
       {/* Panel derecho — formulario */}
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="w-full max-w-lg mx-auto flex flex-col h-full">
+        <div className="flex flex-col h-full" style={{ width: '580px' }}>
 
           {/* Regresar */}
           <Link
