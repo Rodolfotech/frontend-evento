@@ -86,21 +86,19 @@ export default function Login() {
       </div>
 
       {/* Panel derecho — formulario */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <div className="flex flex-col h-full" style={{ width: '580px' }}>
+      <div className="flex flex-col shrink-0" style={{ width: '520px' }}>
+        {/* Regresar */}
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-sm font-medium mb-3 hover:underline"
+          style={{ color: '#1D1D1F99' }}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Regresar al inicio de <span style={{ color: '#2563EB' }}>Hoysesale.cl</span>
+        </Link>
 
-          {/* Regresar */}
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm font-medium mb-4 hover:underline"
-            style={{ color: '#1D1D1F99' }}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Regresar al inicio de <span style={{ color: '#2563EB' }}>Hoysesale.cl</span>
-          </Link>
-
-          {/* Card */}
-          <div className="rounded-2xl p-8 flex-1 flex flex-col justify-center" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
+        {/* Card */}
+        <div className="rounded-2xl p-10 flex-1 flex flex-col justify-center" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
             {/* Header */}
             <div className="text-center mb-6">
               <div className="w-14 h-14 mx-auto mb-3 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#EFF6FF' }}>
@@ -158,7 +156,6 @@ export default function Login() {
               </Link>
             </p>
           </div>
-        </div>
       </div>
 
       </div>
