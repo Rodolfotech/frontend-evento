@@ -28,7 +28,7 @@ const C = {
 const T = {
   label: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '14px', fontWeight: 500, color: C.dark, lineHeight: '16px' } as React.CSSProperties,
   value: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '14px', fontWeight: 400, color: C.dark, lineHeight: '16px' } as React.CSSProperties,
-  title: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '20px', fontWeight: 400, color: C.dark, lineHeight: '28px' } as React.CSSProperties,
+  title: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '20px', fontWeight: 700, color: C.dark, lineHeight: '28px' } as React.CSSProperties,
   descTitle: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '18px', fontWeight: 600, color: C.dark, lineHeight: '28px', wordBreak: 'break-word' } as React.CSSProperties,
   descBody: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '18px', fontWeight: 400, color: C.dark, lineHeight: '28px', wordBreak: 'break-word', overflowWrap: 'break-word' } as React.CSSProperties,
 } as const;
