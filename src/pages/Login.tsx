@@ -58,7 +58,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-8" style={{ backgroundColor: '#F8FAFC' }}>
-      <div className="flex items-stretch gap-12 w-full" style={{ maxWidth: '1280px', height: '640px' }}>
+      <div className="flex items-stretch gap-12 w-full" style={{ maxWidth: '1280px', minHeight: '720px' }}>
 
       {/* Panel izquierdo — branding */}
       <div
@@ -86,11 +86,11 @@ export default function Login() {
       </div>
 
       {/* Panel derecho — formulario */}
-      <div className="flex flex-col shrink-0" style={{ width: '520px' }}>
+      <div className="flex flex-col justify-center shrink-0" style={{ width: '520px' }}>
         {/* Regresar */}
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm font-medium mb-4 mt-2 hover:underline"
+          className="inline-flex items-center gap-2 text-sm font-medium mb-5 hover:underline"
           style={{ color: '#1D1D1F99' }}
         >
           <ArrowLeft className="w-4 h-4" />
@@ -98,7 +98,7 @@ export default function Login() {
         </Link>
 
         {/* Card */}
-        <div className="rounded-2xl p-10 flex-1 flex flex-col justify-center" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
+        <div className="rounded-2xl p-10" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
             {/* Header */}
             <div className="text-center mb-6">
               <div className="w-14 h-14 mx-auto mb-3 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#EFF6FF' }}>
