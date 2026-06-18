@@ -59,15 +59,15 @@ export default function EventCard({ event, featured }: Props) {
           {event.description}
         </p>
 
-        <div className="space-y-1.5 text-sm">
-          <div className="flex items-center gap-2" style={{ color: '#1D1D1F99' }}>
-            <Calendar className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
-            <span>{format(new Date(event.date), "d 'de' MMMM, yyyy • HH:mm", { locale: es })}</span>
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 shrink-0" style={{ color: '#9CA3AF' }} />
+            <span style={{ fontSize: '14px', fontWeight: 500, lineHeight: '16px', color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>{format(new Date(event.date), "d 'de' MMMM, yyyy • HH:mm", { locale: es })}</span>
           </div>
           {event.locationName && (
-            <div className="flex items-center gap-2" style={{ color: '#1D1D1F99' }}>
-              <MapPin className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
-              <span>{event.locationName}{event.city ? `, ${event.city}` : ''}</span>
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 shrink-0" style={{ color: '#9CA3AF' }} />
+              <span style={{ fontSize: '14px', fontWeight: 500, lineHeight: '16px', color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>{event.locationName}{event.city ? `, ${event.city}` : ''}</span>
             </div>
           )}
         </div>

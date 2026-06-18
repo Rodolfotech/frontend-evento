@@ -454,7 +454,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Subtítulo</p>
-            <textarea value={subtitle} onChange={(e) => setSubtitle(e.target.value.slice(0, 90))} rows={4} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none overflow-hidden" />
+            <textarea value={subtitle} onChange={(e) => setSubtitle(e.target.value.slice(0, 50))} rows={4} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none overflow-hidden" />
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Texto descriptivo</p>

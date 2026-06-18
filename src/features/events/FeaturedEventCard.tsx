@@ -72,21 +72,21 @@ export function FeaturedEventCard({ event }: Props) {
 
         <div className="space-y-1.5 flex-1">
           <div className="flex items-center gap-2">
-            <Calendar className="w-3.5 h-3.5 shrink-0" style={{ color: '#2563EB' }} />
-            <span className="text-xs" style={{ color: '#1D1D1F99', fontFamily: 'var(--font-brand)' }}>
+            <Calendar className="w-3.5 h-3.5 shrink-0" style={{ color: '#9CA3AF' }} />
+            <span style={{ fontSize: '14px', fontWeight: 500, lineHeight: '16px', color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
               {format(eventDate, "dd 'de' MMMM, yyyy", { locale: es })}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Clock className="w-3.5 h-3.5 shrink-0" style={{ color: '#2563EB' }} />
-            <span className="text-xs" style={{ color: '#1D1D1F99', fontFamily: 'var(--font-brand)' }}>
+            <Clock className="w-3.5 h-3.5 shrink-0" style={{ color: '#9CA3AF' }} />
+            <span style={{ fontSize: '14px', fontWeight: 500, lineHeight: '16px', color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
               {format(eventDate, 'HH:mm')} hs
             </span>
           </div>
           {(event.city || event.locationName) && (
             <div className="flex items-center gap-2">
-              <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: '#2563EB' }} />
-              <span className="text-xs" style={{ color: '#1D1D1F99', fontFamily: 'var(--font-brand)' }}>
+              <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: '#9CA3AF' }} />
+              <span style={{ fontSize: '14px', fontWeight: 500, lineHeight: '16px', color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
                 {event.city || event.locationName}
               </span>
             </div>
