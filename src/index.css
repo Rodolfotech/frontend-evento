@@ -136,6 +136,7 @@ select.light-form:focus {
   box-shadow: none !important;
 }
 
+
 /* Override para inputs del perfil (fondo blanco, texto gris) */
 input.profile-input,
 textarea.profile-input,

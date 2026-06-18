@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, useRef, useEffect } from 'react';
 import type { LucideIcon } from 'lucide-react';
 
 interface FormInputProps {
@@ -12,6 +12,7 @@ interface FormInputProps {
   required?: boolean;
   rightElement?: React.ReactNode;
   autoComplete?: string;
+  filledBg?: string;
 }
 
 export function FormInput({
@@ -25,9 +26,17 @@ export function FormInput({
   required,
   rightElement,
   autoComplete,
+  filledBg,
 }: FormInputProps) {
   const generatedId = useId();
   const inputId = propId ?? generatedId;
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (filledBg && inputRef.current) {
+      inputRef.current.style.setProperty('background', value ? filledBg : '#FFFFFF', 'important');
+    }
+  }, [value, filledBg]);
 
   return (
     <div>
@@ -45,6 +54,7 @@ export function FormInput({
           <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: '#2563EB' }} />
         )}
         <input
+          ref={inputRef}
           id={inputId}
           type={type}
           value={value}

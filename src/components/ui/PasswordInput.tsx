@@ -10,6 +10,7 @@ interface PasswordInputProps {
   placeholder?: string;
   icon?: LucideIcon;
   autoComplete?: string;
+  filledBg?: string;
 }
 
 export function PasswordInput({
@@ -19,6 +20,7 @@ export function PasswordInput({
   placeholder = '••••••••',
   icon: Icon,
   autoComplete,
+  filledBg,
 }: PasswordInputProps) {
   const [show, setShow] = useState(false);
 
@@ -31,6 +33,7 @@ export function PasswordInput({
       onChange={onChange}
       placeholder={placeholder}
       autoComplete={autoComplete}
+      filledBg={filledBg}
       rightElement={
         <button
           type="button"

@@ -86,28 +86,28 @@ export default function Login() {
       </div>
 
       {/* Panel derecho — formulario */}
-      <div className="flex flex-col justify-center shrink-0" style={{ width: '520px' }}>
+      <div className="flex flex-col shrink-0" style={{ width: '520px' }}>
         {/* Regresar */}
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm font-medium mb-5 hover:underline"
-          style={{ color: '#1D1D1F99' }}
+          className="inline-flex items-center gap-2 mb-6 hover:underline"
+          style={{ fontSize: '14px', fontWeight: 500, color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '16px' }}
         >
           <ArrowLeft className="w-4 h-4" />
-          Regresar al inicio de <span style={{ color: '#2563EB' }}>Hoysesale.cl</span>
+          Regresar al inicio de <span style={{ fontWeight: 600, color: '#2563EB' }}>Hoysesale.cl</span>
         </Link>
 
         {/* Card */}
-        <div className="rounded-2xl p-10" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
+        <div className="rounded-2xl p-10 flex-1 flex flex-col justify-center mt-10 shadow-md" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
             {/* Header */}
             <div className="text-center mb-6">
               <div className="w-14 h-14 mx-auto mb-3 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#EFF6FF' }}>
                 <img src="/Isotipo.svg" alt="" className="w-8 h-8" />
               </div>
-              <p style={{ fontSize: '20px', fontWeight: 700, color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+              <p style={{ fontSize: '24px', fontWeight: 600, color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '32px' }}>
                 Bienvenido de vuelta
               </p>
-              <p className="mt-1" style={{ fontSize: '13px', color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+              <p className="mt-1" style={{ fontSize: '14px', fontWeight: 400, color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '16px' }}>
                 Ingresa a tu cuenta
               </p>
             </div>
@@ -132,26 +132,28 @@ export default function Login() {
                 placeholder="tu@email.com"
                 autoComplete="email"
                 required
+                filledBg="#E4EBFA"
               />
               <PasswordInput
                 label="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
+                filledBg="#E4EBFA"
               />
               <GradientButton type="submit" disabled={loading} loading={loading} loadingText="Ingresando..." icon={LogIn}>
                 Ingresar
               </GradientButton>
             </form>
 
-            <p className="text-center text-sm mt-4" style={{ color: '#1D1D1F99' }}>
-              <Link to="/forgot-password" className="hover:underline font-medium" style={{ color: '#2563EB' }}>
+            <p className="text-center mt-4" style={{ fontSize: '14px', fontWeight: 400, color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif" }}>
+              <Link to="/forgot-password" className="hover:underline" style={{ fontWeight: 500, color: '#2563EB' }}>
                 ¿Olvidaste tu contraseña?
               </Link>
             </p>
-            <p className="text-center text-sm mt-3" style={{ color: '#1D1D1F99' }}>
+            <p className="text-center mt-3" style={{ fontSize: '14px', fontWeight: 400, color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif" }}>
               ¿No tienes cuenta?{' '}
-              <Link to="/register" className="font-medium hover:underline" style={{ color: '#2563EB' }}>
+              <Link to="/register" className="hover:underline" style={{ fontWeight: 600, color: '#2563EB' }}>
                 Registrarse
               </Link>
             </p>
