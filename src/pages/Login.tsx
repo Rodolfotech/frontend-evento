@@ -58,7 +58,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-8" style={{ backgroundColor: '#F8FAFC' }}>
-      <div className="flex items-stretch gap-12 w-full" style={{ maxWidth: '1280px', minHeight: '720px' }}>
+      <div className="flex items-stretch gap-12 w-full" style={{ maxWidth: '1280px', height: '640px' }}>
 
       {/* Panel izquierdo — branding */}
       <div
@@ -90,7 +90,7 @@ export default function Login() {
         {/* Regresar */}
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm font-medium mb-3 hover:underline"
+          className="inline-flex items-center gap-2 text-sm font-medium mb-4 mt-2 hover:underline"
           style={{ color: '#1D1D1F99' }}
         >
           <ArrowLeft className="w-4 h-4" />
