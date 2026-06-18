@@ -86,13 +86,13 @@ export default function Login() {
       </div>
 
       {/* Panel derecho — formulario */}
-      <div className="flex-1 flex flex-col justify-center min-w-0">
-        <div className="w-full max-w-lg mx-auto">
+      <div className="flex-1 flex flex-col min-w-0">
+        <div className="w-full max-w-lg mx-auto flex flex-col h-full">
 
           {/* Regresar */}
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm font-medium mb-8 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-medium mb-4 hover:underline"
             style={{ color: '#1D1D1F99' }}
           >
             <ArrowLeft className="w-4 h-4" />
@@ -100,7 +100,7 @@ export default function Login() {
           </Link>
 
           {/* Card */}
-          <div className="rounded-2xl p-8" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
+          <div className="rounded-2xl p-8 flex-1 flex flex-col justify-center" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E4EBFA' }}>
             {/* Header */}
             <div className="text-center mb-6">
               <div className="w-14 h-14 mx-auto mb-3 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#EFF6FF' }}>
