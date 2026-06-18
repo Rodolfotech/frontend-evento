@@ -76,7 +76,7 @@ export default function Login() {
           <p style={{ fontSize: '48px', fontWeight: 700, color: '#FFFFFF', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '58px' }}>
             La Araucanía,<br />en un solo lugar
           </p>
-          <p className="mt-5" style={{ fontSize: '20px', fontWeight: 400, color: 'rgba(255,255,255,0.85)', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '30px' }}>
+          <p className="mt-5" style={{ fontSize: '30px', fontWeight: 400, color: 'rgba(255,255,255,0.85)', fontFamily: "'Raleway', system-ui, sans-serif", lineHeight: '38px' }}>
             Descubre eventos, y vive<br />experiencias únicas en la<br />región.
           </p>
         </div>
