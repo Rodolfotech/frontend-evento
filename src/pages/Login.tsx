@@ -63,7 +63,7 @@ export default function Login() {
       {/* Panel izquierdo — branding */}
       <div
         className="hidden lg:flex flex-col justify-between relative overflow-hidden shrink-0"
-        style={{ width: '580px', height: '700px', borderRadius: '24px', padding: '56px' }}
+        style={{ width: '580px', borderRadius: '24px', padding: '56px', alignSelf: 'stretch' }}
       >
         <img
           src="/login/fondo_iniciar_sesion.png"
