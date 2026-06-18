@@ -58,12 +58,12 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-8" style={{ backgroundColor: '#F8FAFC' }}>
-      <div className="flex items-center gap-16 w-full" style={{ maxWidth: '1280px' }}>
+      <div className="flex items-stretch gap-12 w-full" style={{ maxWidth: '1280px', minHeight: '720px' }}>
 
       {/* Panel izquierdo — branding */}
       <div
         className="hidden lg:flex flex-col justify-between relative overflow-hidden shrink-0"
-        style={{ width: '580px', borderRadius: '24px', padding: '56px', alignSelf: 'stretch' }}
+        style={{ width: '580px', borderRadius: '24px', padding: '56px' }}
       >
         <img
           src="/login/fondo_iniciar_sesion.png"
