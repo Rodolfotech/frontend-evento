@@ -24,12 +24,13 @@ const C = {
   neutral2: '#E4EBFA',
 } as const;
 
-// Estilos tipográficos reutilizables
+// Estilos tipográficos según SPEC.md
 const T = {
-  label: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 600, color: C.dark } as React.CSSProperties,
-  value: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 400, color: '#1D1D1F99' } as React.CSSProperties,
-  title: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '20px', fontWeight: 600, color: C.dark } as React.CSSProperties,
-  descBody: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '13px', fontWeight: 400, color: '#1D1D1F99', lineHeight: '1.6', wordBreak: 'break-word', overflowWrap: 'break-word' } as React.CSSProperties,
+  label: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '14px', fontWeight: 500, color: C.dark, lineHeight: '16px' } as React.CSSProperties,
+  value: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '14px', fontWeight: 400, color: C.dark, lineHeight: '16px' } as React.CSSProperties,
+  title: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '20px', fontWeight: 400, color: C.dark, lineHeight: '28px' } as React.CSSProperties,
+  descTitle: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '18px', fontWeight: 600, color: C.dark, lineHeight: '28px', wordBreak: 'break-word' } as React.CSSProperties,
+  descBody: { fontFamily: "'Raleway', system-ui, sans-serif", fontSize: '18px', fontWeight: 400, color: C.dark, lineHeight: '28px', wordBreak: 'break-word', overflowWrap: 'break-word' } as React.CSSProperties,
 } as const;
 
 function InstagramIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
@@ -204,7 +205,7 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
           {/* Descripción */}
           <div>
             <p style={{ ...T.label, marginBottom: '8px' }}>Descripción</p>
-            {descTitle && <p style={{ ...T.value, display: 'block', marginBottom: '4px', wordBreak: 'break-word' }}>{descTitle}</p>}
+            {descTitle && <p style={{ ...T.descTitle, display: 'block', marginBottom: '4px' }}>{descTitle}</p>}
             {descBody && <p style={{ ...T.descBody, display: 'block' }}>{descBody}</p>}
           </div>
 
