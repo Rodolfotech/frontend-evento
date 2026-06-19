@@ -97,7 +97,7 @@ export default function CreateEventPage() {
 
   const activePublications = myEvents.filter(e => e.imageUrl);
 
-  const tabs: { key: Tab; label: string; icon: typeof CalendarIcon; count?: number }[] = [
+  const tabs: { key: Tab; label: string; icon: typeof Camera; count?: number }[] = [
     { key: 'instagram', label: 'Programar evento', icon: CalendarRange },
     { key: 'registered', label: 'Publicaciones activas', icon: PlayCircle, count: activePublications.length },
   ];
