@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { User } from '../types';
-import { authApi, usersApi } from '../api';
+import { authApi } from '../api';
 
 interface AuthContextType {
   user: User | null;
@@ -16,48 +16,32 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      usersApi.getProfile()
-        .then(({ data }) => { setUser(data); setLoading(false); })
-        .catch(() => {
-          setToken(null);
-          localStorage.removeItem('token');
-          setLoading(false);
-        });
-    } else {
-      authApi.me()
-        .then(({ data }) => { setUser(data.user); setLoading(false); })
-        .catch(() => { setUser(null); setLoading(false); });
-    }
-  }, [token]);
+    authApi.me()
+      .then(({ data }) => setUser(data.user))
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  }, []);
 
   const login = async (email: string, password: string) => {
     const { data } = await authApi.login(email, password);
-    setToken(data.access_token);
     setUser(data.user);
-    localStorage.setItem('token', data.access_token);
   };
 
   const register = async (name: string, email: string, password: string) => {
     const { data } = await authApi.register({ name, email, password });
-    setToken(data.access_token);
     setUser(data.user);
-    localStorage.setItem('token', data.access_token);
   };
 
   const logout = async () => {
     try { await authApi.logout(); } catch {}
-    setToken(null);
     setUser(null);
-    localStorage.removeItem('token');
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, isAuthenticated: !!(token || user), loading }}>
+    <AuthContext.Provider value={{ user, token: null, login, register, logout, isAuthenticated: !!user, loading }}>
       {children}
     </AuthContext.Provider>
   );
