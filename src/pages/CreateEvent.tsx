@@ -36,8 +36,6 @@ export default function CreateEventPage() {
   const [, setRegisteredEvents] = useState<Event[]>([]);
   const [instagramPosts, setInstagramPosts] = useState<SocialPost[]>([]);
   const [instagramConnected, setInstagramConnected] = useState(false);
-  const [instagramUsername, setInstagramUsername] = useState<string | null>(null);
-  const [instagramAvatar, setInstagramAvatar] = useState<string | null>(null);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [postPage, setPostPage] = useState(1);
   const [myEventsPage, setMyEventsPage] = useState(1);
@@ -58,10 +56,8 @@ export default function CreateEventPage() {
   const [pubError, setPubError] = useState('');
   const [pubSuccess, setPubSuccess] = useState(false);
 
-  const updateInstagramStatus = useCallback(({ data }: { data: { instagram: boolean; instagramUsername: string | null; instagramAvatar: string | null } }) => {
+  const updateInstagramStatus = useCallback(({ data }: { data: { instagram: boolean } }) => {
     setInstagramConnected(data.instagram);
-    setInstagramUsername(data.instagramUsername);
-    setInstagramAvatar(data.instagramAvatar);
   }, []);
 
   const loadUser = useCallback(() => {
@@ -93,7 +89,8 @@ export default function CreateEventPage() {
 
   useEffect(() => {
     if (tab !== 'instagram') return;
-    socialApi.getUserMedia().then(({ data }) => setInstagramPosts(data)).catch(() => undefined);
+    setLoadingPosts(true);
+    socialApi.getUserMedia().then(({ data }) => setInstagramPosts(data)).catch(() => undefined).finally(() => setLoadingPosts(false));
   }, [tab]);
 
   const POST_PAGE_SIZE = 4;
