@@ -106,7 +106,7 @@ export function ComunaGrid({
               <button
                 key={name}
                 type="button"
-                onClick={() => navigate(`/categorias?ciudad=${encodeURIComponent(name)}`)}
+                onClick={() => navigate(`/${name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '-')}`)}
                 className="relative w-full rounded-2xl overflow-hidden cursor-pointer group"
               >
                 {/* Capa 1: color fallback (fondo base) */}

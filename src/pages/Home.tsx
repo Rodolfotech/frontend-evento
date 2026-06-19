@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { eventsApi } from '../api';
 import { getCached, setCached } from '../api/eventsCache';
 import { HeroSearch } from '../features/events/HeroSearch';
@@ -10,8 +9,8 @@ import { UpcomingEventsCarousel } from '../features/events/UpcomingEventsCarouse
 import { OrganizerCTA } from '../features/events/OrganizerCTA';
 import type { Event } from '../types';
 
-const FEATURED_PARAMS = { limit: 8, dateFrom: new Date().toISOString().split('T')[0] };
-const UPCOMING_PARAMS = { limit: 8 };
+const FEATURED_PARAMS = { limit: 100, dateFrom: new Date().toISOString().split('T')[0] };
+const UPCOMING_PARAMS = { limit: 100 };
 
 export default function Home() {
   const [featured, setFeatured] = useState<Event[]>(() => getCached<Event[]>(FEATURED_PARAMS) ?? []);
@@ -58,18 +57,19 @@ export default function Home() {
           subtitle="Experiencias únicas que no te puedes perder"
         />
         <div className="text-center mt-8">
-          <Link
-            to="/categorias"
-            className="text-base font-semibold hover:underline"
+          <button
+            type="button"
+            onClick={() => document.getElementById('categorias')?.scrollIntoView({ behavior: 'smooth' })}
+            className="text-base font-semibold hover:underline cursor-pointer"
             style={{ color: '#1D1D1F', fontFamily: "'Raleway', sans-serif" }}
           >
             Ver todos los eventos →
-          </Link>
+          </button>
         </div>
       </section>
 
-      <CategoryGrid />
-      <ComunaGrid />
+      <div id="categorias"><CategoryGrid /></div>
+      <div id="comunas"><ComunaGrid /></div>
       <UpcomingEventsCarousel events={upcoming} loading={loading && upcoming.length === 0} />
       <OrganizerCTA />
     </div>

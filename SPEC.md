@@ -82,6 +82,43 @@ Solo se deploya desde `main` después del merge.
 - Archivo: `public/Isotipo.svg`
 
 
+## Seguridad — Autenticación con Cookie httpOnly
+
+### Arquitectura de autenticación
+
+El sistema usa **cookies httpOnly** para almacenar el JWT, eliminando la vulnerabilidad XSS que existía con `localStorage`.
+
+| Aspecto | Implementación |
+|---|---|
+| Almacenamiento del JWT | Cookie `access_token` httpOnly (no accesible desde JS) |
+| Envío del token | Automático via cookie (`withCredentials: true` en Axios) |
+| Verificación de sesión | `GET /auth/me` — retorna el usuario autenticado o 401 |
+| Cierre de sesión | `POST /auth/logout` — limpia la cookie en el backend |
+| Expiración | 7 días (`maxAge: 7 * 24 * 60 * 60 * 1000`) |
+| Secure flag | Activo en producción (`NODE_ENV === 'production'`) |
+| SameSite | `lax` — protege contra CSRF en requests cross-origin |
+
+### Flujo de login
+
+1. Usuario envía credenciales a `POST /auth/login`
+2. Backend valida, genera JWT, setea cookie `access_token` con flags httpOnly + secure + sameSite
+3. Backend retorna `{ access_token, user }` en el body (el token en body es legacy, NO se usa en frontend)
+4. Frontend recibe el user y actualiza `AuthContext`
+5. En requests posteriores, el browser envía la cookie automáticamente
+
+### Flujo de verificación de sesión
+
+1. Al cargar la app, `AuthContext` llama `GET /auth/me`
+2. Si hay cookie válida → retorna `{ user }` → usuario autenticado
+3. Si no hay cookie o expiró → retorna 401 → usuario no autenticado
+
+### Reglas de seguridad
+
+- **PROHIBIDO** almacenar tokens en `localStorage` o `sessionStorage`
+- **PROHIBIDO** leer o manipular la cookie `access_token` desde JavaScript
+- **PROHIBIDO** enviar tokens como header `Authorization: Bearer` desde el frontend
+- El backend acepta TANTO cookie como header Authorization (backward compatibility), pero el frontend SOLO debe usar cookies
+
 ##Historias de usuario
 -el usuario quiere registrarse o logearse en la aplicación
 -el usuario quiere vincular su cuenta con instagram en el perfil de usuario

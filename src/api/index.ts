@@ -17,6 +17,8 @@ export const authApi = {
     api.get<{ url: string }>('/auth/google/url', { params: state ? { state } : {} }),
   googleLogin: (code: string) =>
     api.post<{ access_token: string; user: User }>('/auth/google', { code }),
+  me: () => api.get<{ user: User }>('/auth/me'),
+  logout: () => api.post('/auth/logout'),
 };
 
 export const eventsApi = {

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Music2,
@@ -11,8 +10,6 @@ import {
   HeartHandshake,
   PartyPopper,
 } from 'lucide-react';
-import { categoriesApi } from '../../api';
-import type { Category } from '../../types';
 import type { LucideIcon } from 'lucide-react';
 
 const CATEGORY_CONFIG: { name: string; icon: LucideIcon }[] = [
@@ -37,21 +34,12 @@ export function CategoryGrid({
   subtitle = 'Encuentra rápidamente los eventos y panoramas que mejor se ajustan a tus gustos e intereses.',
 }: Props) {
   const navigate = useNavigate();
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    categoriesApi.getAll().then(({ data }) => setCategories(data)).catch(() => {});
-  }, []);
 
   function handleClick(name: string) {
-    const match = categories.find(
-      (c) => c.name.toLowerCase() === name.toLowerCase(),
-    );
-    if (match) {
-      navigate(`/categorias?categoriaId=${match.id}`);
-    } else {
-      navigate(`/categorias?q=${encodeURIComponent(name)}`);
-    }
+    const slug = name.toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/\s+/g, '-');
+    navigate(`/${slug}`);
   }
 
   return (
