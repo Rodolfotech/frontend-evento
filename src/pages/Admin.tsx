@@ -78,7 +78,8 @@ export default function Admin() {
     setLoginError('');
     setLoginLoading(true);
     try {
-      await authApi.login(loginEmail, loginPassword);
+      const { data } = await authApi.login(loginEmail, loginPassword);
+      localStorage.setItem('token', data.access_token);
       setLoginLoading(false);
       window.location.reload();
     } catch (err: any) {
