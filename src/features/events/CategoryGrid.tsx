@@ -44,14 +44,10 @@ export function CategoryGrid({
   }, []);
 
   function handleClick(name: string) {
-    const match = categories.find(
-      (c) => c.name.toLowerCase() === name.toLowerCase(),
-    );
-    if (match) {
-      navigate(`/categorias?categoriaId=${match.id}`);
-    } else {
-      navigate(`/categorias?q=${encodeURIComponent(name)}`);
-    }
+    const slug = name.toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/\s+/g, '-');
+    navigate(`/${slug}`);
   }
 
   return (

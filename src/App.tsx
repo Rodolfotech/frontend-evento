@@ -8,7 +8,6 @@ import AdminGuard from './routes/AdminGuard';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Events from './pages/Events';
 import EventDetail from './pages/EventDetail';
 import CreateEvent from './pages/CreateEvent';
 import Profile from './pages/Profile';
@@ -19,7 +18,7 @@ import ResetPassword from './pages/ResetPassword';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import DataDeletion from './pages/DataDeletion';
-import Comunas from './pages/Comunas';
+import CategoryEvents from './pages/CategoryEvents';
 import { ADMIN_ROUTE } from './constants/admin';
 
 const Admin = lazy(() => import('./pages/Admin'));
@@ -51,9 +50,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/categorias" element={<Events />} />
             <Route path="/categorias/:slug" element={<EventDetail />} />
-            <Route path="/comunas" element={<Comunas />} />
+            <Route path="/:category" element={<CategoryEvents />} />
             <Route element={<AuthGuard />}>
               <Route path="/create-event" element={<CreateEvent />} />
               <Route path="/profile" element={<Profile />} />

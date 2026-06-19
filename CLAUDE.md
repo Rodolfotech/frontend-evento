@@ -63,7 +63,7 @@ src/
 
 All HTTP calls **must** go through the Axios instance in [src/api/client.ts](src/api/client.ts). Never write inline `axios` or `fetch` calls inside components or pages.
 
-Every new endpoint must be declared as a method on a named service object in [src/api/index.ts](src/api/index.ts) (e.g., `adminApi.fetchReports()`). The JWT is read from `localStorage` and injected automatically as `Authorization: Bearer <token>`.
+Every new endpoint must be declared as a method on a named service object in [src/api/index.ts](src/api/index.ts) (e.g., `adminApi.fetchReports()`). Axios envía `withCredentials: true` para que la cookie httpOnly `access_token` se incluya automáticamente en cada request. **No usar `localStorage` para tokens.**
 
 The Vite dev proxy rewrites `/api/*` → `http://localhost:3000/*`. The base URL is controlled by `VITE_API_URL`.
 
@@ -73,10 +73,23 @@ The Vite dev proxy rewrites `/api/*` → `http://localhost:3000/*`. The base URL
 
 [src/context/AuthContext.tsx](src/context/AuthContext.tsx) is the single source of truth for session state. Use `useAuth()` to access `{ user, token, login, register, logout, isAuthenticated, loading }`.
 
-**JWT is stored in `localStorage` — this is an XSS risk.** To mitigate exposure, all protected UI must be gated by route guards, not by hiding routes:
+### Seguridad — Cookie httpOnly
 
-- Pages requiring login → wrap with `<AuthGuard>`
-- Pages requiring admin → wrap with `<AdminGuard>`
+**El JWT se almacena en una cookie `httpOnly` seteada por el backend.** Esto elimina el riesgo XSS ya que JavaScript no puede acceder a la cookie.
+
+**Flujo de autenticación:**
+
+1. El usuario hace login/register → el backend setea la cookie `access_token` (httpOnly, secure, sameSite: lax, 7 días)
+2. Axios envía la cookie automáticamente en cada request (`withCredentials: true`)
+3. Al cargar la app, `AuthContext` llama a `GET /auth/me` para verificar si hay sesión activa
+4. `logout()` llama a `POST /auth/logout` que limpia la cookie en el backend
+
+**Reglas estrictas:**
+
+- **NUNCA usar `localStorage` para almacenar tokens JWT.** Si se detecta `localStorage.getItem('token')` o `localStorage.setItem('token', ...)` en el código, se debe eliminar inmediatamente.
+- **NUNCA leer el token desde JavaScript.** La cookie httpOnly es invisible al código del frontend.
+- **NUNCA enviar el token como header `Authorization`.** Axios lo envía como cookie automáticamente.
+- Todas las páginas protegidas deben usar `<AuthGuard>` o `<AdminGuard>`.
 
 **`AdminGuard` must explicitly check `user.role === 'ADMIN'`** and redirect to `/` if the check fails. The obfuscated admin route (`VITE_ADMIN_ROUTE`) is a secondary deterrent, not a security boundary — never rely on it alone.
 

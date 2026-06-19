@@ -31,8 +31,7 @@ export default function Register() {
         }
         if (e.data.code) {
           try {
-            const { data } = await authApi.googleLogin(e.data.code);
-            localStorage.setItem('token', data.access_token);
+            await authApi.googleLogin(e.data.code);
             window.location.href = '/profile';
           } catch {
             setGoogleLoading(false);

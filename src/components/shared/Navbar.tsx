@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ADMIN_ROUTE } from '../../constants/admin';
 import {
@@ -13,14 +13,29 @@ import { useState } from 'react';
 
 const navLinks = [
   { to: '/', label: 'Eventos' },
-  { to: '/categorias', label: 'Categorias' },
-  { to: '/comunas', label: 'Comunas' },
+  { to: '/#categorias', label: 'Categorias' },
+  { to: '/#comunas', label: 'Comunas' },
 ];
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleNavClick = (to: string) => {
+    if (to.startsWith('/#')) {
+      const id = to.slice(2);
+      if (location.pathname === '/') {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        navigate('/');
+        setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 300);
+      }
+    } else {
+      navigate(to);
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
@@ -35,17 +50,14 @@ export default function Navbar() {
           {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map(({ to, label }) => (
-              <Link
+              <button
                 key={to}
-                to={to}
-                className={`px-4 py-2 text-sm font-medium transition-colors rounded-lg ${
-                  location.pathname === to
-                    ? 'text-[#2563EB]'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                type="button"
+                onClick={() => handleNavClick(to)}
+                className="px-4 py-2 text-sm font-medium transition-colors rounded-lg cursor-pointer text-gray-600 hover:text-gray-900"
               >
                 {label}
-              </Link>
+              </button>
             ))}
           </div>
 
@@ -128,18 +140,14 @@ export default function Navbar() {
         <div className="md:hidden bg-white border-t border-gray-100">
           <div className="px-4 py-3 space-y-1">
             {navLinks.map(({ to, label }) => (
-              <Link
+              <button
                 key={to}
-                to={to}
-                onClick={() => setMobileOpen(false)}
-                className={`block px-3 py-2 rounded-lg text-sm font-medium ${
-                  location.pathname === to
-                    ? 'text-[#2563EB] bg-blue-50'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }`}
+                type="button"
+                onClick={() => { handleNavClick(to); setMobileOpen(false); }}
+                className="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
               >
                 {label}
-              </Link>
+              </button>
             ))}
             <hr className="border-gray-100 my-2" />
             {isAuthenticated ? (

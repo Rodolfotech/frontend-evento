@@ -37,12 +37,6 @@ export default function Admin() {
   const [stats, setStats] = useState<{ totalUsers: number; totalEvents: number; totalAttendees: number; totalInstagramClicks: number } | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setAccessGranted(false);
-      return;
-    }
-
     adminApi.getStats().then(({ data }) => {
       setStats(data);
       setAccessGranted(true);
@@ -51,7 +45,6 @@ export default function Admin() {
         setAccessGranted(false);
         setAccessError('No tienes permisos de administrador.');
       } else if (err?.response?.status === 401) {
-        localStorage.removeItem('token');
         setAccessGranted(false);
       } else if (err?.response) {
         setAccessGranted(false);
@@ -66,7 +59,6 @@ export default function Admin() {
     const resetTimer = () => {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
-        localStorage.removeItem('token');
         window.location.reload();
       }, 30 * 60 * 1000);
     };
@@ -86,8 +78,7 @@ export default function Admin() {
     setLoginError('');
     setLoginLoading(true);
     try {
-      const { data } = await authApi.login(loginEmail, loginPassword);
-      localStorage.setItem('token', data.access_token);
+      await authApi.login(loginEmail, loginPassword);
       setLoginLoading(false);
       window.location.reload();
     } catch (err: any) {
