@@ -22,7 +22,8 @@ export default function ResetPassword() {
     setLoading(true);
     setError('');
     try {
-      await api.post('/auth/reset-password', { token, password });
+      const { data } = await api.post('/auth/reset-password', { token, password });
+      if (data.access_token) localStorage.setItem('token', data.access_token);
       setSuccess(true);
       setTimeout(() => navigate('/'), 1500);
     } catch (err: any) {
