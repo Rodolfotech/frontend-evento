@@ -31,7 +31,7 @@ type Tab = 'myevents' | 'registered' | 'instagram';
 export default function CreateEventPage() {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<Tab>('myevents');
+  const [tab, setTab] = useState<Tab>('instagram');
   const [myEvents, setMyEvents] = useState<Event[]>([]);
   const [, setRegisteredEvents] = useState<Event[]>([]);
   const [instagramPosts, setInstagramPosts] = useState<SocialPost[]>([]);
@@ -385,76 +385,9 @@ export default function CreateEventPage() {
         </div>
       )}
 
-      {/* Tab: Mis Eventos — max-w-7xl */}
-      {tab === 'myevents' && (
-        <div className="max-w-7xl mx-auto px-4 pt-6 pb-20">
-          {/* Botón publicar — derecha, justo debajo del subnav */}
-          <div className="flex justify-end mb-6">
-            <button
-              type="button"
-              onClick={() => setCreateModalOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
-              style={{ backgroundColor: '#2563EB' }}
-            >
-              <Sparkles className="w-4 h-4" />
-              Publicar nuevo evento
-            </button>
-          </div>
-
-          {myEvents.length === 0 ? (
-            <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
-              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
-                <Sparkles className="w-8 h-8" style={{ color: '#2563EB' }} />
-              </div>
-              <p className="text-sm mb-4" style={{ color: '#1D1D1F99' }}>No has publicado eventos aún</p>
-              <button
-                type="button"
-                onClick={() => setCreateModalOpen(true)}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
-                style={{ backgroundColor: '#2563EB' }}
-              >
-                Publicar mi primer evento
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-                {visibleMyEvents.map((event) => (
-                  <div key={event.id} className="relative group">
-                    <EventCard event={event} />
-                    {instagramConnected && (
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          try {
-                            await socialApi.syncFeed(event.id);
-                            const { data } = await eventsApi.getByOwner();
-                            setMyEvents(data);
-                          } catch { /* noop */ }
-                        }}
-                        className="absolute top-2 right-2 p-2 rounded-lg border text-sm transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
-                        style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA', color: '#2563EB' }}
-                        title="Sincronizar Instagram"
-                      >
-                        <RefreshCw className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <Pagination
-                currentPage={myEventsPage}
-                totalPages={myEventsTotalPages}
-                onPageChange={setMyEventsPage}
-              />
-            </>
-          )}
-        </div>
-      )}
-
-      {/* Tab: Publicaciones activas — max-w-4xl */}
+      {/* Tab: Publicaciones activas */}
       {tab === 'registered' && (
-        <div className="max-w-4xl mx-auto px-4 pt-6 pb-20">
+        <div className="max-w-7xl mx-auto px-4 pt-6 pb-20">
           {activePublications.length === 0 ? (
             <div className="rounded-2xl p-16 text-center border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
               <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: '#E4EBFA' }}>
@@ -474,43 +407,6 @@ export default function CreateEventPage() {
               })}
             </div>
           )}
-        </div>
-      )}
-
-      {/* Modal crear evento */}
-      {createModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 backdrop-blur-sm"
-            style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
-            onClick={() => setCreateModalOpen(false)}
-          />
-          <div
-            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl border"
-            style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}
-          >
-            <div
-              className="sticky top-0 z-10 flex items-center justify-between p-4 border-b"
-              style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}
-            >
-              <h2 className="text-lg font-semibold" style={{ color: '#1D1D1F' }}>Publicar Evento</h2>
-              <button
-                type="button"
-                onClick={() => setCreateModalOpen(false)}
-                className="p-2 rounded-lg border cursor-pointer transition-colors"
-                style={{ borderColor: '#E4EBFA', color: '#1D1D1F99' }}
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-6">
-              <CreateEventForm
-                showHeader={false}
-                onSuccess={() => { setCreateModalOpen(false); loadUser(); }}
-                onCancel={() => setCreateModalOpen(false)}
-              />
-            </div>
-          </div>
         </div>
       )}
 
@@ -608,70 +504,123 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
 
   if (editing) {
     return (
-      <div className="rounded-xl p-4 border space-y-3" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold" style={{ color: '#1D1D1F' }}>Editar publicación</p>
-          <button type="button" onClick={() => setEditing(false)} className="p-1 cursor-pointer" style={{ color: '#1D1D1F99' }}>
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="sm:col-span-2">
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Título</p>
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value.slice(0, 45))} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
+      <div className="rounded-2xl border" style={{ backgroundColor: '#FFFFFF', borderColor: '#E4EBFA' }}>
+        {/* Header con info del evento + botones */}
+        <div className="flex items-center gap-3 p-4" style={{ borderBottom: '1px solid #E4EBFA' }}>
+          <div className="w-12 h-12 shrink-0 rounded-lg overflow-hidden">
+            {event.imageUrl && <img src={event.imageUrl} alt="" className="w-full h-full object-cover" />}
           </div>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Subtítulo</p>
-            <textarea value={subtitle} onChange={(e) => setSubtitle(e.target.value.slice(0, 50))} rows={4} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none overflow-hidden" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium truncate" style={{ color: '#1D1D1F' }}>{event.title}</p>
+            <div className="flex items-center gap-2 text-xs mt-0.5" style={{ color: isActive ? '#16A34A' : '#DC2626' }}>
+              <Clock className="w-3 h-3" />
+              {isActive ? 'Publicado' : 'Detenido'}
+            </div>
+            <p className="text-[11px] mt-0.5" style={{ color: '#1D1D1F66' }}>
+              {event.publicationStartDate ? format(new Date(event.publicationStartDate), "d MMM HH:mm", { locale: es }) : '—'}
+              {' → '}
+              {event.publicationEndDate ? format(new Date(event.publicationEndDate), "d MMM HH:mm", { locale: es }) : '—'}
+            </p>
           </div>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Texto descriptivo</p>
-            <textarea value={descText} onChange={(e) => setDescText(e.target.value.slice(0, 172))} rows={10} className="w-full px-3 py-1.5 rounded-lg text-xs light-form resize-none overflow-hidden" />
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Fecha evento</p>
-            <input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Hora</p>
-            <input type="time" value={eventTime} onChange={(e) => setEventTime(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Comuna</p>
-            <select value={comuna} onChange={(e) => setComuna(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form">
-              <option value="" disabled>Selecciona comuna</option>
-              {COMUNAS.map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Tipo</p>
-            <select value={tipo} onChange={(e) => setTipo(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form">
-              {EVENT_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
-            </select>
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Categoría</p>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form">
-              <option value="" disabled>Selecciona categoría</option>
-              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Inicio publicación</p>
-            <input type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Fin publicación</p>
-            <input type="datetime-local" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="w-full px-3 py-1.5 rounded-lg text-xs light-form" />
+          <div className="flex items-center gap-1 shrink-0">
+            <button type="button" onClick={() => setEditing(true)} className="p-1.5 rounded-lg border cursor-pointer" style={{ borderColor: '#E4EBFA', color: '#2563EB' }}><Edit3 className="w-3.5 h-3.5" /></button>
+            {isActive ? (
+              <button type="button" onClick={handleStop} disabled={loading} className="p-1.5 rounded-lg border cursor-pointer" style={{ borderColor: '#E4EBFA', color: '#DC2626' }}><PauseCircle className="w-3.5 h-3.5" /></button>
+            ) : (
+              <button type="button" onClick={() => setEditing(true)} className="p-1.5 rounded-lg border cursor-pointer" style={{ borderColor: '#E4EBFA', color: '#16A34A' }}><PlayCircle className="w-3.5 h-3.5" /></button>
+            )}
+            <button type="button" onClick={handleDelete} disabled={loading} className="p-1.5 rounded-lg border cursor-pointer" style={{ borderColor: '#E4EBFA', color: '#DC2626' }}><Trash2 className="w-3.5 h-3.5" /></button>
           </div>
         </div>
-        <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={() => setEditing(false)} className="px-4 py-1.5 rounded-lg text-xs border cursor-pointer" style={{ borderColor: '#E4EBFA', color: '#1D1D1F99' }}>
-            Cancelar
-          </button>
-          <button type="button" onClick={handleUpdate} disabled={loading} className="px-4 py-1.5 rounded-lg text-xs text-white cursor-pointer disabled:opacity-50" style={{ backgroundColor: '#2563EB' }}>
-            {loading ? 'Guardando...' : 'Guardar'}
-          </button>
+
+        {/* Formulario expandido */}
+        <div className="p-6">
+          <p style={{ fontSize: '20px', fontWeight: 600, color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '4px' }}>Detalles del evento</p>
+          <p style={{ fontSize: '13px', fontWeight: 400, color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '20px' }}>Completa o ajusta la información extraída desde tu publicación.</p>
+
+          <div className="flex gap-6">
+            <div className="flex-1 space-y-4">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Título</p>
+                <input type="text" value={title} onChange={(e) => setTitle(e.target.value.slice(0, 45))} className="w-full px-3 py-2 rounded-xl text-sm light-form" />
+                <p className="text-right text-[10px] mt-0.5" style={{ color: title.length >= 45 ? '#DC2626' : '#1D1D1F66' }}>{title.length}/45</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#1D1D1F99' }}>Descripción</p>
+                <textarea value={descText} onChange={(e) => setDescText(e.target.value.slice(0, 300))} placeholder="Descripción del evento" rows={6} className="w-full px-3 py-2 rounded-xl text-sm light-form resize-none" />
+                <p className="text-right text-[10px] mt-0.5" style={{ color: descText.length >= 300 ? '#DC2626' : '#1D1D1F66' }}>{descText.length}/300</p>
+              </div>
+            </div>
+            <div className="hidden sm:block w-48 shrink-0">
+              <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-center" style={{ color: '#1D1D1F99' }}>Publicación seleccionada</p>
+              {event.imageUrl && (
+                <div className="rounded-xl overflow-hidden" style={{ border: '1px solid #E4EBFA' }}>
+                  <img src={event.imageUrl} alt="" className="w-full h-auto" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Datos del evento */}
+          <div className="mt-6 pt-6" style={{ borderTop: '1px solid #E4EBFA' }}>
+            <p className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: '#1D1D1F' }}>Datos del evento</p>
+            <div className="flex gap-4 mb-6">
+              <div style={{ width: '130px', flexShrink: 0 }}>
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Fecha</p>
+                <input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-xs light-form" />
+              </div>
+              <div style={{ width: '100px', flexShrink: 0 }}>
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Hora</p>
+                <input type="time" value={eventTime} onChange={(e) => setEventTime(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-xs light-form" />
+              </div>
+              <div className="flex-1">
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Período de publicación</p>
+                <div className="flex items-center rounded-xl overflow-hidden w-full light-form" style={{ border: '1px solid #E4EBFA' }}>
+                  <input type={startDate ? 'datetime-local' : 'text'} value={startDate} placeholder="Desde" onFocus={(e) => { e.currentTarget.type = 'datetime-local'; }} onBlur={(e) => { if (!e.currentTarget.value) e.currentTarget.type = 'text'; }} onChange={(e) => setStartDate(e.target.value)} className="flex-1 px-2 py-2.5 text-xs bg-transparent border-none outline-none" />
+                  <span className="text-xs px-1" style={{ color: '#1D1D1F66' }}>→</span>
+                  <input type={endDate ? 'datetime-local' : 'text'} value={endDate} placeholder="Hasta" onFocus={(e) => { e.currentTarget.type = 'datetime-local'; }} onBlur={(e) => { if (!e.currentTarget.value) e.currentTarget.type = 'text'; }} onChange={(e) => setEndDate(e.target.value)} className="flex-1 px-2 py-2.5 text-xs bg-transparent border-none outline-none" />
+                  <CalendarRange className="w-4 h-4 mr-2 shrink-0" style={{ color: '#1D1D1F66' }} />
+                </div>
+              </div>
+              <div className="flex-1">
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Categoría</p>
+                <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-xs light-form">
+                  <option value="" disabled>Seleccione</option>
+                  {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div className="flex-1">
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Comuna</p>
+                <select value={comuna} onChange={(e) => setComuna(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-xs light-form">
+                  <option value="" disabled>Todas las comunas</option>
+                  {COMUNAS.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-6">
+              <div style={{ flexShrink: 0 }}>
+                <p style={{ fontSize: '13px', fontWeight: 700, color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '8px' }}>ESTE EVENTO ES GRATUITO</p>
+                <label className="flex items-center gap-2.5 cursor-pointer">
+                  <input type="checkbox" checked={tipo === 'gratis'} onChange={(e) => setTipo(e.target.checked ? 'gratis' : 'compra')} className="w-5 h-5 rounded" style={{ accentColor: '#2563EB' }} />
+                  <span style={{ fontSize: '13px', fontWeight: 400, color: '#1D1D1F99', fontFamily: "'Raleway', system-ui, sans-serif" }}>Marca si la entrada no tiene costo.</span>
+                </label>
+              </div>
+              <div style={{ width: '280px', flexShrink: 0 }}>
+                <p style={{ fontSize: '13px', fontWeight: 700, color: '#1D1D1F', fontFamily: "'Raleway', system-ui, sans-serif", marginBottom: '8px' }}>$ VALOR DE ENTRADA</p>
+                <input type="text" value={tipo === 'gratis' ? '' : (comuna || '')} onChange={() => {}} placeholder="Ej: $5.000 / adhesión voluntaria" disabled={tipo === 'gratis'} className="w-full px-4 py-3 rounded-xl text-sm light-form disabled:opacity-40" />
+              </div>
+              <button
+                type="button"
+                onClick={handleUpdate}
+                disabled={loading}
+                className="px-10 py-3 rounded-xl text-sm font-semibold text-white cursor-pointer hover:opacity-90 disabled:opacity-50 shrink-0 mt-7"
+                style={{ backgroundColor: '#2563EB' }}
+              >
+                {loading ? 'Guardando...' : 'Guardar cambios'}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
