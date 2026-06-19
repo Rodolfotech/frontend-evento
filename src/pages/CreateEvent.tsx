@@ -3,14 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { eventsApi, socialApi, attendeesApi } from '../api';
 import { clearCache } from '../api/eventsCache';
-import EventCard from '../features/events/EventCard';
-import CreateEventForm from '../features/events/CreateEventForm';
 import type { Event, SocialPost } from '../types';
 import {
   Camera,
-  Calendar as CalendarIcon,
-  Sparkles,
-  RefreshCw,
   X,
   Clock,
   PauseCircle,
@@ -38,8 +33,6 @@ export default function CreateEventPage() {
   const [instagramConnected, setInstagramConnected] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [postPage, setPostPage] = useState(1);
-  const [myEventsPage, setMyEventsPage] = useState(1);
-  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<SocialPost | null>(null);
   const [pubTitle, setPubTitle] = useState('');
   const [pubSubtitle, setPubSubtitle] = useState('');
@@ -94,7 +87,6 @@ export default function CreateEventPage() {
   }, [tab]);
 
   const POST_PAGE_SIZE = 4;
-  const MY_EVENTS_PAGE_SIZE = 3;
 
   const filteredPosts = instagramPosts
     .filter((p) => !!p.media_url)
@@ -102,9 +94,6 @@ export default function CreateEventPage() {
 
   const postTotalPages = Math.ceil(filteredPosts.length / POST_PAGE_SIZE);
   const visiblePosts = filteredPosts.slice((postPage - 1) * POST_PAGE_SIZE, postPage * POST_PAGE_SIZE);
-
-  const myEventsTotalPages = Math.ceil(myEvents.length / MY_EVENTS_PAGE_SIZE);
-  const visibleMyEvents = myEvents.slice((myEventsPage - 1) * MY_EVENTS_PAGE_SIZE, myEventsPage * MY_EVENTS_PAGE_SIZE);
 
   const activePublications = myEvents.filter(e => e.imageUrl);
 
@@ -432,11 +421,6 @@ export default function CreateEventPage() {
 }
 
 const CATEGORIES = ['Música', 'Cultura', 'Gastronomía', 'Turismo', 'Trekking', 'Deportes', 'Ferias', 'Bienestar', 'Fiestas', 'Documental'];
-const EVENT_TYPES = [
-  { value: 'gratis', label: 'Gratis' },
-  { value: 'compra', label: 'Compra tu entrada' },
-  { value: 'cupo', label: 'Asegura tu cupo' },
-];
 
 function parseDescParts(desc: string) {
   const idx = desc.indexOf('\n');
@@ -450,7 +434,7 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
 
   const parts = parseDescParts(event.description || '');
   const [title, setTitle] = useState(event.title);
-  const [subtitle, setSubtitle] = useState(parts.subtitle);
+  const [subtitle] = useState(parts.subtitle);
   const [descText, setDescText] = useState(parts.descText);
   const [eventDate, setEventDate] = useState(format(new Date(event.date), 'yyyy-MM-dd'));
   const [eventTime, setEventTime] = useState(format(new Date(event.date), 'HH:mm'));
