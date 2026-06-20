@@ -40,6 +40,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F8FAFC' }}>
+        <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: '#2563EB', borderTopColor: 'transparent' }} />
+      </div>
+    );
+  }
+
   return (
     <AuthContext.Provider value={{ user, token: null, login, register, logout, isAuthenticated: !!user, loading }}>
       {children}
