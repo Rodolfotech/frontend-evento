@@ -149,7 +149,10 @@ export default function Events() {
       );
     }
     if (showGratis) {
-      result = result.filter((e) => !e.price || e.price === 0);
+      result = result.filter((e) => {
+        const priceFromAddr = e.address && !e.address.startsWith('http') ? e.address : null;
+        return !e.price && !priceFromAddr;
+      });
     }
     if (selectedCategoryName) {
       result = result.filter((e) =>

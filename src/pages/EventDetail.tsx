@@ -82,7 +82,8 @@ export default function EventDetail() {
     );
   }
 
-  const isFree = !event.price || event.price === 0;
+  const priceFromAddress = event.address && !event.address.startsWith('http') ? event.address : null;
+  const isFree = !event.price && !priceFromAddress;
   const slides = [
     ...(event.imageUrl ? [{ type: 'image' as const, url: event.imageUrl }] : []),
     ...((event.socialFeed || []).filter(p => p.media_url).map(p => ({ type: 'post' as const, post: p }))),
@@ -119,9 +120,13 @@ export default function EventDetail() {
                       {event.category.name}
                     </span>
                   )}
-                  {isFree && (
+                  {isFree ? (
                     <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ backgroundColor: '#DCFCE7', color: '#16A34A' }}>
                       Gratis
+                    </span>
+                  ) : (
+                    <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ backgroundColor: '#FEF3C7', color: '#D97706' }}>
+                      Evento de pago
                     </span>
                   )}
                   {event.isOnline && (
