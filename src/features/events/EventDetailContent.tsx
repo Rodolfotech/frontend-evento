@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
+  Ticket,
 } from 'lucide-react';
 import { SocialPostMedia } from '../social/SocialPostMedia';
 import { format } from 'date-fns';
@@ -100,14 +101,16 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
 
   if (!event) return null;
 
-  const isFree = !event.price || event.price === 0;
+  const priceFromAddress = event.address && !event.address.startsWith('http') ? event.address : null;
+  const isFree = !event.price && !priceFromAddress;
   const slides = [
     ...(event.imageUrl ? [{ type: 'image' as const, url: event.imageUrl }] : []),
     ...((event.socialFeed || []).filter(p => p.media_url).map(p => ({ type: 'post' as const, post: p }))),
   ];
   const currentSlide = slides[slideIndex] ?? null;
   const { title: descTitle, body: descBody } = parseDescription(event.description || '');
-  const location = [event.locationName, event.address, event.city].filter(Boolean).join(', ');
+  const locationParts = [event.locationName, priceFromAddress ? undefined : event.address, event.city].filter(Boolean);
+  const location = locationParts.join(', ');
 
   return (
     <div className="p-6 md:p-8 flex flex-col gap-6">
@@ -125,9 +128,13 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
                 {event.category.name}
               </span>
             )}
-            {isFree && (
+            {isFree ? (
               <span className="text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: '#DCFCE7', color: '#16A34A' }}>
                 Gratis
+              </span>
+            ) : (
+              <span className="text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: '#FEF3C7', color: '#D97706' }}>
+                Evento de pago
               </span>
             )}
             {event.isOnline && (
@@ -160,18 +167,33 @@ export function EventDetailContent({ slug, initialEvent }: Props) {
             </div>
           </div>
 
-          {/* Organizador */}
-          {event.owner?.name && (
+          {/* Organizador + Entrada */}
+          <div className="grid grid-cols-2 gap-4">
+            {event.owner?.name && (
+              <div className="flex items-start gap-2.5">
+                <User className="w-4 h-4 shrink-0 mt-0.5" style={{ color: C.blue }} />
+                <div>
+                  <p style={T.label}>Organizador</p>
+                  <p className="mt-0.5" style={T.value}>
+                    {event.owner.name}
+                  </p>
+                </div>
+              </div>
+            )}
             <div className="flex items-start gap-2.5">
-              <User className="w-4 h-4 shrink-0 mt-0.5" style={{ color: C.blue }} />
+              <Ticket className="w-4 h-4 shrink-0 mt-0.5" style={{ color: C.blue }} />
               <div>
-                <p style={T.label}>Organizador</p>
+                <p style={T.label}>Entrada</p>
                 <p className="mt-0.5" style={T.value}>
-                  {event.owner.name}
+                  {isFree
+                    ? 'Entrada Liberada'
+                    : priceFromAddress
+                      ? (isNaN(Number(priceFromAddress)) ? priceFromAddress : `$${Number(priceFromAddress).toLocaleString('es-CL')}`)
+                      : (event.price ? `$${event.price.toLocaleString('es-CL')}` : 'Evento de pago')}
                 </p>
               </div>
             </div>
-          )}
+          </div>
 
           {/* Instagram */}
           <div className="flex items-start gap-2.5">

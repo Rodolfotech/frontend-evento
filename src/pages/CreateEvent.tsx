@@ -6,6 +6,7 @@ import { clearCache } from '../api/eventsCache';
 import type { Event, SocialPost } from '../types';
 import {
   Camera,
+  RefreshCw,
   X,
   Clock,
   PauseCircle,
@@ -194,6 +195,24 @@ export default function CreateEventPage() {
               </button>
             ))}
           </div>
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={() => {
+                setLoadingPosts(true);
+                socialApi.getUserMedia()
+                  .then(({ data }) => setInstagramPosts(data))
+                  .catch(() => {})
+                  .finally(() => setLoadingPosts(false));
+              }}
+              disabled={loadingPosts}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              style={{ backgroundColor: '#EFF6FF', color: '#2563EB', border: '1px solid #DBEAFE' }}
+            >
+              <RefreshCw className={`w-4 h-4 ${loadingPosts ? 'animate-spin' : ''}`} />
+              Actualizar
+            </button>
+          </div>
       </div>
 
       {/* Tab: Programar evento */}
@@ -293,11 +312,11 @@ export default function CreateEventPage() {
                 {/* Fila 1: Fecha, Hora, Período, Categoría, Comuna */}
                 <div className="flex gap-4 mb-6">
                   <div style={{ width: '130px', flexShrink: 0 }}>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Fecha</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Fecha evento</p>
                     <input type="date" value={pubDate} onChange={(e) => setPubDate(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-xs light-form" />
                   </div>
                   <div style={{ width: '100px', flexShrink: 0 }}>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Hora</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Hora evento</p>
                     <input type="time" value={pubTime} onChange={(e) => setPubTime(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-xs light-form" />
                   </div>
                   <div className="flex-1">
@@ -550,11 +569,11 @@ function PublishedEventCard({ event, isActive, onUpdate }: { event: Event; isAct
             <p className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: '#1D1D1F' }}>Datos del evento</p>
             <div className="flex gap-4 mb-6">
               <div style={{ width: '130px', flexShrink: 0 }}>
-                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Fecha</p>
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Fecha evento</p>
                 <input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-xs light-form" />
               </div>
               <div style={{ width: '100px', flexShrink: 0 }}>
-                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Hora</p>
+                <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#1D1D1F99' }}>Hora evento</p>
                 <input type="time" value={eventTime} onChange={(e) => setEventTime(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-xs light-form" />
               </div>
               <div className="flex-1">
