@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, Mail, ArrowLeft } from 'lucide-react';
 import { authApi } from '../api';
 import { FormInput } from '../components/ui/FormInput';
@@ -17,6 +17,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleMessage = async (e: MessageEvent) => {
@@ -29,7 +30,7 @@ export default function Login() {
         if (e.data.code) {
           try {
             await authApi.googleLogin(e.data.code);
-            window.location.href = '/profile';
+            navigate('/profile');
           } catch {
             setGoogleLoading(false);
             setError('Error al iniciar sesión con Google');
@@ -47,7 +48,7 @@ export default function Login() {
     setError('');
     try {
       await login(email, password);
-      window.location.href = '/profile';
+      navigate('/profile');
     } catch {
       setError('Credenciales inválidas');
     } finally {
