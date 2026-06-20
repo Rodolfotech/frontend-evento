@@ -15,7 +15,8 @@ interface Props {
 
 export function FeaturedEventCard({ event }: Props) {
   const [modalOpen, setModalOpen] = useState(false);
-  const isFree = !event.price || event.price === 0;
+  const priceFromAddress = event.address && !event.address.startsWith('http') ? event.address : null;
+  const isFree = !event.price && !priceFromAddress;
   const eventDate = new Date(event.date);
   const catStyle = getCategoryStyle();
 
@@ -50,15 +51,13 @@ export function FeaturedEventCard({ event }: Props) {
           </span>
         )}
 
-        {/* Badge gratuito */}
-        {isFree && (
-          <span
-            className="absolute bottom-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full"
-            style={{ backgroundColor: '#FFFFFF', color: '#1D1D1F', border: '1px solid #E4EBFA', fontFamily: 'var(--font-brand)' }}
-          >
-            Gratis
-          </span>
-        )}
+        {/* Badge gratuito / pago */}
+        <span
+          className="absolute bottom-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full"
+          style={{ backgroundColor: '#FFFFFF', color: '#1D1D1F', border: '1px solid #E4EBFA', fontFamily: 'var(--font-brand)' }}
+        >
+          {isFree ? 'Gratis' : 'Evento de pago'}
+        </span>
       </div>
 
       {/* Contenido */}
